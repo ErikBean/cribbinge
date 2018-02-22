@@ -3,51 +3,13 @@
   <head>
     <meta charset="utf-8">
     <title>CrabApple</title>
-    <script src="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.css" />
-    
-    <script src="https://www.gstatic.com/firebasejs/4.10.0/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
-        authDomain: "crabapple-f6555.firebaseapp.com",
-        databaseURL: "https://crabapple-f6555.firebaseio.com",
-        projectId: "crabapple-f6555",
-        storageBucket: "",
-        messagingSenderId: "801912982668"
-      };
-      firebase.initializeApp(config);
-    </script>
-    
-    <script type="text/javascript">
-      // FirebaseUI config.
-      var uiConfig = {
-        signInSuccessUrl: '/',
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-          firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-          firebase.auth.GithubAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID,
-          firebase.auth.PhoneAuthProvider.PROVIDER_ID
-        ],
-        // Terms of service url.
-        tosUrl: 'www.google.com'
-      };
-
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      if (ui.isPendingRedirect()) {
-        // The start method will wait until the DOM is loaded.
-        ui.start('#firebaseui-auth-container', uiConfig);
-      }
-    </script>
   </head>
   <body>
     <h1>Welcome to My Awesome App</h1>
-    <div id="firebaseui-auth-container"></div>
-
+    <div id="root">
+      replace me!
+    </div>
+    <script src="./dist/vendor.dll.js"></script>
+    <script src="./dist/bundle.js"></script>
   </body>
 </html>
