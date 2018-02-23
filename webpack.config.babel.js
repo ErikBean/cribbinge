@@ -9,9 +9,6 @@ module.exports = (env) => {
       path: path.resolve(__dirname, 'dist'),
       publicPath: '/webpackPublicPath'
     },
-    devServer: {
-      hot: true,
-    },
     module: {
       loaders: [
         {

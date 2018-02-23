@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "webpack --config=webpack.config.vendor.babel.js",
     "build": "webpack --env=development",
-    "start": "webpack-dev-server --hot --watch"
+    "start": "webpack-dev-server --hot"
   },
   "repository": {
     "type": "git",
