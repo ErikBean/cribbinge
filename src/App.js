@@ -1,6 +1,67 @@
-import React from 'react'
+import React, {Component} from 'react'
 import { hot } from 'react-hot-loader'
+import firebase from 'firebase'
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
-const App = () => <div>Hello Worlllldsofhorror!</div>
+var config = {
+  apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
+  authDomain: "crabapple-f6555.firebaseapp.com",
+  databaseURL: "https://crabapple-f6555.firebaseio.com",
+  projectId: "crabapple-f6555",
+  storageBucket: "crabapple-f6555.appspot.com",
+  messagingSenderId: "801912982668"
+};
 
-export default hot(module)(App)
+firebase.initializeApp(config);
+
+class App extends Component {
+  
+  // The component's Local state.
+  state = {
+    signedIn: false // Local signed-in state.
+  };
+
+  // Configure FirebaseUI.
+  uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID
+    ],
+    callbacks: {
+      // Avoid redirects after sign-in.
+      signInSuccess: () => window.alert('signed in!')
+    }
+  };
+  // Listen to the Firebase Auth state and set the local state.
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(
+        (user) => this.setState({signedIn: !!user})
+    );
+  }
+
+  render() {
+    if (!this.state.signedIn) {
+      return (
+        <div>
+          <h1>My App</h1>
+          <p>Please sign-in:</p>
+          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <h1>My App</h1>
+        <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
+        <a onClick={() => firebase.auth().signOut()}>Sign-out</a>
+      </div>
+    );
+  }
+}
+
+
+export default hot(module)(App);

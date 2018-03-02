@@ -15,7 +15,6 @@ module.exports = (env) => {
           test: /\.(js)$/,
           loader: 'babel-loader',
           query: {
-            presets: ['react', 'es2015'],
             cacheDirectory: true,
           },
           exclude: /node_modules/,

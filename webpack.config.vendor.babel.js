@@ -5,8 +5,10 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
     vendor: [
-      'react',
+      'firebase',
       'react-dom',
+      'react',
+      'react-firebaseui/StyledFirebaseAuth'
     ]
   },
   output: {
