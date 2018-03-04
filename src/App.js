@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import { hot } from 'react-hot-loader'
 import firebase from 'firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import CounterThing from './CounterThing'
+
 
 var config = {
   apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
@@ -13,7 +15,7 @@ var config = {
 };
 
 firebase.initializeApp(config);
-
+window.firebase = firebase;
 class App extends Component {
   
   // The component's Local state.
@@ -46,18 +48,15 @@ class App extends Component {
   render() {
     if (!this.state.signedIn) {
       return (
-        <div>
-          <h1>My App</h1>
-          <p>Please sign-in:</p>
-          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
-        </div>
+        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
       );
     }
     return (
       <div>
         <h1>My App</h1>
         <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
-        <a onClick={() => firebase.auth().signOut()}>Sign-out</a>
+        <CounterThing />
+        <a href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
       </div>
     );
   }
