@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import { hot } from 'react-hot-loader'
+import { connect } from 'react-firebase'
+
 import firebase from 'firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CounterThing from './CounterThing'
 import Card from './Card';
+import OnlineUsers from './OnlineUsers';
 
 var config = {
   apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
@@ -35,14 +38,25 @@ class App extends Component {
     ],
     callbacks: {
       // Avoid redirects after sign-in.
-      signInSuccess: () => window.alert('signed in!')
+      signInSuccess: () => console.log('signed in!')
     }
   };
+  onAuthStateChanged = (user) => {
+    this.setState({signedIn: !!user})
+    if(user){
+      this.addUser(user)
+    }
+  }
+  
+  addUser(user) {
+    const users = this.props.users || [];
+    console.log('>>> User!: ',user, users  );
+    const newUsers = [user.uid, ...users]
+    this.props.addUser(newUsers);
+  }
   // Listen to the Firebase Auth state and set the local state.
   componentDidMount() {
-    firebase.auth().onAuthStateChanged(
-        (user) => this.setState({signedIn: !!user})
-    );
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
   }
 
   render() {
@@ -54,7 +68,8 @@ class App extends Component {
     return (
       <div>
         <h1>My App</h1>
-        <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
+        <p>Welcome {firebase.auth().currentUser.displayName}! Please select an opponent:</p>
+        <OnlineUsers />
         <CounterThing />
         <Card card="H13"/>
         <a href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
@@ -62,6 +77,9 @@ class App extends Component {
     );
   }
 }
+const ConnectedApp = connect((props, ref) => ({
+  users: 'onlineUsers',
+  addUser: value => ref('onlineUsers').set(value)
+}))(App)
 
-
-export default hot(module)(App);
+export default hot(module)(ConnectedApp);
