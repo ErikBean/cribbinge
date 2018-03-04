@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader'
 import firebase from 'firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CounterThing from './CounterThing'
-
+import Card from './Card';
 
 var config = {
   apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
@@ -56,6 +56,7 @@ class App extends Component {
         <h1>My App</h1>
         <p>Welcome {firebase.auth().currentUser.displayName}! You are now signed-in!</p>
         <CounterThing />
+        <Card card="H13"/>
         <a href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
       </div>
     );
