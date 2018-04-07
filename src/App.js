@@ -6,7 +6,7 @@ import firebase from 'firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CounterThing from './CounterThing'
 import Card from './Card';
-import OnlineUsers from './OnlineUsers';
+import Users from './Users';
 
 var config = {
   apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
@@ -48,11 +48,8 @@ class App extends Component {
     }
   }
   
-  addUser(user) {
-    const users = this.props.users || [];
-    console.log('>>> User!: ',user, users  );
-    const newUsers = [user.uid, ...users]
-    this.props.addUser(newUsers);
+  addUser = (user) => {
+    this.props.addUser(user.email)
   }
   // Listen to the Firebase Auth state and set the local state.
   componentDidMount() {
@@ -65,11 +62,13 @@ class App extends Component {
         <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
       );
     }
+    const {currentUser: {email}, signOut} = firebase.auth();
     return (
       <div>
         <h1>My App</h1>
-        <p>Welcome {firebase.auth().currentUser.displayName}! Please select an opponent:</p>
-        <OnlineUsers />
+        <p>Welcome {email}! Please select an opponent:</p>
+        <Users users={this.props.users || {}}/>
+        Events: {JSON.stringify(this.props.events)}
         <CounterThing />
         <Card card="H13"/>
         <a href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
@@ -78,8 +77,9 @@ class App extends Component {
   }
 }
 const ConnectedApp = connect((props, ref) => ({
-  users: 'onlineUsers',
-  addUser: value => ref('onlineUsers').set(value)
+  users: 'users',
+  addUser: value => ref(`users/${value.split('@')[0]}/online`).set('true'),
+  removeUser: value => ref(`users/${value.split('@')[0]}`).set('offline'),
 }))(App)
 
 export default hot(module)(ConnectedApp);
