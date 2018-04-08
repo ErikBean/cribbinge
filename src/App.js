@@ -7,6 +7,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CounterThing from './CounterThing'
 import Card from './Card';
 import Users from './Users';
+import Games from './Games';
 
 var config = {
   apiKey: "AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg",
@@ -19,11 +20,12 @@ var config = {
 
 firebase.initializeApp(config);
 window.firebase = firebase;
-class App extends Component {
+export default class App extends Component {
   
   // The component's Local state.
   state = {
-    signedIn: false // Local signed-in state.
+    signedIn: false, // Local signed-in state.
+    name: '' // current user's email before the @ sign
   };
 
   // Configure FirebaseUI.
@@ -42,20 +44,22 @@ class App extends Component {
     }
   };
   onAuthStateChanged = (user) => {
-    this.setState({signedIn: !!user})
+    this.setState({
+      signedIn: !!user,
+      name: user && user.email.split('@')[0]
+    })
     if(user){
-      this.addUser(user)
+      this.props.addUser(user.email.split('@')[0])
     }
-  }
-  
-  addUser = (user) => {
-    this.props.addUser(user.email)
   }
   // Listen to the Firebase Auth state and set the local state.
   componentDidMount() {
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
   }
-
+  startMatch = (withUser) => {
+    const gameId = `${this.state.name}-${withUser}`;
+    this.props.startMatch(gameId);
+  }
   render() {
     if (!this.state.signedIn) {
       return (
@@ -63,23 +67,23 @@ class App extends Component {
       );
     }
     const {currentUser: {email}, signOut} = firebase.auth();
+    const halfWidth = {
+      width: '50%',
+      display: 'inline-block'
+    }
     return (
       <div>
-        <h1>My App</h1>
-        <p>Welcome {email}! Please select an opponent:</p>
-        <Users users={this.props.users || {}}/>
-        Events: {JSON.stringify(this.props.events)}
+        <h1 style={halfWidth}>CribbagePatch v2.1.3</h1>
+        <a style={halfWidth} href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
+        <p>Welcome {this.state.name}!</p>
+        <Games 
+          games={this.props.games}
+          users={() => <Users users={this.props.users || {}} userClicked={this.startMatch}/>}
+          currentUser={this.state.name}
+        />
         <CounterThing />
         <Card card="H13"/>
-        <a href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
       </div>
     );
   }
 }
-const ConnectedApp = connect((props, ref) => ({
-  users: 'users',
-  addUser: value => ref(`users/${value.split('@')[0]}/online`).set('true'),
-  removeUser: value => ref(`users/${value.split('@')[0]}`).set('offline'),
-}))(App)
-
-export default hot(module)(ConnectedApp);
