@@ -73,7 +73,7 @@ export default class App extends Component {
     }
     return (
       <div>
-        <h1 style={halfWidth}>CribbagePatch v2.1.3</h1>
+        <h1 style={halfWidth}>CribbagePatch v2.2.3</h1>
         <a style={halfWidth} href="/" onClick={() => firebase.auth().signOut()}>Sign-out</a>
         <p>Welcome {this.state.name}!</p>
         <Games 
@@ -82,7 +82,6 @@ export default class App extends Component {
           currentUser={this.state.name}
         />
         <CounterThing />
-        <Card card="H13"/>
       </div>
     );
   }
