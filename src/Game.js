@@ -1,19 +1,28 @@
 import React from 'react'
 import { connect } from 'react-firebase'
-import {needsFirstCut, needsSecondCut} from './util/projections';
+import {needsFirstCut, needsSecondCut, currentUserDidFirstCut} from './util/projections';
 import DeckCutter from './DeckCutter';
 
 function Game ({gameEvents, addEvent, currentUser}) {
   if(needsFirstCut(gameEvents)){
-    return <DeckCutter onDeckCut={(card) => addEvent(`${currentUser}:c1=${card}>`)}/>
-  } else if(needsSecondCut(gameEvents)){
-    return <DeckCutter onDeckCut={(card) => addEvent(`${currentUser}:c2=${card}>`)}/>
+    return (
+      <DeckCutter 
+        onDeckCut={(card) => addEvent({what: 'first cut', data: {card}})}
+      />
+    )
+  } else if(needsSecondCut(gameEvents) && !currentUserDidFirstCut(gameEvents)){
+    return <DeckCutter onDeckCut={(card) => addEvent({what: 'second cut', data: {card}})}/>
   }
   return (
-    <div>{gameEvents}</div>
+    <div>{JSON.stringify(gameEvents, undefined, 2)}</div>
   );
 }
 
 export default connect((props, ref) => ({
-  addEvent: evt => ref(`games/${props.gameId}`).set(props.gameEvents + evt),
+  addEvent: evt => ref(`games/${props.gameId}`).push({
+    timestamp: Date.now(),
+    who: props.currentUser,
+    ...evt
+  }),
+  gameEvents:  `games/${props.gameId}`
 }))(Game)

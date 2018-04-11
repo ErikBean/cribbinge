@@ -20,7 +20,7 @@ export default function Games ({users, games, currentUser}) {
       {shouldSelectOpponent && <Users/>}
       {playing && Object.keys(playing).map((key) =>{
         return (
-          <Game key={key} gameId={key} gameEvents={playing[key]} currentUser={currentUser}/>
+          <Game key={key} gameId={key} currentUser={currentUser}/>
         );
       })}
     </div>
