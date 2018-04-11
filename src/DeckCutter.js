@@ -21,15 +21,22 @@ export default class DeckCutter extends Component {
             marginRight: '5px',
             backgroundColor: 'lightblue',
             left: `${i * 20 + 20}px`,
-            transform: card === this.state.hovered ? 'translateY(-50%)' : '',
+            transform: card === this.state.hovered ? 'translateY(-100%)' : '',
           }
           return (
             <div style={cardStyle} key={card}>
-              <div 
+              <div
                 style={{position: 'absolute', width :'20px', height: '200px'}}
                 onMouseEnter={() => this.setState({hovered: card})}
+                onClick={() => this.props.onDeckCut(card)} 
               />
-              <Card card={card} onClick={() => this.props.onDeckCut(card)} faceDown /> 
+              <Card
+                card={card} onClick={() => this.props.onDeckCut(card)}
+                faceDown
+              />
+              {this.state.hovered === card && (
+                <Card card={card} />
+              )}
             </div>
           )
         })}

@@ -1,4 +1,5 @@
-function sortByTime(gameEvents = {}){
+function sortByTime(gameEvents){
+  if(!gameEvents) return []
   return Object.values(gameEvents).sort((ev1, ev2) => {
     return ev1.timestamp > ev2.timestamp;
   })
@@ -24,6 +25,11 @@ function lastEventDoneBy(userName){
 export function needsFirstCut (gameEvents = {}) {
   const lastEventIsStart = lastEventIs('start');
   return lastEventIsStart(gameEvents);
+}
+
+export function firstCut(gameEvents){
+  const event = Object.values(gameEvents).find((item) => {return item.what === 'first cut'})
+  return event && event.data.card;
 }
 
 export function needsSecondCut (gameEvents) {

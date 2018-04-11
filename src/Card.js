@@ -10,7 +10,7 @@ const Card = (props) => {
     height: '200px',
     width: '140px',
     background: `${bgSrc} no-repeat`,
-    backgroundSize: 'contain' 
+    backgroundSize: 'contain'
   }
 
   return (
