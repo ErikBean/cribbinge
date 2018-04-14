@@ -61,3 +61,8 @@ export const deckSelector = createSelector(
     return [];
   },
 );
+
+export const needsOpponentSelector = (games, currentUser) => {
+  if (games === null) return true;
+  return !Object.keys(games).some(gameId => gameId.indexOf(currentUser !== -1));
+};

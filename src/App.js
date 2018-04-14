@@ -9,6 +9,8 @@ import Users from './Users';
 import Games from './Games';
 import AppBar from './AppBar';
 
+import { needsOpponentSelector } from './util/projections';
+
 const config = {
   apiKey: 'AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg',
   authDomain: 'crabapple-f6555.firebaseapp.com',
@@ -74,17 +76,24 @@ export default class App extends Component {
   render() {
     if (!this.state.signedIn) {
       return (
-        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+        <React.Fragment>
+          <CssBaseline />
+          <AppBar classes={{}} />
+          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+        </React.Fragment>
       );
     }
     return (
       <React.Fragment>
         <CssBaseline />
         <AppBar classes={{}} />
-        <p>Welcome {this.state.name}!</p>
+        <Users
+          users={this.props.users || {}}
+          needsOpponent={needsOpponentSelector(this.props.games, this.state.name)}
+          userClicked={this.startMatch}
+        />
         <Games
           games={this.props.games || {}}
-          users={() => <Users users={this.props.users || {}} userClicked={this.startMatch} />}
           currentUser={this.state.name}
         />
         <CounterThing />

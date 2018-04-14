@@ -35,7 +35,8 @@ Game.propTypes = {
 };
 Game.defaultProps = {
   gameEvents: {},
-}
+};
+
 export default connect((props, ref) => ({
   addEvent: evt => ref(`games/${props.gameId}`).push({
     timestamp: Date.now(),

@@ -17,7 +17,7 @@ Counter.propTypes = {
 
 Counter.defaultProps = {
   value: 0,
-}
+};
 
 export default connect((props, ref) => ({
   value: 'counterValue',
