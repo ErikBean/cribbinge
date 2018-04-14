@@ -4,6 +4,7 @@
   "description": "Second gen cribbage app",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint ./src --fix --cache",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "webpack --config=webpack.config.vendor.babel.js",
     "build": "webpack --env=development",
@@ -22,6 +23,7 @@
   "homepage": "https://github.com/ErikBean/cribbinge#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -29,11 +31,19 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
+    "@material-ui/icons": "^1.0.0-beta.42",
     "firebase": "^4.10.1",
+    "material-ui": "^1.0.0-beta.41",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-firebase": "^2.2.8",

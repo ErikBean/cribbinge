@@ -1,28 +1,34 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import Game from './Game';
 
-function _shouldSelectOpponent(currentUser, games={}){
-  if(games === null) return true;
-  return !Object.keys(games).some((gameId) => {
-    return gameId.indexOf(currentUser !== -1);
-  })
+function shouldSelectOpponent(currentUser, games = {}) {
+  if (games === null) return true;
+  return !Object.keys(games).some(gameId => gameId.indexOf(currentUser !== -1));
 }
-export default function Games ({users, games, currentUser}) {
+
+export default function Games({ users, games, currentUser }) {
   const Users = users;
-  const shouldSelectOpponent = _shouldSelectOpponent(currentUser, games)
-  const playing = games && Object.keys(games).filter((gameId) => gameId.indexOf(currentUser !== -1))
-  .reduce((acc, curr) => {
-    acc[curr] = games[curr];
-    return acc;
-  }, {});
+  const playing = games && Object.keys(games).filter(gameId => gameId.indexOf(currentUser !== -1))
+    .reduce((acc, curr) => {
+      acc[curr] = games[curr];
+      return acc;
+    }, {});
   return (
     <div>
-      {shouldSelectOpponent && <Users/>}
-      {playing && Object.keys(playing).map((key) =>{
-        return (
-          <Game key={key} gameId={key} currentUser={currentUser}/>
-        );
-      })}
+      {shouldSelectOpponent(currentUser, games) && <Users />}
+      {playing && 
+        Object.keys(playing).map(key => (
+          <Game key={key} gameId={key} currentUser={currentUser} />
+        ))
+      }
     </div>
   );
 }
+
+Games.propTypes = {
+  users: PropTypes.func.isRequired,
+  games: PropTypes.shape({}).isRequired,
+  currentUser: PropTypes.string.isRequired,
+};

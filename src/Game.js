@@ -1,23 +1,26 @@
-import React from 'react'
-import { connect } from 'react-firebase'
-import {needsFirstCutSelector, needsSecondCutSelector, shownCutsSelector} from './util/projections';
+import React from 'react';
+import { connect } from 'react-firebase';
+import PropTypes from 'prop-types';
+import { needsFirstCutSelector, needsSecondCutSelector, shownCutsSelector, deckSelector } from './util/projections';
 import DeckCutter from './DeckCutter';
 
-function Game ({gameEvents, addEvent, currentUser}) {
+
+function Game({ gameEvents, addEvent, currentUser }) {
   const needsFirstCut = needsFirstCutSelector(gameEvents);
   const needsSecondCut = needsSecondCutSelector(gameEvents);
-  
+  const shownCuts = shownCutsSelector(gameEvents);
+  const deck = deckSelector(gameEvents);
+
   const showCutter = needsFirstCut || needsSecondCut || true;
   const cutEventName = needsFirstCut ? 'first cut' : 'second cut';
-  const shownCuts = shownCutsSelector(gameEvents);
-  const hasDoneCut = shownCuts.some(({who}) => who === currentUser);
+  const hasDoneCut = shownCuts.some(({ who }) => who === currentUser);
   return (
     <div>
-      {showCutter && 
+      {showCutter &&
         <DeckCutter
           hasDoneCut={hasDoneCut}
-          onDeckCut={(card) => addEvent({what: cutEventName, card})}
-          shownCuts={shownCuts}
+          onDeckCut={card => addEvent({ what: cutEventName, card })}
+          deck={deck}
         />
       }
       {JSON.stringify(gameEvents, undefined, 2)}
@@ -25,11 +28,19 @@ function Game ({gameEvents, addEvent, currentUser}) {
   );
 }
 
+Game.propTypes = {
+  gameEvents: PropTypes.shape({}),
+  addEvent: PropTypes.func.isRequired,
+  currentUser: PropTypes.string.isRequired,
+};
+Game.defaultProps = {
+  gameEvents: {},
+}
 export default connect((props, ref) => ({
   addEvent: evt => ref(`games/${props.gameId}`).push({
     timestamp: Date.now(),
     who: props.currentUser,
-    ...evt
+    ...evt,
   }),
-  gameEvents:  `games/${props.gameId}`
-}))(Game)
+  gameEvents: `games/${props.gameId}`,
+}))(Game);
