@@ -21,6 +21,7 @@ module.exports = (env) => {
         },
       ]
     },
+    devtool: 'inline-source-map',
     plugins: [
       new webpack.DllReferencePlugin({
         context: __dirname,

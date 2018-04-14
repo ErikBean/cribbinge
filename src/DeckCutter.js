@@ -1,11 +1,10 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {createDeck, shuffle} from './util/deck'
 import Card from './Card';
 
-export default class DeckCutter extends Component {
+export default class DeckCutter extends PureComponent {
   state = {
     deck: [],
-    hovered: ''
   }
   componentDidMount(){
     this.setState({
@@ -21,25 +20,21 @@ export default class DeckCutter extends Component {
             marginRight: '5px',
             backgroundColor: 'lightblue',
             left: `${i * 20 + 20}px`,
-            transform: card === this.state.hovered ? 'translateY(-100%)' : '',
           }
+          const onClick = this.props.hasDoneCut ? () => {} : () => this.props.onDeckCut(card)
           return (
             <div style={cardStyle} key={card}>
-              <div
-                style={{position: 'absolute', width :'20px', height: '200px'}}
-                onMouseEnter={() => this.setState({hovered: card})}
-                onClick={() => this.props.onDeckCut(card)} 
-              />
               <Card
-                card={card} onClick={() => this.props.onDeckCut(card)}
+                card={card}
+                onClick={onClick}
                 faceDown
               />
-              {this.state.hovered === card && (
-                <Card card={card} />
-              )}
             </div>
           )
         })}
+        {this.props.shownCuts.map(({card}) => (
+          <Card card={card} key={card}/>
+        ))}
       </div>
     );
   }

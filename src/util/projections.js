@@ -1,44 +1,71 @@
-function sortByTime(gameEvents){
+import { createSelector } from 'reselect'
+
+function sortByTimeSelector(gameEvents){
   if(!gameEvents) return []
   return Object.values(gameEvents).sort((ev1, ev2) => {
     return ev1.timestamp > ev2.timestamp;
   })
 }
 
-function lastEvent(events){
-  const sortedEvents = sortByTime(events);
-  return sortedEvents.length && sortedEvents[sortedEvents.length -1];
+const currentUserSelector = (gameEvents, props) => props.currentUser;
+
+function firstCutSelector(gameEvents){
+  if(!gameEvents) return null;
+  return Object.values(gameEvents).find((item) => {return item.what === 'first cut'})
 }
 
-function lastEventIs(eventName){
-  return function (events){
-    return lastEvent(events).what === eventName;
+function secondCutSelector(gameEvents){
+  if(!gameEvents) return null;
+  return Object.values(gameEvents).find((item) => {return item.what === 'second cut'})
+}
+
+const lastEventSelector = createSelector(
+  [sortByTimeSelector],
+  (sortedEvents)=> {
+    return sortedEvents.length && sortedEvents[sortedEvents.length -1];
   }
-}
+);
 
-function lastEventDoneBy(userName){
-  return function (events){
-    return lastEvent(events).who === userName;
+
+const lastEventDoneByCurrentUserSelector = createSelector(
+  [lastEventSelector, currentUserSelector],
+  (lastEvent, currentUser) => {
+    return lastEvent.who === currentUser;
   }
-}
+)
 
-export function needsFirstCut (gameEvents = {}) {
-  const lastEventIsStart = lastEventIs('start');
-  return lastEventIsStart(gameEvents);
-}
+export const needsFirstCutSelector = createSelector(
+  [lastEventSelector],
+  (lastEvent) => {
+    return lastEvent.what === 'start';
+  }
+)
 
-export function firstCut(gameEvents){
-  const event = Object.values(gameEvents).find((item) => {return item.what === 'first cut'})
-  return event && event.data.card;
-}
+export const needsSecondCutSelector = createSelector(
+  [lastEventSelector],
+  (lastEvent) => {
+    return lastEvent.what === 'first cut';
+  }
+)
 
-export function needsSecondCut (gameEvents) {
-  const lastEventIsFirstCut = lastEventIs('first cut');
-  return lastEventIsFirstCut(gameEvents)
-}
 
-export function currentUserDidFirstCut(currentUser, gameEvents){
-  const lastEventIsFirstCut = lastEventIs('first cut');
-  const lastEventDoneByCurrentUser = lastEventDoneBy(currentUser);
-  return lastEventIsFirstCut(gameEvents) && lastEventDoneByCurrentUser(gameEvents);
-}
+//need to pass props to this with currentUser (get rid of this): 
+export const currentUserDidFirstCutSelector = createSelector(
+  [currentUserSelector, lastEventSelector],
+  (currentUser, lastEvent) => {
+    return lastEvent.who === currentUser && lastEvent.what === 'first cut';
+  }
+);
+
+export const shownCutsSelector = createSelector(
+  [firstCutSelector, secondCutSelector],
+  (firstCut, secondCut) => {
+    if(firstCut && secondCut){
+      return [firstCut, secondCut]
+    } else if(firstCut){
+      return [firstCut]
+    } else {
+      return [];
+    }
+  }
+)
