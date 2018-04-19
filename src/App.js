@@ -8,7 +8,7 @@ import CounterThing from './CounterThing';
 import Users from './Users';
 import Games from './Games';
 import AppBar from './AppBar';
-import InfoBar from './InfoBar';
+// import InfoBar from './InfoBar';
 
 import { needsOpponentSelector } from './util/projections';
 

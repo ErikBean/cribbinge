@@ -35,6 +35,7 @@ function Game({
       {showCutter &&
         <MuiDeckCutter
           hasDoneCut={hasDoneCut}
+          shownCuts={shownCuts}
           onDeckCut={card => addEvent({ what: cutEventName, card })}
           opponent={opponent}
           deck={deck}

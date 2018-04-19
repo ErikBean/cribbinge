@@ -5,6 +5,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Slide from 'material-ui/transitions/Slide';
 
+import { getNumberOrFace, getSuit } from './util/deck';
 import Card from './Card';
 
 const styles = theme => ({
@@ -34,9 +35,6 @@ const styles = theme => ({
   right: {
     left: '50vw',
   },
-  cut: {
-    color: 'red',
-  },
 });
 
 class MuiDeckCutter extends PureComponent {
@@ -51,6 +49,15 @@ class MuiDeckCutter extends PureComponent {
   sliceDeck = (e) => {
     this.setState({ cutIndex: parseInt(e.target.value) });
   }
+  flipCard = (card) => {
+    const index = this.props.deck.indexOf(card);
+    const leftStackClicked = index === this.state.cutIndex + 1;
+    const rightStackClicked = index === this.state.cutIndex;
+    if (leftStackClicked || rightStackClicked) {
+      console.log('>>> flipped: ', card);
+      this.props.onDeckCut(card);
+    }
+  }
   render() {
     const { cutIndex } = this.state;
     const { classes } = this.props;
@@ -60,19 +67,26 @@ class MuiDeckCutter extends PureComponent {
         {this.props.deck.map((card, i) => {
           const leftRightClass = i > cutIndex ? classes.left : classes.right;
           const cutClass = i === cutIndex ? classes.cut : '';
-          const zIndex = i > cutIndex  ? (52 - i) : 'initial';
+          const zIndex = i > cutIndex ? (52 - i) : 'initial';
+          const marginLeft = `${i * 2}px`;
+          const shown = (card === this.props.shownCuts[0].card || card === this.props.shownCuts[1].card);
           return (
-            <div id="cardWrapper">
+            <div id="cardWrapper" onClick={() => this.flipCard(card)} key={card}>
               <Paper
-                style={{ marginLeft: `${i * 2}px`, zIndex }}
-                key={card}
-                className={`${classes.root} ${leftRightClass} ${cutClass}`}
+                style={{ marginLeft, zIndex }}
+                className={`${classes.root} ${leftRightClass}`}
                 elevation={4}
-              >
-              </Paper>
-              {i === cutIndex &&
-                <Paper 
-                  hidden
+              />
+              {shown &&
+                <Paper
+                  className={`${classes.root} ${leftRightClass}`}
+                  style={{
+                    marginLeft,
+                    zIndex,
+                    background: `url(./src/svg-cards/${getNumberOrFace(card)}_of_${getSuit(card)}.svg) no-repeat !important`,
+                    backgroundSize: 'contain !important',
+                    backgroundColor: 'red',
+                  }}
                 >
                   {card}
                 </Paper>
