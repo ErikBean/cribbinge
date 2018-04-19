@@ -7,12 +7,12 @@ function sortByTimeSelector(gameEvents) {
 
 const currentUserSelector = (gameEvents, props) => props.currentUser;
 
-function firstCutSelector(gameEvents) {
+export function firstCutSelector(gameEvents) {
   if (!gameEvents) return null;
   return Object.values(gameEvents).find(item => item.what === 'first cut');
 }
 
-function secondCutSelector(gameEvents) {
+export function secondCutSelector(gameEvents) {
   if (!gameEvents) return null;
   return Object.values(gameEvents).find(item => item.what === 'second cut');
 }
@@ -71,3 +71,5 @@ export const needsOpponentSelector = (games, currentUser) => {
   if (games === null) return true;
   return !Object.keys(games).some(gameId => gameId.indexOf(currentUser !== -1));
 };
+
+

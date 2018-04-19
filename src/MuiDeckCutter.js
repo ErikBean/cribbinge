@@ -13,12 +13,15 @@ const styles = theme => ({
     position: 'relative',
     height: '100vh',
   },
-  root: theme.mixins.gutters({
-    marginTop: theme.spacing.unit * 3,
+  cardWrapper: {
     position: 'absolute',
-    display: 'inline-block',
-    borderRadius: 5,
+    width: '200px',
+    height: '200px',
     transition: '0.5s',
+    marginTop: theme.spacing.unit * 3,
+  },
+  card: theme.mixins.gutters({
+    borderRadius: 5,
     width: '140px',
     height: '200px',
     background: 'url(./src/svg-cards/ic_spa_black_24px.svg) no-repeat',
@@ -33,19 +36,33 @@ const styles = theme => ({
   right: {
     left: '50vw',
   },
+  cut: {
+    position: 'absolute'
+  }
 });
 
 class MuiDeckCutter extends PureComponent {
   static propTypes = {
     onDeckCut: PropTypes.func.isRequired,
+    onSliceDeck: PropTypes.func.isRequired,
     hasDoneCut: PropTypes.bool.isRequired,
     deck: PropTypes.arrayOf(PropTypes.string).isRequired,
   }
   state = {
-    cutIndex: 25,
+    cutIndex: this.props.remoteCutIndex || 25,
+  }
+  componentDidUpdate(oldProps){
+    if(this.props.remoteCutIndex, oldProps.remoteCutIndex){
+      this.setState({
+        cutIndex: this.props.remoteCutIndex,
+      });
+      this.input.value = this.props.remoteCutIndex;
+      console.log('>>> Here: ', this.input);
+    }
   }
   sliceDeck = (e) => {
     this.setState({ cutIndex: parseInt(e.target.value) });
+    this.props.onSliceDeck(e.target.value);
   }
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);
@@ -61,27 +78,40 @@ class MuiDeckCutter extends PureComponent {
     const { classes } = this.props;
     return (
       <div className={classes.wrapper}>
-        <input disabled={this.props.hasDoneCut} onChange={this.sliceDeck} defaultValue={cutIndex} type="range" min="0" max="51" style={{ width: '100%' }} />
+        <input 
+          onChange={this.sliceDeck}
+          defaultValue={cutIndex}
+          type="range"
+          min="0"
+          max="51"
+          style={{ width: '100%' }}
+          ref={(elem) => {this.input = elem}}
+        />
         {this.props.deck.map((card, i) => {
           const leftRightClass = i > cutIndex ? classes.left : classes.right;
           const cutClass = i === cutIndex ? classes.cut : '';
-          const zIndex = i > cutIndex ? (52 - i) : 'initial';
           const marginLeft = `${i * 2}px`;
           const shown = (card === (this.props.shownCuts[0] || {}).card || card === (this.props.shownCuts[1] || {}).card);
           return (
-            <div id="cardWrapper" onClick={() => this.flipCard(card)} key={card}>
+            <div 
+              id="cardWrapper"
+              key={card}
+              className={`${classes.cardWrapper} ${leftRightClass}`}
+            >
               <Paper
-                style={{ marginLeft, zIndex }}
-                className={`${classes.root} ${leftRightClass}`}
+                style={{ marginLeft }}
+                onClick={() => this.flipCard(card)}
+                className={`${classes.card}`}
                 elevation={4}
               />
               {shown &&
                 <Paper
-                  className={`${classes.root} ${leftRightClass}`}
+                  className={`${classes.card}`}
                   style={{
                     marginLeft,
+                    position: 'absolute',
+                    top: 0,
                     padding: 0,
-                    zIndex,
                   }}
                 >
                   <Card card={card} />

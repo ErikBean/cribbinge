@@ -1,68 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Snackbar from 'material-ui/Snackbar';
-import IconButton from 'material-ui/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 
-const styles = theme => ({
-  close: {
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4,
-  },
-});
+const styles = theme => {
+  return ({
+    root: theme.mixins.gutters({
+      paddingTop: 16,
+      paddingBottom: 16,
+      marginBottom: theme.spacing.unit * 3,
+      backgroundColor: theme.palette.secondary.main,
+    }),
+  })
+};
 
-class SimpleSnackbar extends React.Component {
-  state = {
-    open: true,
-  };
-
-  handleClick = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    this.setState({ open: false });
-  };
-
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.open}
-          onClose={this.handleClose}
-          SnackbarContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{this.props.message}</span>}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={this.handleClose}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-      </div>
-    );
-  }
+function InfoBar(props) {
+  const { classes } = props;
+  return (
+    <div>
+      <Paper className={classes.root} elevation={2}>
+        <Typography variant="headline" component="h3">
+          {props.mainMessage}
+        </Typography>
+        <Typography component="p">
+          {props.subMessage}
+        </Typography>
+      </Paper>
+    </div>
+  );
 }
 
-SimpleSnackbar.propTypes = {
+InfoBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleSnackbar);
+export default withStyles(styles)(InfoBar);

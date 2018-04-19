@@ -8,7 +8,7 @@ import CounterThing from './CounterThing';
 import Users from './Users';
 import Games from './Games';
 import AppBar from './AppBar';
-// import InfoBar from './InfoBar';
+import InfoBar from './InfoBar';
 
 import { needsOpponentSelector } from './util/projections';
 
@@ -87,8 +87,8 @@ export default class App extends Component {
     return (
       <React.Fragment>
         <CssBaseline />
-        <AppBar classes={{}} />
-        {/* <InfoBar /> */}
+        <AppBar />
+        {/* <InfoBar mainMessage={} /> */}
         <Users
           users={this.props.users || {}}
           needsOpponent={needsOpponentSelector(this.props.games, this.state.name)}
