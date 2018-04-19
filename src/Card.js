@@ -33,12 +33,13 @@ const Card = (props) => {
 Card.propTypes = {
   card: PropTypes.string.isRequired,
   faceDown: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   children: PropTypes.node,
 };
 Card.defaultProps = {
   faceDown: false,
   children: null,
+  onClick(){},
 };
 
 export default Card;

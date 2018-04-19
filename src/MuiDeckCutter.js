@@ -16,12 +16,10 @@ const styles = theme => ({
   root: theme.mixins.gutters({
     marginTop: theme.spacing.unit * 3,
     position: 'absolute',
-    paddingTop: 16,
-    paddingBottom: 16,
     display: 'inline-block',
     borderRadius: 5,
     transition: '0.5s',
-    width: '100px',
+    width: '140px',
     height: '200px',
     background: 'url(./src/svg-cards/ic_spa_black_24px.svg) no-repeat',
     backgroundPosition: 'center',
@@ -63,13 +61,13 @@ class MuiDeckCutter extends PureComponent {
     const { classes } = this.props;
     return (
       <div className={classes.wrapper}>
-        <input onChange={this.sliceDeck} defaultValue={cutIndex} type="range" min="0" max="51" style={{ width: '100%' }} />
+        <input disabled={this.props.hasDoneCut} onChange={this.sliceDeck} defaultValue={cutIndex} type="range" min="0" max="51" style={{ width: '100%' }} />
         {this.props.deck.map((card, i) => {
           const leftRightClass = i > cutIndex ? classes.left : classes.right;
           const cutClass = i === cutIndex ? classes.cut : '';
           const zIndex = i > cutIndex ? (52 - i) : 'initial';
           const marginLeft = `${i * 2}px`;
-          const shown = (card === this.props.shownCuts[0].card || card === this.props.shownCuts[1].card);
+          const shown = (card === (this.props.shownCuts[0] || {}).card || card === (this.props.shownCuts[1] || {}).card);
           return (
             <div id="cardWrapper" onClick={() => this.flipCard(card)} key={card}>
               <Paper
@@ -82,13 +80,11 @@ class MuiDeckCutter extends PureComponent {
                   className={`${classes.root} ${leftRightClass}`}
                   style={{
                     marginLeft,
+                    padding: 0,
                     zIndex,
-                    background: `url(./src/svg-cards/${getNumberOrFace(card)}_of_${getSuit(card)}.svg) no-repeat !important`,
-                    backgroundSize: 'contain !important',
-                    backgroundColor: 'red',
                   }}
                 >
-                  {card}
+                  <Card card={card} />
                 </Paper>
               }
             </div>
