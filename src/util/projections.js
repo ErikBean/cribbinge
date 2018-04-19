@@ -65,7 +65,7 @@ export const deckSelector = createSelector(
 export const opponentSelector = (gameId, currentUser) => {
   const [user1, user2] = gameId.split('-');
   return currentUser === user1 ? user2 : user1;
-}
+};
 
 export const needsOpponentSelector = (games, currentUser) => {
   if (games === null) return true;

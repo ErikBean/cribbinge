@@ -6,7 +6,7 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
-import DeckCutter from './DeckCutter';
+import MuiDeckCutter from './MuiDeckCutter';
 import InfoBar from './InfoBar';
 
 const styles = theme => ({
@@ -17,7 +17,9 @@ const styles = theme => ({
   }),
 });
 
-function Game({ gameEvents, addEvent, currentUser, gameId, classes }) {
+function Game({
+  gameEvents, addEvent, currentUser, gameId, classes,
+}) {
   const needsFirstCut = needsFirstCutSelector(gameEvents);
   const needsSecondCut = needsSecondCutSelector(gameEvents);
   const shownCuts = shownCutsSelector(gameEvents);
@@ -31,7 +33,7 @@ function Game({ gameEvents, addEvent, currentUser, gameId, classes }) {
     <Paper className={classes.root} elevation={4}>
       {/* <InfoBar message="Cut to see who gets the first crib" open/> */}
       {showCutter &&
-        <DeckCutter
+        <MuiDeckCutter
           hasDoneCut={hasDoneCut}
           onDeckCut={card => addEvent({ what: cutEventName, card })}
           opponent={opponent}
