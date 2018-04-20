@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
+import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import Slide from 'material-ui/transitions/Slide';
 
@@ -15,21 +16,25 @@ const styles = theme => ({
   },
   cardWrapper: {
     position: 'absolute',
-    width: '200px',
+    width: '140px',
     height: '200px',
     transition: '0.5s',
     marginTop: theme.spacing.unit * 3,
+    backgroundColor: 'green',
   },
   card: theme.mixins.gutters({
     borderRadius: 5,
-    width: '140px',
-    height: '200px',
+    height: '100%',
+    width: '100%',
     background: 'url(./src/svg-cards/ic_spa_black_24px.svg) no-repeat',
     backgroundPosition: 'center',
     backgroundColor: 'lightblue',
     backgroundSize: 'contain',
     transformStyle: 'preserve-3d',
   }),
+  cardPaper: {
+    height: '100%',
+  },
   left: {
     left: '5vw',
   },
@@ -54,10 +59,9 @@ class MuiDeckCutter extends PureComponent {
   componentDidUpdate(oldProps){
     if(this.props.remoteCutIndex, oldProps.remoteCutIndex){
       this.setState({
-        cutIndex: this.props.remoteCutIndex,
+        cutIndex: parseInt(this.props.remoteCutIndex),
       });
       this.input.value = this.props.remoteCutIndex;
-      console.log('>>> Here: ', this.input);
     }
   }
   sliceDeck = (e) => {
@@ -66,10 +70,8 @@ class MuiDeckCutter extends PureComponent {
   }
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);
-    const leftStackClicked = index === this.state.cutIndex + 1;
-    const rightStackClicked = index === this.state.cutIndex;
-    if (leftStackClicked || rightStackClicked) {
-      console.log('>>> flipped: ', card);
+    const leftStackClicked = index === this.state.cutIndex - 1;
+    if (leftStackClicked) {
       this.props.onDeckCut(card);
     }
   }
@@ -82,13 +84,13 @@ class MuiDeckCutter extends PureComponent {
           onChange={this.sliceDeck}
           defaultValue={cutIndex}
           type="range"
-          min="0"
+          min="1"
           max="51"
           style={{ width: '100%' }}
           ref={(elem) => {this.input = elem}}
         />
         {this.props.deck.map((card, i) => {
-          const leftRightClass = i > cutIndex ? classes.left : classes.right;
+          const leftRightClass = i < cutIndex ? classes.left : classes.right;
           const cutClass = i === cutIndex ? classes.cut : '';
           const marginLeft = `${i * 2}px`;
           const shown = (card === (this.props.shownCuts[0] || {}).card || card === (this.props.shownCuts[1] || {}).card);
@@ -97,24 +99,24 @@ class MuiDeckCutter extends PureComponent {
               id="cardWrapper"
               key={card}
               className={`${classes.cardWrapper} ${leftRightClass}`}
+              style={{ marginLeft }}
             >
               <Paper
-                style={{ marginLeft }}
-                onClick={() => this.flipCard(card)}
-                className={`${classes.card}`}
                 elevation={4}
-              />
+                className={classes.cardPaper}
+              >
+                <Button className={`${classes.card}`} onClick={() => this.flipCard(card)} />
+              </Paper>
               {shown &&
                 <Paper
-                  className={`${classes.card}`}
+                  className={`${classes.card} ${classes.cardPaper}`}
                   style={{
-                    marginLeft,
                     position: 'absolute',
                     top: 0,
                     padding: 0,
                   }}
                 >
-                  <Card card={card} />
+                  <Card card={card} className={classes.card}/>
                 </Paper>
               }
             </div>
