@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { connect } from 'react-firebase';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
@@ -18,40 +18,43 @@ const styles = theme => ({
   }),
 });
 
-function Game({
-  gameEvents, addEvent, currentUser, gameId, classes, changeIndex,
-  remoteCutIndex
-}) {
-  const needsFirstCut = needsFirstCutSelector(gameEvents);
-  const needsSecondCut = needsSecondCutSelector(gameEvents);
-  const shownCuts = shownCutsSelector(gameEvents);
-  const deck = deckSelector(gameEvents);
-  const opponent = opponentSelector(gameId, currentUser);
-  const messages = messageSelector(gameEvents, {currentUser}, opponent);
+class Game extends PureComponent {
+  render(){
+    const {
+      gameEvents, addEvent, currentUser, gameId, classes, changeIndex,
+      remoteCutIndex
+    } = this.props;
+    const needsFirstCut = needsFirstCutSelector(gameEvents);
+    const needsSecondCut = needsSecondCutSelector(gameEvents);
+    const shownCuts = shownCutsSelector(gameEvents);
+    const deck = deckSelector(gameEvents);
+    const opponent = opponentSelector(gameId, currentUser);
+    const messages = messageSelector(gameEvents, {currentUser}, opponent);
 
-  const showCutter = needsFirstCut || needsSecondCut || true;
-  const cutEventName = needsFirstCut ? 'first cut' : 'second cut';
-  const hasDoneCut = shownCuts.some(({ who }) => who === currentUser);
-  return (
-    <Paper className={classes.root} elevation={4}>
-      <InfoBar 
-        mainMessage={messages.mainMessage}
-        onConfirm={() => console.log('message confirmed!')}
-        subMessage={messages.subMessage}
-      />
-      {showCutter &&
-        <MuiDeckCutter
-          hasDoneCut={hasDoneCut}
-          shownCuts={shownCuts}
-          onDeckCut={card => addEvent({ what: cutEventName, card })}
-          onSliceDeck={index => changeIndex(index)}
-          opponent={opponent}
-          deck={deck}
-          remoteCutIndex={remoteCutIndex}
+    const showCutter = needsFirstCut || needsSecondCut || true;
+    const cutEventName = needsFirstCut ? 'first cut' : 'second cut';
+    const hasDoneCut = shownCuts.some(({ who }) => who === currentUser);
+    return (
+      <Paper className={classes.root} elevation={4}>
+        <InfoBar 
+          mainMessage={messages.mainMessage}
+          onConfirm={() => console.log('message confirmed!')}
+          subMessage={messages.subMessage}
         />
-      }
-    </Paper>
-  );
+        {showCutter &&
+          <MuiDeckCutter
+            hasDoneCut={hasDoneCut}
+            shownCuts={shownCuts}
+            onDeckCut={card => addEvent({ what: cutEventName, card })}
+            onSliceDeck={index => changeIndex(index)}
+            opponent={opponent}
+            deck={deck}
+            remoteCutIndex={remoteCutIndex}
+          />
+        }
+      </Paper>
+    );
+  }
 }
 
 Game.propTypes = {

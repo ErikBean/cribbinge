@@ -10,6 +10,16 @@ import { getNumberOrFace, getSuit } from './util/deck';
 import Card from './Card';
 
 const styles = theme => ({
+  flipContainer: {
+    perspective: '1000px',
+    height: '100%'
+  },
+  flipper: {
+    transition: '6s',
+    transformStyle: 'preserve-3d',
+    position: 'relative',
+    height: '100%',
+  },
   wrapper: {
     position: 'relative',
     height: '100vh',
@@ -20,7 +30,6 @@ const styles = theme => ({
     height: '200px',
     transition: '0.5s',
     marginTop: theme.spacing.unit * 3,
-    backgroundColor: 'green',
   },
   card: theme.mixins.gutters({
     borderRadius: 5,
@@ -30,10 +39,14 @@ const styles = theme => ({
     backgroundPosition: 'center',
     backgroundColor: 'lightblue',
     backgroundSize: 'contain',
-    transformStyle: 'preserve-3d',
   }),
   cardPaper: {
+    position: 'absolute',
+    top: 0,
+    padding: 0,
     height: '100%',
+    width: '100%',
+    backfaceVisibility: 'hidden',
   },
   left: {
     left: '5vw',
@@ -41,8 +54,12 @@ const styles = theme => ({
   right: {
     left: '50vw',
   },
-  cut: {
-    position: 'absolute'
+  cardBack: {
+    zIndex: 2,
+    transform: 'rotateY(0deg)',
+  },
+  cardFront: {
+    transform: 'rotateY(180deg)',
   }
 });
 
@@ -71,7 +88,7 @@ class MuiDeckCutter extends PureComponent {
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);
     const leftStackClicked = index === this.state.cutIndex - 1;
-    if (leftStackClicked) {
+    if (leftStackClicked && !this.props.hasDoneCut) {
       this.props.onDeckCut(card);
     }
   }
@@ -88,37 +105,37 @@ class MuiDeckCutter extends PureComponent {
           max="51"
           style={{ width: '100%' }}
           ref={(elem) => {this.input = elem}}
+          disabled={this.props.hasDoneCut}
         />
         {this.props.deck.map((card, i) => {
           const leftRightClass = i < cutIndex ? classes.left : classes.right;
-          const cutClass = i === cutIndex ? classes.cut : '';
           const marginLeft = `${i * 2}px`;
           const shown = (card === (this.props.shownCuts[0] || {}).card || card === (this.props.shownCuts[1] || {}).card);
+          const flipClass = shown ? classes.cardFront : '';
           return (
             <div 
               id="cardWrapper"
-              key={card}
               className={`${classes.cardWrapper} ${leftRightClass}`}
               style={{ marginLeft }}
+              key={card}
             >
-              <Paper
-                elevation={4}
-                className={classes.cardPaper}
-              >
-                <Button className={`${classes.card}`} onClick={() => this.flipCard(card)} />
-              </Paper>
-              {shown &&
-                <Paper
-                  className={`${classes.card} ${classes.cardPaper}`}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    padding: 0,
-                  }}
-                >
-                  <Card card={card} className={classes.card}/>
-                </Paper>
-              }
+              <div className={classes.flipContainer}>
+                <div className={`${classes.flipper} ${flipClass}`}>
+                  <Paper
+                    elevation={4}
+                    className={`${classes.cardPaper} ${classes.cardBack}`}
+                    style={{transform: 'rotateY(0deg)', zIndex: 2}}
+                  >
+                    <Button disabled={i !== (cutIndex -1)} className={`${classes.card}`} onClick={() => this.flipCard(card)} >&nbsp;</Button>
+                  </Paper>
+                  <Paper
+                    elevation={4}
+                    className={`${classes.cardPaper} ${classes.cardFront}`}
+                  >
+                    <Card card={card} className={classes.card}/>
+                  </Paper>
+                </div>
+              </div>
             </div>
           );
         })}
