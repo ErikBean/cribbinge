@@ -1,6 +1,10 @@
 import React, {PureComponent} from 'react';
-import { connect } from 'react-firebase';
 import PropTypes from 'prop-types';
+
+import { connect } from 'react-firebase';
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
@@ -30,29 +34,32 @@ class Game extends PureComponent {
     const deck = deckSelector(gameEvents);
     const opponent = opponentSelector(gameId, currentUser);
     const messages = messageSelector(gameEvents, {currentUser}, opponent);
-
+    // const gql = 
+    
     const showCutter = needsFirstCut || needsSecondCut || true;
     const cutEventName = needsFirstCut ? 'first cut' : 'second cut';
     const hasDoneCut = shownCuts.some(({ who }) => who === currentUser);
     return (
-      <Paper className={classes.root} elevation={4}>
-        <InfoBar 
-          mainMessage={messages.mainMessage}
-          onConfirm={() => console.log('message confirmed!')}
-          subMessage={messages.subMessage}
-        />
-        {showCutter &&
-          <MuiDeckCutter
-            hasDoneCut={hasDoneCut}
-            shownCuts={shownCuts}
-            onDeckCut={card => addEvent({ what: cutEventName, card })}
-            onSliceDeck={index => changeIndex(index)}
-            opponent={opponent}
-            deck={deck}
-            remoteCutIndex={remoteCutIndex}
-          />
+      <Query
+        query={gql`
+      {
+        posts {
+          title
         }
-      </Paper>
+      }
+    `}
+      >
+        {({ loading, error, data }) => {
+          if (loading) return <p>Loading...</p>;
+          if (error) return <p>Error :( {error.message}</p>;
+
+          return data.posts.map(({ title }) => (
+            <div key={title}>
+              <p>title: {title}</p>
+            </div>
+          ));
+        }}
+      </Query>
     );
   }
 }

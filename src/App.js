@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CssBaseline from 'material-ui/CssBaseline';
-import PropTypes from 'prop-types';
+
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from 'react-apollo';
+
 
 import CounterThing from './CounterThing';
 import Users from './Users';
@@ -11,6 +15,11 @@ import AppBar from './AppBar';
 import InfoBar from './InfoBar';
 
 import { needsOpponentSelector } from './util/projections';
+
+const client = new ApolloClient({
+  uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql",
+  credentials: true,
+});
 
 const config = {
   apiKey: 'AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg',
@@ -75,31 +84,28 @@ export default class App extends Component {
     this.props.startMatch(gameId);
   }
   render() {
-    if (!this.state.signedIn) {
-      return (
+    return (
+      <ApolloProvider client={client}>
         <React.Fragment>
           <CssBaseline />
-          <AppBar classes={{}} />
-          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+          <AppBar />
+          {!this.state.signedIn && <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />}
+          {this.state.signedIn && (
+            <div>
+              <Users
+                users={this.props.users || {}}
+                needsOpponent={needsOpponentSelector(this.props.games, this.state.name)}
+                userClicked={this.startMatch}
+              />
+              <Games
+                games={this.props.games || {}}
+                currentUser={this.state.name}
+              />
+            </div>
+          )}
+          <CounterThing />
         </React.Fragment>
-      );
-    }
-    return (
-      <React.Fragment>
-        <CssBaseline />
-        <AppBar />
-        {/* <InfoBar mainMessage={} /> */}
-        <Users
-          users={this.props.users || {}}
-          needsOpponent={needsOpponentSelector(this.props.games, this.state.name)}
-          userClicked={this.startMatch}
-        />
-        <Games
-          games={this.props.games || {}}
-          currentUser={this.state.name}
-        />
-        <CounterThing />
-      </React.Fragment>
+      </ApolloProvider>
     );
   }
 }

@@ -74,7 +74,7 @@ class MuiDeckCutter extends PureComponent {
     cutIndex: this.props.remoteCutIndex || 25,
   }
   componentDidUpdate(oldProps){
-    if(this.props.remoteCutIndex, oldProps.remoteCutIndex){
+    if(this.props.remoteCutIndex !== oldProps.remoteCutIndex){
       this.setState({
         cutIndex: parseInt(this.props.remoteCutIndex),
       });
@@ -126,7 +126,12 @@ class MuiDeckCutter extends PureComponent {
                     className={`${classes.cardPaper} ${classes.cardBack}`}
                     style={{transform: 'rotateY(0deg)', zIndex: 2}}
                   >
-                    <Button disabled={i !== (cutIndex -1)} className={`${classes.card}`} onClick={() => this.flipCard(card)} >&nbsp;</Button>
+                    <Button 
+                      disabled={i !== (cutIndex -1)} 
+                      className={`${classes.card}`} 
+                      onClick={() => this.flipCard(card)} >
+                      &nbsp;
+                    </Button>
                   </Paper>
                   <Paper
                     elevation={4}
