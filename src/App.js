@@ -17,7 +17,8 @@ import InfoBar from './InfoBar';
 import { needsOpponentSelector } from './util/projections';
 
 const client = new ApolloClient({
-  uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql",
+  // uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql", // serve from cloud function
+  uri: "http://localhost:5000/crabapple-f6555/us-central1/api/graphql", //serve locally
   credentials: true,
 });
 

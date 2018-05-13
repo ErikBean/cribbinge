@@ -34,7 +34,6 @@ class Game extends PureComponent {
     const deck = deckSelector(gameEvents);
     const opponent = opponentSelector(gameId, currentUser);
     const messages = messageSelector(gameEvents, {currentUser}, opponent);
-    // const gql = 
     
     const showCutter = needsFirstCut || needsSecondCut || true;
     const cutEventName = needsFirstCut ? 'first cut' : 'second cut';
@@ -43,8 +42,10 @@ class Game extends PureComponent {
       <Query
         query={gql`
       {
-        posts {
-          title
+        game(id: "${gameId}") {
+          events {
+            what
+          }
         }
       }
     `}
@@ -53,11 +54,7 @@ class Game extends PureComponent {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
 
-          return data.posts.map(({ title }) => (
-            <div key={title}>
-              <p>title: {title}</p>
-            </div>
-          ));
+          return JSON.stringify(data.game.events);
         }}
       </Query>
     );
