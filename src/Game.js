@@ -12,6 +12,7 @@ import { withStyles } from 'material-ui/styles';
 import { needsFirstCutSelector, needsSecondCutSelector, shownCutsSelector, deckSelector, opponentSelector } from './util/projections';
 import {messageSelector} from './util/projections/messages';
 import MuiDeckCutter from './MuiDeckCutter';
+import BeginGameCuts from './BeginGameCuts';
 import InfoBar from './InfoBar';
 
 const styles = theme => ({
@@ -23,29 +24,25 @@ const styles = theme => ({
 });
 
 class Game extends PureComponent {
+  cutForFirstCrib = (card) => {
+    this.props.addEvent({
+      card,
+      timestamp: Date.now(),
+      what: 'cut for first crib',
+      who: this.props.currentUser,
+    })
+  }
   render(){
-    const {
-      gameEvents, addEvent, currentUser, gameId, classes, changeIndex,
-      remoteCutIndex
-    } = this.props;
-    const needsFirstCut = needsFirstCutSelector(gameEvents);
-    const needsSecondCut = needsSecondCutSelector(gameEvents);
-    const shownCuts = shownCutsSelector(gameEvents);
-    const deck = deckSelector(gameEvents);
-    const opponent = opponentSelector(gameId, currentUser);
-    const messages = messageSelector(gameEvents, {currentUser}, opponent);
-    
-    const showCutter = needsFirstCut || needsSecondCut || true;
-    const cutEventName = needsFirstCut ? 'first cut' : 'second cut';
-    const hasDoneCut = shownCuts.some(({ who }) => who === currentUser);
+    const {currentUser, gameId } = this.props;
     return (
       <Query
+        pollInterval={10000}
         query={gql`
       {
         game(id: "${gameId}") {
-          events {
-            what
-          }
+          deck
+          shownCuts
+          hasCutForFirstCrib(userid: "${currentUser}")
         }
       }
     `}
@@ -53,8 +50,17 @@ class Game extends PureComponent {
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
-
-          return JSON.stringify(data.game.events);
+          return (
+            <div>
+              <MuiDeckCutter 
+                deck={data.game.deck} 
+                doCut={this.cutForFirstCrib}
+                shownCuts={data.game.shownCuts}
+                hasDoneCut={data.game.hasCutForFirstCrib}
+              />
+              <BeginGameCuts cuts={data.game.shownCuts}/>
+            </div>
+          );
         }}
       </Query>
     );
@@ -73,12 +79,6 @@ Game.defaultProps = {
 const StyledGame = withStyles(styles)(Game);
 
 export default connect((props, ref) => ({
-  addEvent: evt => ref(`games/${props.gameId}`).push({
-    timestamp: Date.now(),
-    who: props.currentUser,
-    ...evt,
-  }),
-  changeIndex: index => ref('cutIndex').set(index),
+  addEvent: evt => ref(`games/${props.gameId}`).push(evt),
   gameEvents: `games/${props.gameId}`,
-  remoteCutIndex: 'cutIndex',
 }))(StyledGame);

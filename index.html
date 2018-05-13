@@ -9,18 +9,6 @@
     <div id="root">
       replace me!
     </div>
-    <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/dist/serviceWorkers/worker.js', {scope: '/sw-test/'})
-        .then(function(reg) {
-          // registration worked
-          console.log('Registration succeeded. Scope is ' + reg.scope);
-        }).catch(function(error) {
-          // registration failed
-          console.log('Registration failed with ' + error);
-        });
-    }
-    </script>
     <script src="./dist/vendor.dll.js"></script>
     <script src="./webpackPublicPath/bundle.js"></script>
   </body>

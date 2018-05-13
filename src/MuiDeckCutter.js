@@ -22,7 +22,7 @@ const styles = theme => ({
   },
   wrapper: {
     position: 'relative',
-    height: '100vh',
+    height: '50vh',
   },
   cardWrapper: {
     position: 'absolute',
@@ -60,15 +60,19 @@ const styles = theme => ({
   },
   cardFront: {
     transform: 'rotateY(180deg)',
+    bottom: 0,
   }
 });
 
 class MuiDeckCutter extends PureComponent {
   static propTypes = {
-    onDeckCut: PropTypes.func.isRequired,
-    onSliceDeck: PropTypes.func.isRequired,
+    doCut: PropTypes.func.isRequired,
     hasDoneCut: PropTypes.bool.isRequired,
     deck: PropTypes.arrayOf(PropTypes.string).isRequired,
+    shownCuts: PropTypes.arrayOf(PropTypes.string)
+  }
+  static defaultProps = {
+    shownCuts: [],
   }
   state = {
     cutIndex: this.props.remoteCutIndex || 25,
@@ -83,13 +87,12 @@ class MuiDeckCutter extends PureComponent {
   }
   sliceDeck = (e) => {
     this.setState({ cutIndex: parseInt(e.target.value) });
-    this.props.onSliceDeck(e.target.value);
   }
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);
     const leftStackClicked = index === this.state.cutIndex - 1;
     if (leftStackClicked && !this.props.hasDoneCut) {
-      this.props.onDeckCut(card);
+      this.props.doCut(card);
     }
   }
   render() {
@@ -110,7 +113,7 @@ class MuiDeckCutter extends PureComponent {
         {this.props.deck.map((card, i) => {
           const leftRightClass = i < cutIndex ? classes.left : classes.right;
           const marginLeft = `${i * 2}px`;
-          const shown = (card === (this.props.shownCuts[0] || {}).card || card === (this.props.shownCuts[1] || {}).card);
+          const shown = this.props.shownCuts.indexOf(card) !== -1;
           const flipClass = shown ? classes.cardFront : '';
           return (
             <div 
