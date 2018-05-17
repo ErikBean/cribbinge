@@ -39,7 +39,7 @@ Card.propTypes = {
 Card.defaultProps = {
   faceDown: false,
   children: null,
-  onClick(){},
+  onClick() {},
 };
 
 export default Card;

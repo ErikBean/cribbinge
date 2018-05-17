@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import Slide from 'material-ui/transitions/Slide';
 
-import { getNumberOrFace, getSuit } from './util/deck';
 import Card from './Card';
 
 const styles = theme => ({
   flipContainer: {
     perspective: '1000px',
-    height: '100%'
+    height: '100%',
   },
   flipper: {
     transition: '6s',
@@ -61,32 +58,25 @@ const styles = theme => ({
   cardFront: {
     transform: 'rotateY(180deg)',
     bottom: 0,
-  }
+  },
 });
 
 class MuiDeckCutter extends PureComponent {
   static propTypes = {
+    deck: PropTypes.arrayOf(PropTypes.string).isRequired,
     doCut: PropTypes.func.isRequired,
     hasDoneCut: PropTypes.bool.isRequired,
-    deck: PropTypes.arrayOf(PropTypes.string).isRequired,
-    shownCuts: PropTypes.arrayOf(PropTypes.string)
+    shownCuts: PropTypes.arrayOf(PropTypes.string),
+    classes: PropTypes.shape({}).isRequired,
   }
   static defaultProps = {
     shownCuts: [],
   }
   state = {
-    cutIndex: this.props.remoteCutIndex || 25,
-  }
-  componentDidUpdate(oldProps){
-    if(this.props.remoteCutIndex !== oldProps.remoteCutIndex){
-      this.setState({
-        cutIndex: parseInt(this.props.remoteCutIndex),
-      });
-      this.input.value = this.props.remoteCutIndex;
-    }
+    cutIndex: 25,
   }
   sliceDeck = (e) => {
-    this.setState({ cutIndex: parseInt(e.target.value) });
+    this.setState({ cutIndex: parseInt(e.target.value, 10) });
   }
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);
@@ -100,14 +90,14 @@ class MuiDeckCutter extends PureComponent {
     const { classes } = this.props;
     return (
       <div className={classes.wrapper}>
-        <input 
+        <input
           onChange={this.sliceDeck}
           defaultValue={cutIndex}
           type="range"
           min="1"
           max="51"
           style={{ width: '100%' }}
-          ref={(elem) => {this.input = elem}}
+          ref={(elem) => { this.input = elem; }}
           disabled={this.props.hasDoneCut}
         />
         {this.props.deck.map((card, i) => {
@@ -116,7 +106,7 @@ class MuiDeckCutter extends PureComponent {
           const shown = this.props.shownCuts.indexOf(card) !== -1;
           const flipClass = shown ? classes.cardFront : '';
           return (
-            <div 
+            <div
               id="cardWrapper"
               className={`${classes.cardWrapper} ${leftRightClass}`}
               style={{ marginLeft }}
@@ -127,12 +117,13 @@ class MuiDeckCutter extends PureComponent {
                   <Paper
                     elevation={4}
                     className={`${classes.cardPaper} ${classes.cardBack}`}
-                    style={{transform: 'rotateY(0deg)', zIndex: 2}}
+                    style={{ transform: 'rotateY(0deg)', zIndex: 2 }}
                   >
-                    <Button 
-                      disabled={i !== (cutIndex -1)} 
-                      className={`${classes.card}`} 
-                      onClick={() => this.flipCard(card)} >
+                    <Button
+                      disabled={i !== (cutIndex - 1)}
+                      className={`${classes.card}`}
+                      onClick={() => this.flipCard(card)}
+                    >
                       &nbsp;
                     </Button>
                   </Paper>
@@ -140,7 +131,7 @@ class MuiDeckCutter extends PureComponent {
                     elevation={4}
                     className={`${classes.cardPaper} ${classes.cardFront}`}
                   >
-                    <Card card={card} className={classes.card}/>
+                    <Card card={card} className={classes.card} />
                   </Paper>
                 </div>
               </div>

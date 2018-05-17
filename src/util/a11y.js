@@ -1,5 +1,5 @@
 export default function a11yClick(onClick) {
-  return function (event) {
+  return function handleEvent(event) {
     if (event.type === 'click') {
       return onClick(event);
     } else if (event.type === 'keypress') {

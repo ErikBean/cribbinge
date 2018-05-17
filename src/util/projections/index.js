@@ -72,4 +72,3 @@ export const needsOpponentSelector = (games, currentUser) => {
   return !Object.keys(games).some(gameId => gameId.indexOf(currentUser !== -1));
 };
 
-

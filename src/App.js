@@ -4,21 +4,19 @@ import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CssBaseline from 'material-ui/CssBaseline';
 
-import ApolloClient from "apollo-boost";
+import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-
 
 import CounterThing from './CounterThing';
 import Users from './Users';
 import Games from './Games';
 import AppBar from './AppBar';
-import InfoBar from './InfoBar';
 
 import { needsOpponentSelector } from './util/projections';
 
 const client = new ApolloClient({
   // uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql", // serve from cloud function
-  uri: "http://localhost:5000/crabapple-f6555/us-central1/api/graphql", //serve locally
+  uri: 'http://localhost:5000/crabapple-f6555/us-central1/api/graphql', // serve locally
   credentials: true,
 });
 
@@ -90,9 +88,11 @@ export default class App extends Component {
         <React.Fragment>
           <CssBaseline />
           <AppBar />
-          {!this.state.signedIn && <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />}
-          {this.state.signedIn && (
-            <div>
+          {!this.state.signedIn &&
+            <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+          }
+          {this.state.signedIn &&
+            <React.Fragment>
               <Users
                 users={this.props.users || {}}
                 needsOpponent={needsOpponentSelector(this.props.games, this.state.name)}
@@ -102,8 +102,8 @@ export default class App extends Component {
                 games={this.props.games || {}}
                 currentUser={this.state.name}
               />
-            </div>
-          )}
+            </React.Fragment>
+          }
           <CounterThing />
         </React.Fragment>
       </ApolloProvider>
