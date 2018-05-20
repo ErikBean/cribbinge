@@ -8,6 +8,7 @@ import gql from 'graphql-tag';
 import { withStyles } from 'material-ui/styles';
 import MuiDeckCutter from './MuiDeckCutter';
 import BeginGameCuts from './BeginGameCuts';
+import SnackBar from './SnackBar';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -30,13 +31,13 @@ class Game extends PureComponent {
     const { currentUser, gameId } = this.props;
     return (
       <Query
-        pollInterval={10000}
         query={gql`
       {
         game(id: "${gameId}") {
           deck
           shownCuts
           hasCutForFirstCrib(userid: "${currentUser}")
+          wonFirstCrib(userid: "${currentUser}")
         }
       }
     `}
@@ -53,6 +54,7 @@ class Game extends PureComponent {
                 hasDoneCut={data.game.hasCutForFirstCrib}
               />
               <BeginGameCuts cuts={data.game.shownCuts} />
+              <SnackBar message={data.game.wonFirstCrib.toString()}/>
             </React.Fragment>
           );
         }}
@@ -66,7 +68,6 @@ Game.propTypes = {
   addEvent: PropTypes.func.isRequired,
   currentUser: PropTypes.string.isRequired,
 };
-
 
 const StyledGame = withStyles(styles)(Game);
 
