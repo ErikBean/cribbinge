@@ -39,7 +39,7 @@ class SimpleSnackbar extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleClick}>Open simple snackbar</Button>
+        <Button onClick={this.handleClick}>Show Info Message</Button>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',

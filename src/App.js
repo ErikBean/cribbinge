@@ -104,7 +104,7 @@ export default class App extends Component {
               />
             </React.Fragment>
           }
-          <CounterThing />
+          {/* <CounterThing /> */}
         </React.Fragment>
       </ApolloProvider>
     );

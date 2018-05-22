@@ -31,13 +31,21 @@ class Game extends PureComponent {
     const { currentUser, gameId } = this.props;
     return (
       <Query
+        pollInterval={10000}
         query={gql`
       {
         game(id: "${gameId}") {
           deck
+          cutsForFirstCrib{
+            first {
+              who
+            }
+            second {
+              who
+            }
+            winner
+          }
           shownCuts
-          hasCutForFirstCrib(userid: "${currentUser}")
-          wonFirstCrib(userid: "${currentUser}")
         }
       }
     `}
@@ -45,16 +53,20 @@ class Game extends PureComponent {
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
+          console.log('>>> game: ', data.game);
           return (
             <React.Fragment>
               <MuiDeckCutter
                 deck={data.game.deck}
                 doCut={this.cutForFirstCrib}
                 shownCuts={data.game.shownCuts}
-                hasDoneCut={data.game.hasCutForFirstCrib}
+                hasDoneCut={
+                  data.game.cutsForFirstCrib.first.who === currentUser || 
+                  data.game.cutsForFirstCrib.second.who === currentUser 
+                }
               />
               <BeginGameCuts cuts={data.game.shownCuts} />
-              <SnackBar message={data.game.wonFirstCrib.toString()}/>
+              <SnackBar message={data.game.cutsForFirstCrib.winner.toString()}/>
             </React.Fragment>
           );
         }}
