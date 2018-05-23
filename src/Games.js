@@ -13,7 +13,12 @@ export default function Games({ games, currentUser }) {
     <div>
       {playing &&
         Object.keys(playing).map(key => (
-          <Game key={key} gameId={key} currentUser={currentUser} />
+          <Game
+            key={key}
+            gameId={key}
+            currentUser={currentUser}
+            opponent={key.replace(currentUser, '').replace('-', '')}
+          />
         ))
       }
     </div>
