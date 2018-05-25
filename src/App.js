@@ -13,8 +13,6 @@ import Users from './Users';
 import Game from './Game';
 import AppBar from './AppBar';
 
-import { needsOpponentSelector } from './util/projections';
-
 const client = new ApolloClient({
   // uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql", // serve from cloud function
   uri: 'http://localhost:5000/crabapple-f6555/us-central1/api/graphql', // serve locally
@@ -42,7 +40,50 @@ export default class App extends Component {
     name: '', // current user's email before the @ sign
     signedIn: false, // Local signed-in state.
   }
-  
+
+  // Listen to the Firebase Auth state and set the local state.
+  componentWillMount() {
+    const activeGame = window.localStorage.getItem(LOCALSTORAGE_KEY);
+    if (activeGame) this.setState({ activeGame });
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+  }
+
+  onAuthStateChanged = (user) => {
+    this.setState({
+      signedIn: !!user,
+      name: user && user.email.split('@')[0],
+    });
+    if (user) {
+      this.props.addUser(user.email.split('@')[0]);
+    }
+  }
+
+  setActiveGame = (gameId) => {
+    if (gameId === this.state.activeGame) {
+      this.toggleDrawer();
+      return;
+    }
+    this.setState({
+      activeGame: gameId,
+    }, () => {
+      if (this.state.drawerOpen) this.toggleDrawer();
+      window.localStorage.setItem(LOCALSTORAGE_KEY, gameId);
+    });
+  }
+
+  toggleDrawer = () => {
+    this.setState({ drawerOpen: !this.state.drawerOpen });
+  }
+
+  startMatch = (withUser) => {
+    const gameId = `${this.state.name}-${withUser}`;
+    this.props.startMatch(gameId);
+    this.setActiveGame(gameId);
+  }
+
   // Configure FirebaseUI.
   uiConfig = {
     // Popup signin flow rather than redirect flow.
@@ -58,55 +99,15 @@ export default class App extends Component {
       signInSuccess: () => console.log('signed in!'),
     },
   }
-  
-  // Listen to the Firebase Auth state and set the local state.
-  componentWillMount() {
-    const activeGame = window.localStorage.getItem(LOCALSTORAGE_KEY);
-    if(activeGame) this.setState({ activeGame })
-  }
-  
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
-  }
-  
-  setActiveGame = (gameId) => {
-    if(gameId === this.state.activeGame) return this.toggleDrawer();
-    this.setState({
-      activeGame: gameId
-    }, () => {
-      if(this.state.drawerOpen) this.toggleDrawer();
-      window.localStorage.setItem(LOCALSTORAGE_KEY, gameId);
-    });
-  }
-  
-  onAuthStateChanged = (user) => {
-    this.setState({
-      signedIn: !!user,
-      name: user && user.email.split('@')[0],
-    });
-    if (user) {
-      this.props.addUser(user.email.split('@')[0]);
-    }
-  }
 
-  toggleDrawer = () => {
-    this.setState({drawerOpen: !this.state.drawerOpen})
-  }
-  
-  startMatch = (withUser) => {
-    const gameId = `${this.state.name}-${withUser}`;
-    this.props.startMatch(gameId);
-    this.setActiveGame(gameId);
-  }
-  
   render() {
     return (
       <ApolloProvider client={client}>
         <React.Fragment>
           <CssBaseline />
-          <AppBar onMenuClick={this.toggleDrawer}/>
+          <AppBar onMenuClick={this.toggleDrawer} />
           <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
-            <GamesList currentUser={this.state.name} setActiveGame={this.setActiveGame}/>
+            <GamesList currentUser={this.state.name} setActiveGame={this.setActiveGame} />
           </Drawer>
           {!this.state.signedIn &&
             <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
@@ -138,11 +139,9 @@ export default class App extends Component {
 App.propTypes = {
   addUser: PropTypes.func.isRequired,
   startMatch: PropTypes.func.isRequired,
-  games: PropTypes.shape({}),
   users: PropTypes.shape({}),
-}
+};
 
 App.defaultProps = {
-  games: {},
   users: {},
-}
+};

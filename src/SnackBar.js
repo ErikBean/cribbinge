@@ -15,7 +15,7 @@ const styles = theme => ({
     position: 'fixed',
     bottom: 0,
     right: '5vw',
-    backgroundColor: 'lightgreen'
+    backgroundColor: 'lightgreen',
   },
 });
 
@@ -35,9 +35,9 @@ class SimpleSnackbar extends React.Component {
 
     this.setState({ open: false });
   };
-  
+
   doAction = () => {
-    
+    this.setState({ open: false }, this.props.action);
   }
 
   render() {
@@ -45,7 +45,7 @@ class SimpleSnackbar extends React.Component {
 
     return (
       <div>
-        <Button 
+        <Button
           className={classes.showInfo}
           onClick={this.handleClick}
         >
@@ -92,13 +92,13 @@ class SimpleSnackbar extends React.Component {
 SimpleSnackbar.propTypes = {
   action: PropTypes.func,
   actionText: PropTypes.string,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape({}).isRequired,
   message: PropTypes.string.isRequired,
 };
 
 SimpleSnackbar.defaultProps = {
   action: () => {},
   actionText: '',
-}
+};
 
 export default withStyles(styles)(SimpleSnackbar);

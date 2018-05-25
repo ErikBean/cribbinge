@@ -1,16 +1,10 @@
-import React from 'react'
+import React from 'react';
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import GamesList from './GamesList';
 
-const styles = (theme) => ({
-  title: {
-    margin: theme.spacing.unit * 5,
-  }
-})
-function MuiDrawer ({open, toggleDrawer, classes, children}) {
+function MuiDrawer({
+  open, toggleDrawer, children,
+}) {
   return (
     <Drawer
       anchor="left"
@@ -22,4 +16,10 @@ function MuiDrawer ({open, toggleDrawer, classes, children}) {
   );
 }
 
-export default withStyles(styles)(MuiDrawer)
+MuiDrawer.propTypes = {
+  open: PropTypes.bool.isRequired,
+  toggleDrawer: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+export default MuiDrawer;

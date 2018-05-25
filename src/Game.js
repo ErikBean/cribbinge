@@ -21,7 +21,8 @@ class Game extends PureComponent {
     });
   }
   render() {
-    const { currentUser, gameId, opponent } = this.props;
+    const { currentUser, gameId } = this.props;
+    const opponent = gameId.replace(currentUser, '').replace('-', '');
     return (
       <Query
         pollInterval={10000}
@@ -54,7 +55,7 @@ class Game extends PureComponent {
               <Grid item sm={12} lg={6}>
                 <BeginGameCuts cuts={data.game.cutsForFirstCrib.shownCuts} />
               </Grid>
-              <SnackBar message={data.game.message}/>
+              <SnackBar message={data.game.message} />
             </Grid>
           );
         }}
