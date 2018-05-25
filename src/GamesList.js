@@ -13,18 +13,36 @@ import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
+const styles = (theme) => {
+  console.log('>>> theme: ', theme);
+  return {
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+    gutters: {
+      paddingRight: '50px',
+      paddingLeft: '50px',
+      [theme.breakpoints.between('xs', 'md')]: {
+        paddingRight: '20px',
+        paddingLeft: '20px',
+      },
+    },
+    active: {
+      fontWeight: 'bold',
+      color: theme.palette.text.primary,
+    },
+    nonactive: {
+      color: theme.palette.text.secondary,
+    },
+  };
+};
 
 
 class GamesList extends PureComponent {
   render() {
-    const { classes } = this.props;
+    const { classes, activeGame } = this.props;
     return (
       <Query
         query={gql`
@@ -45,25 +63,36 @@ class GamesList extends PureComponent {
           return (
             <div className={classes.root}>
               <List subheader={<ListSubheader component="div">Games</ListSubheader>}>
-                {data.games.map(game => (
-                  <React.Fragment key={game.id}>
-                    <ListItem
-                      button
-                      onClick={() => this.props.setActiveGame(game.id)}
-                    >
-
-                      <Avatar>
-                        <PersonIcon />
-                      </Avatar>
-                      <ListItemText primary={game.id} secondary="Jan 9, 2014" />
-                    </ListItem>
-                    <Divider />
-                  </React.Fragment>
-                 ))}
+                <Divider />
+                {data.games
+                  .filter(game => game.id.includes(this.props.currentUser))
+                  .map(game => (
+                    <React.Fragment key={game.id}>
+                      <ListItem
+                        button
+                        onClick={() => this.props.setActiveGame(game.id)}
+                        classes={{gutters: classes.gutters}}
+                      >
+                        <Avatar>
+                          <PersonIcon />
+                        </Avatar>
+                        <ListItemText
+                          primary={game.id}
+                          secondary="Jan 9, 2014"
+                          classes={
+                            game.id === activeGame
+                              ? { primary: classes.active }
+                              : { primary: classes.nonactive }
+                          }
+                        />
+                      </ListItem>
+                      <Divider />
+                    </React.Fragment>
+                  ))}
               </List>
             </div>
-         );
-       }}
+          );
+        }}
       </Query>
     );
   }
@@ -72,6 +101,10 @@ class GamesList extends PureComponent {
 GamesList.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   setActiveGame: PropTypes.func.isRequired,
+  activeGame: PropTypes.string,
+};
+GamesList.defaultProps = {
+  activeGame: '',
 };
 
 export default withStyles(styles)(GamesList);

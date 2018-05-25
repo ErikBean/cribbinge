@@ -63,15 +63,21 @@ export default class App extends Component {
 
   setActiveGame = (gameId) => {
     if (gameId === this.state.activeGame) {
-      this.toggleDrawer();
+      this.closeDrawer();
       return;
     }
     this.setState({
       activeGame: gameId,
     }, () => {
-      if (this.state.drawerOpen) this.toggleDrawer();
       window.localStorage.setItem(LOCALSTORAGE_KEY, gameId);
+      this.closeDrawer();
     });
+  }
+
+  closeDrawer = () => {
+    if (this.state.drawerOpen) {
+      this.toggleDrawer();
+    }
   }
 
   toggleDrawer = () => {
@@ -107,7 +113,11 @@ export default class App extends Component {
           <CssBaseline />
           <AppBar onMenuClick={this.toggleDrawer} />
           <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
-            <GamesList currentUser={this.state.name} setActiveGame={this.setActiveGame} />
+            <GamesList
+              currentUser={this.state.name}
+              setActiveGame={this.setActiveGame}
+              activeGame={this.state.activeGame}
+            />
           </Drawer>
           {!this.state.signedIn &&
             <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
