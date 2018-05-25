@@ -28,7 +28,12 @@ function ButtonAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+          <IconButton
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="Menu"
+            onClick={props.onMenuClick}
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="title" color="inherit" className={classes.flex}>
@@ -42,6 +47,7 @@ function ButtonAppBar(props) {
 }
 ButtonAppBar.propTypes = {
   classes: PropTypes.shape({}).isRequired,
+  onMenuClick: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ButtonAppBar);

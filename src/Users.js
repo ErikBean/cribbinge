@@ -19,10 +19,10 @@ const styles = theme => ({
 
 
 function Users({
-  users, userClicked, classes, needsOpponent,
+  users, userClicked, classes,
 }) {
   return (
-    <Dialog open={needsOpponent}>
+    <Dialog open>
       <DialogTitle id="simple-dialog-title">Select an Opponent</DialogTitle>
       <div className={classes.root}>
         <List>
@@ -52,7 +52,6 @@ Users.propTypes = {
   users: PropTypes.shape({}).isRequired,
   classes: PropTypes.shape({}).isRequired,
   userClicked: PropTypes.func.isRequired,
-  needsOpponent: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(Users);

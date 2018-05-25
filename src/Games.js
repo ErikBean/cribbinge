@@ -10,7 +10,7 @@ export default function Games({ games, currentUser }) {
       return acc;
     }, {});
   return (
-    <div>
+    <React.Fragment>
       {playing &&
         Object.keys(playing).map(key => (
           <Game
@@ -21,7 +21,7 @@ export default function Games({ games, currentUser }) {
           />
         ))
       }
-    </div>
+    </React.Fragment>
   );
 }
 

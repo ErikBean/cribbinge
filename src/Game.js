@@ -5,18 +5,11 @@ import { connect } from 'react-firebase';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { withStyles } from 'material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+
 import MuiDeckCutter from './MuiDeckCutter';
 import BeginGameCuts from './BeginGameCuts';
 import SnackBar from './SnackBar';
-
-const styles = theme => ({
-  root: theme.mixins.gutters({
-    paddingTop: 16,
-    paddingBottom: 16,
-    margin: theme.spacing.unit * 3,
-  }),
-});
 
 class Game extends PureComponent {
   cutForFirstCrib = (card) => {
@@ -49,16 +42,20 @@ class Game extends PureComponent {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
           return (
-            <React.Fragment>
-              <MuiDeckCutter
-                deck={data.game.deck}
-                doCut={this.cutForFirstCrib}
-                shownCuts={data.game.shownCuts}
-                hasDoneCut={data.game.cutsForFirstCrib.hasCutForFirstCrib}
-              />
-              <BeginGameCuts cuts={data.game.cutsForFirstCrib.shownCuts} />
+            <Grid container>
+              <Grid item sm={12} lg={6}>
+                <MuiDeckCutter
+                  deck={data.game.deck}
+                  doCut={this.cutForFirstCrib}
+                  shownCuts={data.game.shownCuts}
+                  hasDoneCut={data.game.cutsForFirstCrib.hasCutForFirstCrib}
+                />
+              </Grid>
+              <Grid item sm={12} lg={6}>
+                <BeginGameCuts cuts={data.game.cutsForFirstCrib.shownCuts} />
+              </Grid>
               <SnackBar message={data.game.message}/>
-            </React.Fragment>
+            </Grid>
           );
         }}
       </Query>
@@ -72,8 +69,6 @@ Game.propTypes = {
   currentUser: PropTypes.string.isRequired,
 };
 
-const StyledGame = withStyles(styles)(Game);
-
 export default connect((props, ref) => ({
   addEvent: evt => ref(`games/${props.gameId}`).push(evt),
-}))(StyledGame);
+}))(Game);

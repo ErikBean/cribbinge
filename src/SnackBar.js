@@ -11,6 +11,12 @@ const styles = theme => ({
     width: theme.spacing.unit * 4,
     height: theme.spacing.unit * 4,
   },
+  showInfo: {
+    position: 'fixed',
+    bottom: 0,
+    right: '5vw',
+    backgroundColor: 'lightgreen'
+  },
 });
 
 class SimpleSnackbar extends React.Component {
@@ -19,7 +25,7 @@ class SimpleSnackbar extends React.Component {
   };
 
   handleClick = () => {
-    this.setState({ open: true });
+    this.setState({ open: !this.state.open });
   };
 
   handleClose = (event, reason) => {
@@ -39,7 +45,12 @@ class SimpleSnackbar extends React.Component {
 
     return (
       <div>
-        <Button onClick={this.handleClick}>Show Info Message</Button>
+        <Button 
+          className={classes.showInfo}
+          onClick={this.handleClick}
+        >
+          Info Message
+        </Button>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',

@@ -49,7 +49,7 @@ const styles = theme => ({
     left: '5vw',
   },
   right: {
-    left: '50vw',
+    left: '25vw',
   },
   cardBack: {
     zIndex: 2,
@@ -102,7 +102,7 @@ class MuiDeckCutter extends PureComponent {
         />
         {this.props.deck.map((card, i) => {
           const leftRightClass = i < cutIndex ? classes.left : classes.right;
-          const marginLeft = `${i * 2}px`;
+          const marginLeft = `${i}px`;
           const shown = this.props.shownCuts.indexOf(card) !== -1;
           const flipClass = shown ? classes.cardFront : '';
           return (

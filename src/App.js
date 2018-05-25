@@ -7,9 +7,10 @@ import CssBaseline from 'material-ui/CssBaseline';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
-import CounterThing from './CounterThing';
+import Drawer from './Drawer';
+import GamesList from './GamesList';
 import Users from './Users';
-import Games from './Games';
+import Game from './Game';
 import AppBar from './AppBar';
 
 import { needsOpponentSelector } from './util/projections';
@@ -31,37 +32,17 @@ const config = {
 
 firebase.initializeApp(config);
 window.firebase = firebase;
+const LOCALSTORAGE_KEY = 'cribbagePatch.activeGame';
 
 export default class App extends Component {
-  static propTypes = {
-    addUser: PropTypes.func.isRequired,
-    startMatch: PropTypes.func.isRequired,
-    games: PropTypes.shape({}),
-    users: PropTypes.shape({}),
-  }
-  static defaultProps = {
-    games: {},
-    users: {},
-  }
   // The component's Local state.
   state = {
-    signedIn: false, // Local signed-in state.
+    activeGame: window.localStorage.getItem(LOCALSTORAGE_KEY),
+    drawerOpen: false,
     name: '', // current user's email before the @ sign
-  };
-  // Listen to the Firebase Auth state and set the local state.
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+    signedIn: false, // Local signed-in state.
   }
-
-  onAuthStateChanged = (user) => {
-    this.setState({
-      signedIn: !!user,
-      name: user && user.email.split('@')[0],
-    });
-    if (user) {
-      this.props.addUser(user.email.split('@')[0]);
-    }
-  }
+  
   // Configure FirebaseUI.
   uiConfig = {
     // Popup signin flow rather than redirect flow.
@@ -76,37 +57,92 @@ export default class App extends Component {
       // Avoid redirects after sign-in.
       signInSuccess: () => console.log('signed in!'),
     },
-  };
+  }
+  
+  // Listen to the Firebase Auth state and set the local state.
+  componentWillMount() {
+    const activeGame = window.localStorage.getItem(LOCALSTORAGE_KEY);
+    if(activeGame) this.setState({ activeGame })
+  }
+  
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+  }
+  
+  setActiveGame = (gameId) => {
+    if(gameId === this.state.activeGame) return this.toggleDrawer();
+    this.setState({
+      activeGame: gameId
+    }, () => {
+      if(this.state.drawerOpen) this.toggleDrawer();
+      window.localStorage.setItem(LOCALSTORAGE_KEY, gameId);
+    });
+  }
+  
+  onAuthStateChanged = (user) => {
+    this.setState({
+      signedIn: !!user,
+      name: user && user.email.split('@')[0],
+    });
+    if (user) {
+      this.props.addUser(user.email.split('@')[0]);
+    }
+  }
 
+  toggleDrawer = () => {
+    this.setState({drawerOpen: !this.state.drawerOpen})
+  }
+  
   startMatch = (withUser) => {
     const gameId = `${this.state.name}-${withUser}`;
     this.props.startMatch(gameId);
+    this.setActiveGame(gameId);
   }
+  
   render() {
     return (
       <ApolloProvider client={client}>
         <React.Fragment>
           <CssBaseline />
-          <AppBar />
+          <AppBar onMenuClick={this.toggleDrawer}/>
+          <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
+            <GamesList currentUser={this.state.name} setActiveGame={this.setActiveGame}/>
+          </Drawer>
           {!this.state.signedIn &&
             <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
           }
           {this.state.signedIn &&
             <React.Fragment>
-              <Users
-                users={this.props.users || {}}
-                needsOpponent={needsOpponentSelector(this.props.games, this.state.name)}
-                userClicked={this.startMatch}
-              />
-              <Games
-                games={this.props.games || {}}
-                currentUser={this.state.name}
-              />
+              {
+                this.state.activeGame
+                  ? (
+                    <Game
+                      gameId={this.state.activeGame}
+                      currentUser={this.state.name}
+                    />
+                  ) : (
+                    <Users
+                      users={this.props.users || {}}
+                      userClicked={this.startMatch}
+                    />
+                  )
+              }
             </React.Fragment>
           }
-          {/* <CounterThing /> */}
         </React.Fragment>
       </ApolloProvider>
     );
   }
+}
+
+App.propTypes = {
+  addUser: PropTypes.func.isRequired,
+  startMatch: PropTypes.func.isRequired,
+  games: PropTypes.shape({}),
+  users: PropTypes.shape({}),
+}
+
+App.defaultProps = {
+  games: {},
+  users: {},
 }
