@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import firebase from 'firebase';
 
 import Avatar from 'material-ui/Avatar';
 
@@ -28,7 +27,7 @@ function Users({
         <List>
           {
             Object.keys(users)
-            .filter(name => name !== firebase.auth().currentUser.email.split('@')[0])
+            .filter(name => name !== this.props.currentUser)
             .map(name => (
               <ListItem
                 key={name}

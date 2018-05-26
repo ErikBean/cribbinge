@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CssBaseline from 'material-ui/CssBaseline';
 
@@ -102,7 +104,7 @@ export default class App extends Component {
     ],
     callbacks: {
       // Avoid redirects after sign-in.
-      signInSuccess: () => console.log('signed in!'),
+      signInSuccessWithAuthResult: (result) => console.log('auth state:', result),
     },
   }
 
@@ -133,6 +135,7 @@ export default class App extends Component {
                     />
                   ) : (
                     <Users
+                      currentUser={this.state.name}
                       users={this.props.users || {}}
                       userClicked={this.startMatch}
                     />
