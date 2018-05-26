@@ -8,26 +8,24 @@ const Card = (props) => {
   if (!props.card) return (<span>???</span>);
   const value = getNumberOrFace(props.card);
   const suit = getSuit(props.card);
-  const bgSrc = props.faceDown ? 'url(./src/svg-cards/card_back.svg)' : `url(./src/svg-cards/${value}_of_${suit}.svg)`;
+  const bgSrc = props.faceDown ? './src/svg-cards/card_back.svg' : `./src/svg-cards/${value}_of_${suit}.svg`;
   const style = {
-    display: 'inline-block',
-    height: '200px',
     width: '140px',
-    background: `${bgSrc} no-repeat`,
-    backgroundSize: 'contain',
+    ...props.style,
   };
 
   return (
-    <div
+    <img
       style={style}
       role="button"
       tabIndex={0}
+      src={bgSrc}
       onClick={a11yClick(props.onClick)}
       onKeyPress={a11yClick(props.onClick)}
       data-qa={`card-${props.card}`}
     >
       {props.children}
-    </div>
+    </img>
   );
 };
 

@@ -34,9 +34,18 @@ class Game extends PureComponent {
     });
   }
   renderDiscardStage = () => (
-    <Grid item xs={12} style={{position: 'fixed', bottom: '150px'}}>
-      <Hand cards={this.props.hand}/>
-    </Grid>
+    <React.Fragment>
+      <Grid
+        item
+        xs={12}
+        style={{
+          paddingTop: '100px',
+          minWidth:'850px'
+        }}
+      >
+        <Hand cards={this.props.hand}/>
+      </Grid>
+    </React.Fragment>
   )
   renderBeginGameStage = () => (
     <React.Fragment>
