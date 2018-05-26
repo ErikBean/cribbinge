@@ -18,19 +18,24 @@ const styles = theme => ({
   }),
   button: {
     // margin: theme.spacing.unit,
-  }
+  },
 });
 
 function GameControls(props) {
-  const { classes, message, actionText, action } = props;
+  const {
+    classes, message, actionText, action,
+  } = props;
   return (
     <Paper className={classes.root} elevation={4}>
       <Typography variant="headline" component="h3">
         {message}
       </Typography>
-      {actionText && 
+      {actionText &&
         <Button
-          variant="raised" color="primary" aria-label="add" size="large"
+          variant="raised"
+          color="primary"
+          aria-label="add"
+          size="large"
           onClick={action}
           className={classes.button}
         >
@@ -42,7 +47,16 @@ function GameControls(props) {
 }
 
 GameControls.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape({}).isRequired,
+  action: PropTypes.func,
+  actionText: PropTypes.string,
+  message: PropTypes.string,
+};
+
+GameControls.defaultProps = {
+  action() {},
+  actionText: '',
+  message: '',
 };
 
 export default withStyles(styles)(GameControls);

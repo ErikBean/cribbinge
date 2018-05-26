@@ -2,21 +2,15 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-firebase';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import Grid from '@material-ui/core/Grid';
 
-import {getMessage, getActionText} from './util/messages';
 import { createDeck, shuffle } from './util/deck';
 
 import MuiDeckCutter from './MuiDeckCutter';
 import BeginGameCuts from './BeginGameCuts';
-import GameControls from './GameControls';
-import SnackBar from './SnackBar';
 
 class Game extends PureComponent {
-  opponent = this.props.gameId.replace(this.props.currentUser, '').replace('-', '')
   cutForFirstCrib = (card) => {
     this.props.addEvent({
       card,
@@ -28,79 +22,52 @@ class Game extends PureComponent {
   deal = () => {
     const deck = shuffle(createDeck());
     this.props.addEvent({
-      cards:{
-        [this.opponent]: deck.slice(0,6),
-        [this.props.currentUser]: deck.slice(6,12),
+      cards: {
+        [this.props.opponent]: deck.slice(0, 6),
+        [this.props.currentUser]: deck.slice(6, 12),
       },
       timestamp: Date.now(),
       what: 'deal round 1',
       who: this.props.currentUser,
     });
   }
-  renderBeginGameStage(data){
+  renderBeginGameStage() {
     return (
       <React.Fragment>
         <Grid item sm={12} lg={6}>
           <MuiDeckCutter
-            deck={data.game.deck}
+            deck={this.props.deck}
             doCut={this.cutForFirstCrib}
-            shownCuts={data.game.shownCuts}
-            hasDoneCut={data.game.cutsForFirstCrib.hasCutForFirstCrib}
+            shownCuts={this.props.cutsForFirstCrib.shownCuts}
+            hasDoneCut={this.props.cutsForFirstCrib.hasCutForFirstCrib}
           />
         </Grid>
         <Grid item sm={12} lg={6}>
-          <BeginGameCuts cuts={data.game.cutsForFirstCrib.shownCuts} />
+          <BeginGameCuts cuts={this.props.cutsForFirstCrib.shownCuts} />
         </Grid>
       </React.Fragment>
-    )
+    );
   }
   render() {
-    const { currentUser, gameId } = this.props;
-    // const opponent = ;
     return (
-      <Query
-        pollInterval={10000}
-        query={gql`
-      {
-        game(id: "${gameId}") {
-          deck
-          stage
-          cutsForFirstCrib {
-            hasCutForFirstCrib(userid: "${currentUser}")
-            shownCuts
-            winner
-          }
-        }
-      }
-    `}
-      >
-        {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>;
-          if (error) return <p>Error :( {error.message}</p>;
-          const message = getMessage(data.game, {currentUser, opponent: this.opponent})
-          return (
-            <Grid container>
-              {data.game.stage === 0 && this.renderBeginGameStage(data)}
-              {/* <SnackBar message={data.game.message} /> */}
-              <Grid item sm={12}>
-                <GameControls
-                  message={message.text}
-                  actionText={message.actionText}
-                  action={this[message.action]}
-                />
-              </Grid>
-            </Grid>
-          );
-        }}
-      </Query>
+      <Grid container>
+        {this.props.stage === 0 && this.renderBeginGameStage()}
+      </Grid>
     );
   }
 }
 
 Game.propTypes = {
-  gameId: PropTypes.string.isRequired,
+  gameId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
   addEvent: PropTypes.func.isRequired,
   currentUser: PropTypes.string.isRequired,
+  cutsForFirstCrib: PropTypes.shape({
+    shownCuts: PropTypes.arrayOf(PropTypes.string).isRequired,
+    hasCutForFirstCrib: PropTypes.bool.isRequired,
+  }).isRequired,
+  opponent: PropTypes.string.isRequired,
+  deck: PropTypes.arrayOf(PropTypes.string).isRequired,
+  stage: PropTypes.number.isRequired,
 };
 
 export default connect((props, ref) => ({

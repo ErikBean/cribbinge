@@ -71,7 +71,7 @@ class GamesList extends PureComponent {
                       <ListItem
                         button
                         onClick={() => this.props.setActiveGame(game.id)}
-                        classes={{gutters: classes.gutters}}
+                        classes={{ gutters: classes.gutters }}
                       >
                         <Avatar>
                           <PersonIcon />
@@ -102,6 +102,7 @@ GamesList.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   setActiveGame: PropTypes.func.isRequired,
   activeGame: PropTypes.string,
+  currentUser: PropTypes.string.isRequired,
 };
 GamesList.defaultProps = {
   activeGame: '',

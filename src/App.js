@@ -12,7 +12,7 @@ import { ApolloProvider } from 'react-apollo';
 import Drawer from './Drawer';
 import GamesList from './GamesList';
 import Users from './Users';
-import Game from './Game';
+import GameQuery from './GameQuery';
 import AppBar from './AppBar';
 
 const client = new ApolloClient({
@@ -104,7 +104,7 @@ export default class App extends Component {
     ],
     callbacks: {
       // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: (result) => console.log('auth state:', result),
+      signInSuccessWithAuthResult: result => console.log('auth state:', result),
     },
   }
 
@@ -129,7 +129,7 @@ export default class App extends Component {
               {
                 this.state.activeGame
                   ? (
-                    <Game
+                    <GameQuery
                       gameId={this.state.activeGame}
                       currentUser={this.state.name}
                     />
