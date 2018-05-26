@@ -35,23 +35,19 @@ export default class GameQuery extends PureComponent {
           if (error) return <p>Error :( {error.message}</p>;
           const message = getMessage(data.game, { currentUser, opponent });
           return (
-            <Grid container>
-              <Grid item sm={12}>
-                <Game
-                  gameId={gameId}
-                  currentUser={currentUser}
-                  opponent={opponent}
-                  {...data.game}
-                />
-              </Grid>
-              <Grid item sm={12}>
+            <Game
+              gameId={gameId}
+              currentUser={currentUser}
+              opponent={opponent}
+              controls={(actions) => (
                 <GameControls
                   message={message.text}
                   actionText={message.actionText}
-                  action={this[message.action]}
+                  action={actions[message.action]}
                 />
-              </Grid>
-            </Grid>
+              )}
+              {...data.game}
+            />
           );
         }}
       </Query>

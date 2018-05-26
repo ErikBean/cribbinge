@@ -48,10 +48,17 @@ class Game extends PureComponent {
       </React.Fragment>
     );
   }
+  actions = {
+    cutForFirstCrib: this.cutForFirstCrib,
+    deal: this.deal,
+  }
   render() {
     return (
       <Grid container>
         {this.props.stage === 0 && this.renderBeginGameStage()}
+        <Grid item xs={12}>
+          {this.props.controls(this.actions)}
+        </Grid>
       </Grid>
     );
   }
