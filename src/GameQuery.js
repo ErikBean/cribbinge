@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Grid from '@material-ui/core/Grid';
 import { getMessage } from './util/messages';
 import Game from './Game';
 import GameControls from './GameControls';
@@ -26,6 +25,7 @@ export default class GameQuery extends PureComponent {
             shownCuts
             winner
           }
+          hand(userid: "${currentUser}")
         }
       }
     `}
@@ -39,7 +39,7 @@ export default class GameQuery extends PureComponent {
               gameId={gameId}
               currentUser={currentUser}
               opponent={opponent}
-              controls={(actions) => (
+              controls={actions => (
                 <GameControls
                   message={message.text}
                   actionText={message.actionText}

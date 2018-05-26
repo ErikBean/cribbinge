@@ -10,6 +10,7 @@ const Card = (props) => {
   const suit = getSuit(props.card);
   const bgSrc = props.faceDown ? 'url(./src/svg-cards/card_back.svg)' : `url(./src/svg-cards/${value}_of_${suit}.svg)`;
   const style = {
+    display: 'inline-block',
     height: '200px',
     width: '140px',
     background: `${bgSrc} no-repeat`,

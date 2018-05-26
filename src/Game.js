@@ -9,14 +9,18 @@ import { createDeck, shuffle } from './util/deck';
 
 import MuiDeckCutter from './MuiDeckCutter';
 import BeginGameCuts from './BeginGameCuts';
+import Hand from './Hand';
 
 class Game extends PureComponent {
+  actions = {
+    cutForFirstCrib: this.cutForFirstCrib,
+    deal: this.deal,
+  }
+
   cutForFirstCrib = (card) => {
     this.props.addEvent({
       card,
-      timestamp: Date.now(),
       what: 'cut for first crib',
-      who: this.props.currentUser,
     });
   }
   deal = () => {
@@ -26,36 +30,43 @@ class Game extends PureComponent {
         [this.props.opponent]: deck.slice(0, 6),
         [this.props.currentUser]: deck.slice(6, 12),
       },
-      timestamp: Date.now(),
       what: 'deal round 1',
-      who: this.props.currentUser,
     });
   }
-  renderBeginGameStage() {
-    return (
-      <React.Fragment>
-        <Grid item sm={12} lg={6}>
-          <MuiDeckCutter
-            deck={this.props.deck}
-            doCut={this.cutForFirstCrib}
-            shownCuts={this.props.cutsForFirstCrib.shownCuts}
-            hasDoneCut={this.props.cutsForFirstCrib.hasCutForFirstCrib}
-          />
-        </Grid>
-        <Grid item sm={12} lg={6}>
-          <BeginGameCuts cuts={this.props.cutsForFirstCrib.shownCuts} />
-        </Grid>
-      </React.Fragment>
-    );
-  }
-  actions = {
-    cutForFirstCrib: this.cutForFirstCrib,
-    deal: this.deal,
+  renderDiscardStage = () => (
+    <Grid item xs={12} style={{position: 'fixed', bottom: '150px'}}>
+      <Hand cards={this.props.hand}/>
+    </Grid>
+  )
+  renderBeginGameStage = () => (
+    <React.Fragment>
+      <Grid item sm={12} lg={6}>
+        <MuiDeckCutter
+          deck={this.props.deck}
+          doCut={this.cutForFirstCrib}
+          shownCuts={this.props.cutsForFirstCrib.shownCuts}
+          hasDoneCut={this.props.cutsForFirstCrib.hasCutForFirstCrib}
+        />
+      </Grid>
+      <Grid item sm={12} lg={6}>
+        <BeginGameCuts cuts={this.props.cutsForFirstCrib.shownCuts} />
+      </Grid>
+    </React.Fragment>
+  )
+  renderGameStage(stage){
+    switch(stage){
+      case 0:
+        return this.renderBeginGameStage();
+      case 1:
+        return this.renderDiscardStage();
+      default: 
+        return 'Not sure whats happening'
+    }
   }
   render() {
     return (
       <Grid container>
-        {this.props.stage === 0 && this.renderBeginGameStage()}
+        {this.renderGameStage(this.props.stage)}
         <Grid item xs={12}>
           {this.props.controls(this.actions)}
         </Grid>
@@ -65,18 +76,24 @@ class Game extends PureComponent {
 }
 
 Game.propTypes = {
-  gameId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
   addEvent: PropTypes.func.isRequired,
+  controls: PropTypes.func.isRequired,
   currentUser: PropTypes.string.isRequired,
   cutsForFirstCrib: PropTypes.shape({
     shownCuts: PropTypes.arrayOf(PropTypes.string).isRequired,
     hasCutForFirstCrib: PropTypes.bool.isRequired,
   }).isRequired,
-  opponent: PropTypes.string.isRequired,
   deck: PropTypes.arrayOf(PropTypes.string).isRequired,
+  gameId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
+  hand: PropTypes.arrayOf(PropTypes.string).isRequired,
+  opponent: PropTypes.string.isRequired,
   stage: PropTypes.number.isRequired,
 };
 
 export default connect((props, ref) => ({
-  addEvent: evt => ref(`games/${props.gameId}`).push(evt),
+  addEvent: evt => ref(`games/${props.gameId}`).push({
+    timestamp: Date.now(),
+    who: props.currentUser,
+    ...evt,
+  }),
 }))(Game);
