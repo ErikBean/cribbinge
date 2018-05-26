@@ -37,7 +37,7 @@ const LOCALSTORAGE_KEY = 'cribbagePatch.activeGame';
 export default class App extends Component {
   // The component's Local state.
   state = {
-    activeGame: window.localStorage.getItem(LOCALSTORAGE_KEY),
+    activeGame: window.localStorage.getItem(LOCALSTORAGE_KEY) || '',
     drawerOpen: false,
     name: '', // current user's email before the @ sign
     signedIn: false, // Local signed-in state.
