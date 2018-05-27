@@ -12,10 +12,14 @@ import BeginGameCuts from './BeginGameCuts';
 import Hand from './Hand';
 
 class Game extends PureComponent {
-  actions = {
+  state = {
+    selectedCards: [],
+  }
+  actions = () => ({
     cutForFirstCrib: this.cutForFirstCrib,
     deal: this.deal,
-  }
+    discard: this.discard,
+  })
 
   cutForFirstCrib = (card) => {
     this.props.addEvent({
@@ -33,6 +37,23 @@ class Game extends PureComponent {
       what: 'deal round 1',
     });
   }
+  discard = (cards = this.state.selectedCards) => {
+    if (!cards || cards.length < 2) {
+      window.alert('Please select two cards');
+      return;
+    }
+    this.props.addEvent({
+      cards,
+      what: 'discard',
+    });
+  }
+  playPegCard = ([card]) => {
+    if (!this.state.selectedCards.includes(card)) { // select before playing
+      this.setState({ selectedCards: [card] });
+    } else {
+      console.log('wanna peg: ', card);
+    }
+  }
   renderDiscardStage = () => (
     <React.Fragment>
       <Grid
@@ -40,10 +61,27 @@ class Game extends PureComponent {
         xs={12}
         style={{
           paddingTop: '100px',
-          minWidth:'850px'
         }}
       >
-        <Hand cards={this.props.hand}/>
+        <Hand
+          {...this.props.hand}
+          onCardClick={cards => this.setState({ selectedCards: cards })}
+          selectable={2}
+        />
+      </Grid>
+    </React.Fragment>
+  )
+  renderPeggingStage = () => (
+    <React.Fragment>
+      <Grid
+        item
+        xs={12}
+      >
+        <Hand
+          {...this.props.hand}
+          onCardClick={this.playPegCard}
+          selectable={1}
+        />
       </Grid>
     </React.Fragment>
   )
@@ -62,14 +100,16 @@ class Game extends PureComponent {
       </Grid>
     </React.Fragment>
   )
-  renderGameStage(stage){
-    switch(stage){
+  renderGameStage(stage) {
+    switch (stage) {
       case 0:
         return this.renderBeginGameStage();
       case 1:
         return this.renderDiscardStage();
-      default: 
-        return 'Not sure whats happening'
+      case 2:
+        return this.renderPeggingStage();
+      default:
+        return 'Not sure whats happening';
     }
   }
   render() {
@@ -77,7 +117,7 @@ class Game extends PureComponent {
       <Grid container>
         {this.renderGameStage(this.props.stage)}
         <Grid item xs={12}>
-          {this.props.controls(this.actions)}
+          {this.props.controls(this.actions())}
         </Grid>
       </Grid>
     );
@@ -94,7 +134,10 @@ Game.propTypes = {
   }).isRequired,
   deck: PropTypes.arrayOf(PropTypes.string).isRequired,
   gameId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
-  hand: PropTypes.arrayOf(PropTypes.string).isRequired,
+  hand: PropTypes.shape({
+    cards: PropTypes.arrayOf(PropTypes.string).isRequired,
+    hasDiscarded: PropTypes.bool.isRequired,
+  }).isRequired,
   opponent: PropTypes.string.isRequired,
   stage: PropTypes.number.isRequired,
 };

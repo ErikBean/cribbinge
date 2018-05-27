@@ -25,7 +25,14 @@ export default class GameQuery extends PureComponent {
             shownCuts
             winner
           }
-          hand(userid: "${currentUser}")
+          hand(userid: "${currentUser}") {
+            cards
+            hasDiscarded
+          }
+          crib {
+            cards
+            hasAllCards
+          }
         }
       }
     `}
@@ -45,7 +52,7 @@ export default class GameQuery extends PureComponent {
                   actionText={message.actionText}
                   action={actions[message.action]}
                 />
-              )}
+                )}
               {...data.game}
             />
           );

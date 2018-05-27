@@ -131,7 +131,7 @@ class MuiDeckCutter extends PureComponent {
                     elevation={4}
                     className={`${classes.cardPaper} ${classes.cardFront}`}
                   >
-                    <Card card={card} className={classes.card} />
+                    <Card style={{ width: '100%' }} card={card} className={classes.card} />
                   </Paper>
                 </div>
               </div>
