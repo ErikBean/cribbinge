@@ -4,10 +4,6 @@ import { connect } from 'react-firebase';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-// import { withClientState } from 'apollo-link-state';
-
-// import { Mutation } from 'react-apollo';
-
 class GameUpdater extends Component {
   componentDidUpdate(){
     const {gameEvents, apolloClient} = this.props;
@@ -15,7 +11,7 @@ class GameUpdater extends Component {
     
     this.props.mutate({
       variables: {
-        gameId: this.props.gameId,
+        gameid: this.props.gameId,
         game: gameEvents,
       }
     })

@@ -26,19 +26,43 @@ const client = new ApolloClient({
       fame: {
         status: 'barrrr',
         __typename: 'Foo'
-      }
+      },
+      doop: { fluff: 'you', __typename: 'Event'},
+      games: {
+        __typename: 'Games'
+      },
+      activeGame: {},
     },
     resolvers: {
       Query: {
         foo(_, __, { cache }) {
           return 'bar'
-          // return cache.readQuery(gql``);
+        },
+        cacheGame(_, {id}, {cache}){
+          const naan = cache.readQuery({
+            query: gql`
+              query GetTodos {
+                games
+              }
+            `
+          })
+          console.log('>>> naan? : ', naan);
+          return naan.games;
         }
       },
       Mutation: {
-        updateGame(_, { gameId, game }, { cache }) {
-          console.log('>>> Mutation: ', {...arguments});
-          // cache.writeData({ data: {fame: {status: 'bar'}}});
+        updateGame(_, { gameid, game }, { cache }) {
+          if(game && gameid) {
+            console.log('>>> mutate!: ', );
+            cache.writeData({
+               data: {
+                 games: {
+                   [gameid]: game,
+                   __typename: 'Games',
+                 }
+               }
+             });
+          }
           return {
             status: 'mutation done?',
             __typename: 'GameUpdate'
