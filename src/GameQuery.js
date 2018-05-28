@@ -34,12 +34,15 @@ export default class GameQuery extends PureComponent {
             hasAllCards
           }
         }
+        foo @client
       }
     `}
       >
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
+          console.log('>>> foo?: ', data.foo);
+          if(!data.game) return <p>No game data</p>;
           const message = getMessage(data.game, { currentUser, opponent });
           return (
             <Game
@@ -52,7 +55,7 @@ export default class GameQuery extends PureComponent {
                   actionText={message.actionText}
                   action={actions[message.action]}
                 />
-                )}
+              )}
               {...data.game}
             />
           );

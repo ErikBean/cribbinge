@@ -33,6 +33,7 @@ class Game extends PureComponent {
       cards: {
         [this.props.opponent]: deck.slice(0, 6),
         [this.props.currentUser]: deck.slice(6, 12),
+        __typename: 'Hands',
       },
       what: 'deal round 1',
     });
@@ -146,6 +147,7 @@ export default connect((props, ref) => ({
   addEvent: evt => ref(`games/${props.gameId}`).push({
     timestamp: Date.now(),
     who: props.currentUser,
+    __typename: 'Event',
     ...evt,
   }),
 }))(Game);

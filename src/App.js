@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import firebase from 'firebase/app';
+import gql from 'graphql-tag';
 import 'firebase/auth';
 
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -9,17 +10,46 @@ import CssBaseline from 'material-ui/CssBaseline';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
-import Drawer from './Drawer';
-import GamesList from './GamesList';
-import Users from './Users';
-import GameQuery from './GameQuery';
 import AppBar from './AppBar';
+import Drawer from './Drawer';
+import GameQuery from './GameQuery';
+import GamesList from './GamesList';
+import GameUpdater from './GameUpdater';
+import Users from './Users';
 
 const client = new ApolloClient({
   // uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql", // serve from cloud function
   uri: 'http://localhost:5000/crabapple-f6555/us-central1/api/graphql', // serve locally
   credentials: true,
+  clientState: {
+    defaults: {
+      fame: {
+        status: 'barrrr',
+        __typename: 'Foo'
+      }
+    },
+    resolvers: {
+      Query: {
+        foo(_, __, { cache }) {
+          return 'bar'
+          // return cache.readQuery(gql``);
+        }
+      },
+      Mutation: {
+        updateGame(_, { gameId, game }, { cache }) {
+          console.log('>>> Mutation: ', {...arguments});
+          // cache.writeData({ data: {fame: {status: 'bar'}}});
+          return {
+            status: 'mutation done?',
+            __typename: 'GameUpdate'
+          };
+        }
+      }
+    }
+  },
 });
+
+window.ac = client;
 
 const config = {
   apiKey: 'AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg',
@@ -113,6 +143,7 @@ export default class App extends Component {
       <ApolloProvider client={client}>
         <React.Fragment>
           <CssBaseline />
+          <GameUpdater gameId={this.state.activeGame} apolloClient={client}/>
           <AppBar onMenuClick={this.toggleDrawer} />
           <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
             <GamesList
