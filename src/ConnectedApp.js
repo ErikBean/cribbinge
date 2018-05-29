@@ -9,5 +9,6 @@ export default connect((props, ref) => ({
     what: 'start',
     timestamp: Date.now(),
     deck: JSON.stringify(shuffle(createDeck())),
+    __typename: 'Event',
   }),
 }))(App);
