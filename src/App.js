@@ -95,7 +95,7 @@ export default class App extends Component {
 
   startMatch = (withUser) => {
     const gameId = `${this.state.name}-${withUser}`;
-    this.props.startMatch(gameId);
+    this.props.startMatch(gameId, this.state.name);
     this.setActiveGame(gameId);
   }
 

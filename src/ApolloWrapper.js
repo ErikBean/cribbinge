@@ -31,10 +31,10 @@ class ApolloWrapper extends PureComponent {
   componentDidUpdate(){
     this.update();
   }
-  update(){    
+  update(){
     const {events} = this.props;
     if(events){
-      console.log('>>> I updated!: ', events);      
+      console.log('>>> I updated!: ', events);
       const data = { gameEvents: Object.values(events) };
       client.writeData({ data });
     }

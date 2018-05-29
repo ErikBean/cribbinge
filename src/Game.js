@@ -23,7 +23,7 @@ class Game extends PureComponent {
 
   cutForFirstCrib = (card) => {
     this.props.addEvent({
-      card,
+      cards: [card],
       what: 'cut for first crib',
     });
   }

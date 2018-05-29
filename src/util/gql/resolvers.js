@@ -1,4 +1,6 @@
 import gql from 'graphql-tag';
+import {getDeck, getStage} from './resolverHelpers'
+import {getFirstCuts} from './resolverHelpers/firstCrib'
 
 export const defaults = {
   todos: [],
@@ -9,13 +11,34 @@ export const defaults = {
 let nextTodoId = 0;
 
 export const resolvers = {
-  // Query: {
-  //   gameEvents(_, __, { cache }){}
-  // }
+  Query: {
+    game2(_, {id}, { cache }) {
+      const query = gql`{
+        gameEvents {
+          timestamp
+          what
+          who
+          cards
+        }
+      }`
+      const events = cache.readQuery({ query }).gameEvents;
+      return {
+        id,
+        events,
+        deck: getDeck(events),
+        stage: getStage(events),
+        cutsForFirstCrib: getFirstCuts(events),
+        __typename: 'Game'
+      };
+    }
+  },
+  CutsInfo: {
+    hasCutForFirstCrib(cuts, {userid}){
+      console.log('cuts! ', cuts, userid);
+      return false;
+    }
+  },
   Mutation: {
-    addGameEvent(_, { gameEvent }, { cache }){
-      // cache.writeData({ data: { visibilityFilter: 'FUCK' }})
-    },
     addTodo: (_, { text }, { cache }) => {
       const query = gql`
         query GetTodos {

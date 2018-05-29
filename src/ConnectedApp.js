@@ -5,10 +5,11 @@ import { createDeck, shuffle } from './util/deck';
 export default connect((props, ref) => ({
   users: 'users',
   addUser: value => ref(`users/${value}/online`).set('true'),
-  startMatch: gameId => ref(`games/${gameId}`).push({
-    what: 'start',
-    timestamp: Date.now(),
-    deck: JSON.stringify(shuffle(createDeck())),
+  startMatch: (gameId, name) => ref(`games/${gameId}`).push({
     __typename: 'Event',
+    cards: shuffle(createDeck()),
+    timestamp: Date.now(),
+    what: 'start',
+    who: name,
   }),
 }))(App);

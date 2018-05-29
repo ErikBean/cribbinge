@@ -14,7 +14,7 @@ export default class GameQuery extends PureComponent {
     const opponent = gameId.replace(this.props.currentUser, '').replace('-', '');
     return (
       <Query
-        pollInterval={5000}
+        pollInterval={10000}
         query={gql`
       {
         game(id: "${gameId}") {
@@ -34,18 +34,24 @@ export default class GameQuery extends PureComponent {
             hasAllCards
           }
         }
-        todos @client
-        visibilityFilter @client
-        gameEvents @client {
-          timestamp
+        game2(id: "${gameId}") @client {
+          id
+          deck
+          stage
+          cutsForFirstCrib {
+            hasCutForFirstCrib(userid: "${currentUser}")
+            first
+            second
+          }
         }
+        visibilityFilter @client
       }
     `}
       >
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
-          console.log('>>> foo?: ', data.visibilityFilter, data.todos, data.gameEvents);
+          console.log('>>> foo?: ', data.game2);
           if(!data.game) return <p>No game data</p>;
           const message = getMessage(data.game, { currentUser, opponent });
           return (
