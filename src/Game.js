@@ -38,7 +38,8 @@ class Game extends PureComponent {
       what: 'deal round 1',
     });
   }
-  discard = (cards = this.state.selectedCards) => {
+  discard = () => {
+    const cards = this.state.selectedCards;
     if (!cards || cards.length < 2) {
       window.alert('Please select two cards');
       return;
@@ -67,7 +68,7 @@ class Game extends PureComponent {
         <Hand
           {...this.props.hand}
           onCardClick={cards => this.setState({ selectedCards: cards })}
-          selectable={2}
+          numSelectable={2}
         />
       </Grid>
     </React.Fragment>
@@ -81,7 +82,7 @@ class Game extends PureComponent {
         <Hand
           {...this.props.hand}
           onCardClick={this.playPegCard}
-          selectable={1}
+          numSelectable={1}
         />
       </Grid>
     </React.Fragment>

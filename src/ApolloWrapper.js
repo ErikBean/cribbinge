@@ -54,11 +54,10 @@ export default connect(props => ({
 
 ApolloWrapper.propTypes = {
   gameId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
-  events: PropTypes.arrayOf(PropTypes.shape({
-    cards: PropTypes.arrayOf(PropTypes.string).isRequired,
-    timestamp: PropTypes.number,
-    what: PropTypes.string.isRequired,
-    who: PropTypes.string.isRequired,
-  })).isRequired,
+  events: PropTypes.shape({}),
   children: PropTypes.node.isRequired,
 };
+
+ApolloWrapper.defaultProps = {
+  events: {}
+}

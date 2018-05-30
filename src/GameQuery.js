@@ -40,8 +40,8 @@ export default class GameQuery extends PureComponent {
           stage
           cutsForFirstCrib {
             hasCutForFirstCrib(userid: "${currentUser}")
-            first
-            second
+            shownCuts
+            winner
           }
         }
         visibilityFilter @client

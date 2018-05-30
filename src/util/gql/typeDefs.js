@@ -21,8 +21,6 @@ const typeDefs = `
   }
   
   type CutsInfo {
-    first: Cut
-    second: Cut
     winner: String
     hasCutForFirstCrib(userid: String!): Boolean!
     shownCuts: [String!]

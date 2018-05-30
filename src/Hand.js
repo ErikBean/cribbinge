@@ -25,6 +25,7 @@ class Hand extends PureComponent {
   onCardClick = (card) => {
     const { numSelectable } = this.props;
     const sliceAt = numSelectable > 0 ? numSelectable - 1 : 0;
+    console.log('>>> Here: ', sliceAt, numSelectable, this.state.selected);
     return this.setState({
       selected: [
         card,

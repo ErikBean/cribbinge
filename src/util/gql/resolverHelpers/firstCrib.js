@@ -2,21 +2,6 @@ const { createSelector } = require('reselect');
 const { sortByTimeSelector } = require('./index');
 const { valueOf } = require('../../deck');
 
-export const getFirstCut = (cuts) => {
-  if (!cuts.length) {
-    return null;
-  }
-  return sortByTimeSelector(cuts).pop();
-};
-
-export const getSecondCut = (cuts) => {
-  // what if there is only 1 cut ?
-  if (cuts.length < 2) {
-    return null;
-  }
-  return sortByTimeSelector(cuts).reverse().pop();
-};
-
 export const getFirstCuts = (gameEvents) => {
   const cutEvents = gameEvents.filter(evt => evt.what === 'cut for first crib');
   return {
@@ -26,18 +11,32 @@ export const getFirstCuts = (gameEvents) => {
   };
 };
 
-export const hasCutForFirstCrib = (cuts, { userid }) => cuts
-  .map(cut => cut.who === userid)
-  .reduce((acc, curr) => acc || curr, false);
+export const getFirstCut = (cuts) => {
+  return cuts.first && cuts.first.cards[0];
+};
 
-export const getFirstCribWinner = createSelector(
-  [getFirstCut, getSecondCut],
+export const getSecondCut = (cuts) => {
+  return cuts.second && cuts.second.cards[0];
+};
+
+export const getShownCuts = createSelector(
+  getFirstCut,
+  getSecondCut,
   (firstCut, secondCut) => {
-    if (!firstCut || !secondCut) return false;
-    const isFirstLower = valueOf(firstCut.cards[0]) < valueOf(secondCut.cards[0]);
-    if (valueOf(firstCut.cards[0]) === valueOf(secondCut.cards[0])) return 'TIE!';
-    else if (isFirstLower) return firstCut.who;
-    return secondCut.who;
-  },
-);
+    return [firstCut, secondCut]
+  }
+)
+
+export const hasCutForFirstCrib = (cuts, { userid }) => {
+  const {first, second} = cuts;
+  return (first && first.who) === userid || (second && second.who) === userid;
+}
+
+export const getFirstCribWinner = ({first: firstCut, second: secondCut}) => {
+  if (!firstCut || !secondCut) return false;
+  const isFirstLower = valueOf(firstCut.cards[0]) < valueOf(secondCut.cards[0]);
+  if (valueOf(firstCut.cards[0]) === valueOf(secondCut.cards[0])) return 'TIE!';
+  else if (isFirstLower) return firstCut.who;
+  return secondCut.who;
+};
 

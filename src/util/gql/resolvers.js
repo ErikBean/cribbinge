@@ -1,6 +1,11 @@
 import gql from 'graphql-tag';
 import { getDeck, getStage } from './resolverHelpers';
-import { getFirstCuts } from './resolverHelpers/firstCrib';
+import {
+  getFirstCuts,
+  hasCutForFirstCrib,
+  getShownCuts,
+  getFirstCribWinner
+} from './resolverHelpers/firstCrib';
 
 export const defaults = {
   todos: [],
@@ -34,9 +39,14 @@ export const resolvers = {
   },
   CutsInfo: {
     hasCutForFirstCrib(cuts, { userid }) {
-      console.log('cuts! ', cuts, userid);
-      return false;
+      return hasCutForFirstCrib(cuts, {userid});
     },
+    shownCuts(cuts){
+      return getShownCuts(cuts);
+    },
+    winner(cuts){
+      return getFirstCribWinner(cuts);
+    }
   },
   Mutation: {
     addTodo: (_, { text }, { cache }) => {
