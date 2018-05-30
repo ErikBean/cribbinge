@@ -36,13 +36,14 @@
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1",
+    "webpack": "4.10.2",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "3.1.4",
     "webpack-manifest-plugin": "^2.0.2"
   },
   "dependencies": {
     "@material-ui/core": "1.1.0",
-    "@material-ui/icons": "^1.0.0-rc.0",
+    "@material-ui/icons": "1.1.0",
     "apollo-boost": "0.1.7",
     "firebase": "5.0.4",
     "graphql": "^0.13.2",

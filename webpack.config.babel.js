@@ -10,7 +10,7 @@ module.exports = (env) => {
       publicPath: '/webpackPublicPath'
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.(js)$/,
           loader: 'babel-loader',
@@ -21,6 +21,7 @@ module.exports = (env) => {
         },
       ]
     },
+    mode: 'development',
     devtool: 'inline-source-map',
     plugins: [
       new webpack.DllReferencePlugin({

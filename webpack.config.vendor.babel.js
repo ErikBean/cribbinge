@@ -19,6 +19,7 @@ module.exports = {
       'reselect',
     ]
   },
+  mode: 'development',
   output: {
     filename: 'vendor.dll.js',
     path: path.resolve(__dirname, 'dist'),
