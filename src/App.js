@@ -1,32 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import firebase from 'firebase/app';
-import gql from 'graphql-tag';
 import 'firebase/auth';
 
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CssBaseline from 'material-ui/CssBaseline';
-
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from 'react-apollo';
 
 import ApolloWrapper from './ApolloWrapper';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
 import GameQuery from './GameQuery';
 import GamesList from './GamesList';
-import GameUpdater from './GameUpdater';
 import Users from './Users';
-
-
-const client = new ApolloClient({
-  // uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql", // serve from cloud function
-  uri: 'http://localhost:5000/crabapple-f6555/us-central1/api/graphql', // serve locally
-  credentials: true,
-  clientState: {
-    
-  },
-});
 
 const config = {
   apiKey: 'AIzaSyAifgF5ZKTGRN3MJQ2CjWEgcyGJZ3O28Tg',
@@ -117,23 +102,22 @@ export default class App extends Component {
 
   render() {
     return (
-        <React.Fragment>
-          <CssBaseline />
-          {/* <GameUpdater gameId={this.state.activeGame} apolloClient={client}/> */}
-          <AppBar onMenuClick={this.toggleDrawer} />
-          {!this.state.signedIn &&
-            <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar onMenuClick={this.toggleDrawer} />
+        {!this.state.signedIn &&
+        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
           }
-          {this.state.signedIn &&
-            <ApolloWrapper gameId={this.state.activeGame}>
-              <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
-                <GamesList
-                  currentUser={this.state.name}
-                  setActiveGame={this.setActiveGame}
-                  activeGame={this.state.activeGame}
-                />
-              </Drawer>
-              {
+        {this.state.signedIn &&
+        <ApolloWrapper gameId={this.state.activeGame}>
+          <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
+            <GamesList
+              currentUser={this.state.name}
+              setActiveGame={this.setActiveGame}
+              activeGame={this.state.activeGame}
+            />
+          </Drawer>
+          {
                 this.state.activeGame
                   ? (
                     <GameQuery
@@ -148,10 +132,10 @@ export default class App extends Component {
                     />
                   )
               }
-            </ApolloWrapper>
+        </ApolloWrapper>
           }
-        </React.Fragment>
-        );
+      </React.Fragment>
+    );
   }
 }
 

@@ -52,7 +52,7 @@ export default class GameQuery extends PureComponent {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
           console.log('>>> foo?: ', data.game2);
-          if(!data.game) return <p>No game data</p>;
+          if (!data.game) return <p>No game data</p>;
           const message = getMessage(data.game, { currentUser, opponent });
           return (
             <Game

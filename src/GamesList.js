@@ -13,31 +13,28 @@ import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 
-const styles = (theme) => {
-  console.log('>>> theme: ', theme);
-  return {
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
+const styles = theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+  gutters: {
+    paddingRight: '50px',
+    paddingLeft: '50px',
+    [theme.breakpoints.between('xs', 'md')]: {
+      paddingRight: '20px',
+      paddingLeft: '20px',
     },
-    gutters: {
-      paddingRight: '50px',
-      paddingLeft: '50px',
-      [theme.breakpoints.between('xs', 'md')]: {
-        paddingRight: '20px',
-        paddingLeft: '20px',
-      },
-    },
-    active: {
-      fontWeight: 'bold',
-      color: theme.palette.text.primary,
-    },
-    nonactive: {
-      color: theme.palette.text.secondary,
-    },
-  };
-};
+  },
+  active: {
+    fontWeight: 'bold',
+    color: theme.palette.text.primary,
+  },
+  nonactive: {
+    color: theme.palette.text.secondary,
+  },
+});
 
 
 class GamesList extends PureComponent {

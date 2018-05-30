@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import {getDeck, getStage} from './resolverHelpers'
-import {getFirstCuts} from './resolverHelpers/firstCrib'
+import { getDeck, getStage } from './resolverHelpers';
+import { getFirstCuts } from './resolverHelpers/firstCrib';
 
 export const defaults = {
   todos: [],
@@ -8,11 +8,11 @@ export const defaults = {
   gameEvents: [],
 };
 
-let nextTodoId = 0;
+const nextTodoId = 0;
 
 export const resolvers = {
   Query: {
-    game2(_, {id}, { cache }) {
+    game2(_, { id }, { cache }) {
       const query = gql`{
         gameEvents {
           timestamp
@@ -20,7 +20,7 @@ export const resolvers = {
           who
           cards
         }
-      }`
+      }`;
       const events = cache.readQuery({ query }).gameEvents;
       return {
         id,
@@ -28,15 +28,15 @@ export const resolvers = {
         deck: getDeck(events),
         stage: getStage(events),
         cutsForFirstCrib: getFirstCuts(events),
-        __typename: 'Game'
+        __typename: 'Game',
       };
-    }
+    },
   },
   CutsInfo: {
-    hasCutForFirstCrib(cuts, {userid}){
+    hasCutForFirstCrib(cuts, { userid }) {
       console.log('cuts! ', cuts, userid);
       return false;
-    }
+    },
   },
   Mutation: {
     addTodo: (_, { text }, { cache }) => {
@@ -51,7 +51,7 @@ export const resolvers = {
       `;
       const previous = cache.readQuery({ query });
       const newTodo = {
-        id: nextTodoId++,
+        id: nextTodoId + 1,
         text,
         completed: false,
         __typename: 'TodoItem',

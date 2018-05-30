@@ -1,6 +1,5 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
 
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
@@ -9,7 +8,7 @@ import { connect } from 'react-firebase';
 import {
   defaults,
   resolvers,
-  typeDefs
+  typeDefs,
 } from './util/gql';
 
 const client = new ApolloClient({
@@ -19,27 +18,26 @@ const client = new ApolloClient({
   clientState: {
     defaults,
     resolvers,
-    typeDefs
+    typeDefs,
   },
 });
 window.ac = client;
 
 class ApolloWrapper extends PureComponent {
-  componentDidMount(){
+  componentDidMount() {
     this.update();
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     this.update();
   }
-  update(){
-    const {events} = this.props;
-    if(events){
-      console.log('>>> I updated!: ', events);
+  update() {
+    const { events } = this.props;
+    if (events) {
       const data = { gameEvents: Object.values(events) };
       client.writeData({ data });
     }
   }
-  render(){
+  render() {
     return (
       <ApolloProvider client={client}>
         <React.Fragment>
@@ -50,6 +48,17 @@ class ApolloWrapper extends PureComponent {
   }
 }
 
-export default connect((props, ref) => ({
-  events: `games/${props.gameId}`
+export default connect(props => ({
+  events: `games/${props.gameId}`,
 }))(ApolloWrapper);
+
+ApolloWrapper.propTypes = {
+  gameId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
+  events: PropTypes.arrayOf(PropTypes.shape({
+    cards: PropTypes.arrayOf(PropTypes.string).isRequired,
+    timestamp: PropTypes.number,
+    what: PropTypes.string.isRequired,
+    who: PropTypes.string.isRequired,
+  })).isRequired,
+  children: PropTypes.node.isRequired,
+};
