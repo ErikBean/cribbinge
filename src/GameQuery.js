@@ -43,6 +43,10 @@ export default class GameQuery extends PureComponent {
             shownCuts
             winner
           }
+          hand(userid: "${currentUser}"){
+            cards
+            hasDiscarded
+          }
         }
         visibilityFilter @client
       }

@@ -59,5 +59,5 @@ ApolloWrapper.propTypes = {
 };
 
 ApolloWrapper.defaultProps = {
-  events: {}
-}
+  events: {},
+};

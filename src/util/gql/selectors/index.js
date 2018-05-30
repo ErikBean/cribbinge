@@ -26,7 +26,7 @@ const lastEventSelector = createSelector(
 );
 
 
-const getEventsForCurrentRound = createSelector(
+export const getEventsForCurrentRound = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
     const dealEvent = Array.from(sortedEvents).reverse()

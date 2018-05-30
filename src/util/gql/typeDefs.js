@@ -18,6 +18,12 @@ const typeDefs = `
     stage: Int!
     events: [Event]!
     cutsForFirstCrib: CutsInfo
+    hand(userid: String!): Hand
+  }
+  
+  type Hand {
+    cards: [String]
+    hasDiscarded: Boolean
   }
   
   type CutsInfo {

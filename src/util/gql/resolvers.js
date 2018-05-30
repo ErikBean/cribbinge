@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
-import { getDeck, getStage } from './resolverHelpers';
+import { getDeck, getStage } from './selectors';
 import {
   getFirstCuts,
   hasCutForFirstCrib,
   getShownCuts,
-  getFirstCribWinner
-} from './resolverHelpers/firstCrib';
+  getFirstCribWinner,
+} from './selectors/firstCrib';
+import { getHand } from './selectors/hand';
 
 export const defaults = {
   todos: [],
@@ -33,20 +34,25 @@ export const resolvers = {
         deck: getDeck(events),
         stage: getStage(events),
         cutsForFirstCrib: getFirstCuts(events),
-        __typename: 'Game',
+        __typename: 'Game2',
       };
     },
   },
+  Game2: {
+    hand(game, {userid}){
+      return getHand(game.events, {userid});
+    }
+  },
   CutsInfo: {
     hasCutForFirstCrib(cuts, { userid }) {
-      return hasCutForFirstCrib(cuts, {userid});
+      return hasCutForFirstCrib(cuts, { userid });
     },
-    shownCuts(cuts){
+    shownCuts(cuts) {
       return getShownCuts(cuts);
     },
-    winner(cuts){
+    winner(cuts) {
       return getFirstCribWinner(cuts);
-    }
+    },
   },
   Mutation: {
     addTodo: (_, { text }, { cache }) => {
