@@ -5,10 +5,18 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
     vendor: [
+      '@material-ui/core',
+      '@material-ui/icons',
+      'apollo-boost',
       'firebase',
+      'material-ui',
+      'react-apollo',
       'react-dom',
+      'react-firebase',
+      'react-firebaseui/StyledFirebaseAuth',
+      'react-hot-loader',
       'react',
-      'react-firebaseui/StyledFirebaseAuth'
+      'reselect',
     ]
   },
   output: {

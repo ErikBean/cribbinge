@@ -89,6 +89,10 @@
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@firebase/app-types/-/app-types-0.3.1.tgz#df4e79c38f759e606a421e866cecb7da4577b606"
 
+"@firebase/app-types@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@firebase/app-types/-/app-types-0.3.2.tgz#a92dc544290e2893bd8c02a81e684dae3d8e7c85"
+
 "@firebase/app@0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@firebase/app/-/app-0.3.2.tgz#863a5558ee796e55ce90bd9bef8ee66ef6a96e6f"
@@ -99,9 +103,23 @@
     tslib "1.9.0"
     xmlhttprequest "1.8.0"
 
+"@firebase/app@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@firebase/app/-/app-0.3.3.tgz#cb8df89495e4409e92ab30c0068b9e0641a6db81"
+  dependencies:
+    "@firebase/app-types" "0.3.2"
+    "@firebase/util" "0.2.1"
+    dom-storage "2.1.0"
+    tslib "1.9.0"
+    xmlhttprequest "1.8.0"
+
 "@firebase/auth-types@0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.3.2.tgz#fc636084eb82cb098e4e76efc5fffd315e22abdd"
+
+"@firebase/auth-types@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.3.3.tgz#950a68bdae1e1e37ece054ff69ee0082c5ecabab"
 
 "@firebase/auth@0.5.2":
   version "0.5.2"
@@ -109,9 +127,19 @@
   dependencies:
     "@firebase/auth-types" "0.3.2"
 
+"@firebase/auth@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@firebase/auth/-/auth-0.5.3.tgz#4f0d83cd5a7c173d3a7a06f904bb1084acd8a0c4"
+  dependencies:
+    "@firebase/auth-types" "0.3.3"
+
 "@firebase/database-types@0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@firebase/database-types/-/database-types-0.3.1.tgz#4a15423f3b2cb3bed111f5a353c5c1bb2e2787ba"
+
+"@firebase/database-types@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@firebase/database-types/-/database-types-0.3.2.tgz#70611a64dd460e0e253c7427f860d56a1afd86fe"
 
 "@firebase/database@0.3.2":
   version "0.3.2"
@@ -123,9 +151,23 @@
     faye-websocket "0.11.1"
     tslib "1.9.0"
 
+"@firebase/database@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@firebase/database/-/database-0.3.3.tgz#01123d4e0f8cb020e685ead27d795ef8794b2991"
+  dependencies:
+    "@firebase/database-types" "0.3.2"
+    "@firebase/logger" "0.1.1"
+    "@firebase/util" "0.2.1"
+    faye-websocket "0.11.1"
+    tslib "1.9.0"
+
 "@firebase/firestore-types@0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-0.4.2.tgz#6b5b25063b48a283923a15a36a2df7a513e186f8"
+
+"@firebase/firestore-types@0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-0.4.3.tgz#0baa4f68aa8889474f582320af577f1e9a78fab6"
 
 "@firebase/firestore@0.5.3":
   version "0.5.3"
@@ -137,9 +179,23 @@
     grpc "1.11.3"
     tslib "1.9.0"
 
+"@firebase/firestore@0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@firebase/firestore/-/firestore-0.5.4.tgz#26f67fa038ffd74ef849019728c59d4a5590a324"
+  dependencies:
+    "@firebase/firestore-types" "0.4.3"
+    "@firebase/logger" "0.1.1"
+    "@firebase/webchannel-wrapper" "0.2.8"
+    grpc "1.11.3"
+    tslib "1.9.0"
+
 "@firebase/functions-types@0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@firebase/functions-types/-/functions-types-0.1.2.tgz#f291b2945218a97d9ab0e20f2fdec2cef6f90f94"
+
+"@firebase/functions-types@0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@firebase/functions-types/-/functions-types-0.1.3.tgz#17bc08a51f92b4eb5d1498f18b363f6c0e3a2df8"
 
 "@firebase/functions@0.2.3":
   version "0.2.3"
@@ -149,6 +205,15 @@
     "@firebase/messaging-types" "0.2.2"
     isomorphic-fetch "2.2.1"
 
+"@firebase/functions@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@firebase/functions/-/functions-0.2.4.tgz#4d7acbc1feb8a1503f12072e40ea797d42bdb6b7"
+  dependencies:
+    "@firebase/functions-types" "0.1.3"
+    "@firebase/messaging-types" "0.2.3"
+    isomorphic-fetch "2.2.1"
+    tslib "1.9.0"
+
 "@firebase/logger@0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@firebase/logger/-/logger-0.1.1.tgz#af5df54253286993f4b367c3dabe569c848860d3"
@@ -157,11 +222,23 @@
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@firebase/messaging-types/-/messaging-types-0.2.2.tgz#7d97abb87b599445f09df0085cbd89e9405984c6"
 
+"@firebase/messaging-types@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@firebase/messaging-types/-/messaging-types-0.2.3.tgz#ed2949129dc5b3b0adff23ae1e1010bc7806f974"
+
 "@firebase/messaging@0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@firebase/messaging/-/messaging-0.3.3.tgz#4f8813fac30d9107ad4972e1c36da571fb5c5dd8"
   dependencies:
     "@firebase/messaging-types" "0.2.2"
+    "@firebase/util" "0.2.1"
+    tslib "1.9.0"
+
+"@firebase/messaging@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@firebase/messaging/-/messaging-0.3.4.tgz#374d8e19e8fa900d81bc30f5d4e8946bd1c336a7"
+  dependencies:
+    "@firebase/messaging-types" "0.2.3"
     "@firebase/util" "0.2.1"
     tslib "1.9.0"
 
@@ -173,15 +250,34 @@
     promise-polyfill "7.1.2"
     whatwg-fetch "2.0.4"
 
+"@firebase/polyfill@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@firebase/polyfill/-/polyfill-0.3.3.tgz#9c882429762d99ba70ffe2074523e30ea03524ee"
+  dependencies:
+    core-js "2.5.5"
+    promise-polyfill "7.1.2"
+    whatwg-fetch "2.0.4"
+
 "@firebase/storage-types@0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@firebase/storage-types/-/storage-types-0.2.2.tgz#14b56a3b61005e72dfd9ac3ec6bcb160bc3736d3"
+
+"@firebase/storage-types@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@firebase/storage-types/-/storage-types-0.2.3.tgz#09e7ce30eb0d713733e0193cb5c0c3ac157bf330"
 
 "@firebase/storage@0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@firebase/storage/-/storage-0.2.2.tgz#97a90e41b008f6c3b6193e7fed1f4afd3cfda8b4"
   dependencies:
     "@firebase/storage-types" "0.2.2"
+    tslib "1.9.0"
+
+"@firebase/storage@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@firebase/storage/-/storage-0.2.3.tgz#80188243d8274de9cc0fab570bc9064664a8563d"
+  dependencies:
+    "@firebase/storage-types" "0.2.3"
     tslib "1.9.0"
 
 "@firebase/util@0.2.1":
@@ -194,15 +290,16 @@
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.8.tgz#38a936b60b898a1ad0f3719543ff1a1031f60f8b"
 
-"@material-ui/core@^1.0.0-rc.0":
-  version "1.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-1.0.0-rc.1.tgz#71a0b98c5698a4631114678eaec2d28b7d04c369"
+"@material-ui/core@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-1.1.0.tgz#592a58efe2001396125c3187565d3cb88a98b2e7"
   dependencies:
     "@babel/runtime" "^7.0.0-beta.42"
     "@types/jss" "^9.5.3"
     "@types/react-transition-group" "^2.0.8"
     brcast "^3.0.1"
     classnames "^2.2.5"
+    debounce "^1.1.0"
     deepmerge "^2.0.1"
     dom-helpers "^3.2.1"
     hoist-non-react-statics "^2.5.0"
@@ -214,13 +311,11 @@
     jss-props-sort "^6.0.0"
     jss-vendor-prefixer "^7.0.0"
     keycode "^2.1.9"
-    lodash "^4.2.0"
     normalize-scroll-left "^0.1.2"
     prop-types "^15.6.0"
-    react-event-listener "^0.5.1"
+    react-event-listener "^0.5.9"
     react-jss "^8.1.0"
     react-popper "^0.10.0"
-    react-scrollbar-size "^2.0.2"
     react-transition-group "^2.2.1"
     recompose "^0.26.0 || ^0.27.0"
     scroll "^2.0.3"
@@ -372,41 +467,41 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apollo-boost@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/apollo-boost/-/apollo-boost-0.1.6.tgz#922d423536e408abfff816904ad2753d50feb9bf"
+apollo-boost@0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/apollo-boost/-/apollo-boost-0.1.7.tgz#22cd49d2257e44df9b991c606cebb8189ec8f230"
   dependencies:
-    apollo-cache-inmemory "^1.2.1"
-    apollo-client "^2.3.1"
+    apollo-cache-inmemory "^1.2.2"
+    apollo-client "^2.3.2"
     apollo-link "^1.0.6"
     apollo-link-error "^1.0.3"
     apollo-link-http "^1.3.1"
     apollo-link-state "^0.4.0"
     graphql-tag "^2.4.2"
 
-apollo-cache-inmemory@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.2.1.tgz#1f8222270aa7983eb9d2ac30057196378ab3bb01"
+apollo-cache-inmemory@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.2.2.tgz#051b1fec5b3cec1b348bd7ac9c713a72a0bba45b"
   dependencies:
-    apollo-cache "^1.1.8"
-    apollo-utilities "^1.0.12"
-    graphql-anywhere "^4.1.10"
+    apollo-cache "^1.1.9"
+    apollo-utilities "^1.0.13"
+    graphql-anywhere "^4.1.11"
 
-apollo-cache@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.8.tgz#b078d33dec876d52b5a81a325d3c254d4e362d3c"
+apollo-cache@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.1.9.tgz#90426f25c43bc66ae02808af01194d78fd15ea40"
   dependencies:
-    apollo-utilities "^1.0.12"
+    apollo-utilities "^1.0.13"
 
-apollo-client@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.3.1.tgz#64b204779b7e8b21f901529527a9a9c973eb7fd4"
+apollo-client@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.3.2.tgz#0c4c06eba0aedc63d2d988f247a9310cb2152c2e"
   dependencies:
     "@types/zen-observable" "^0.5.3"
-    apollo-cache "^1.1.8"
+    apollo-cache "^1.1.9"
     apollo-link "^1.0.0"
     apollo-link-dedup "^1.0.0"
-    apollo-utilities "^1.0.12"
+    apollo-utilities "^1.0.13"
     symbol-observable "^1.0.2"
     zen-observable "^0.8.0"
   optionalDependencies:
@@ -455,6 +550,10 @@ apollo-link@^1.0.0, apollo-link@^1.0.6, apollo-link@^1.2.2:
 apollo-utilities@^1.0.0, apollo-utilities@^1.0.12, apollo-utilities@^1.0.8:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.12.tgz#9e2b2a34cf89f3bf0d73a664effd8c1bb5d1b7f7"
+
+apollo-utilities@^1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.0.13.tgz#793c858bb42243f7254d3c2961c64a7158e51022"
 
 aproba@^1.0.3:
   version "1.2.0"
@@ -1909,6 +2008,10 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
+debounce@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.1.0.tgz#6a1a4ee2a9dc4b7c24bb012558dbcdb05b37f408"
+
 debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2639,7 +2742,20 @@ find-up@^2.0.0, find-up@^2.1.0:
   dependencies:
     locate-path "^2.0.0"
 
-firebase@^5.0.0, firebase@^5.0.3:
+firebase@5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.0.4.tgz#f367c80531c1a8a4ef82b6537b2a6bd92685e226"
+  dependencies:
+    "@firebase/app" "0.3.3"
+    "@firebase/auth" "0.5.3"
+    "@firebase/database" "0.3.3"
+    "@firebase/firestore" "0.5.4"
+    "@firebase/functions" "0.2.4"
+    "@firebase/messaging" "0.3.4"
+    "@firebase/polyfill" "0.3.3"
+    "@firebase/storage" "0.2.3"
+
+firebase@^5.0.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.0.3.tgz#b3e9334022cd90567d398b31f49fb67f0489e271"
   dependencies:
@@ -2841,11 +2957,17 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.4, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-anywhere@^4.1.0-alpha.0, graphql-anywhere@^4.1.10:
+graphql-anywhere@^4.1.0-alpha.0:
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/graphql-anywhere/-/graphql-anywhere-4.1.10.tgz#247ada0c8d85b9d5d6b37180973442ac68ff15de"
   dependencies:
     apollo-utilities "^1.0.12"
+
+graphql-anywhere@^4.1.11:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/graphql-anywhere/-/graphql-anywhere-4.1.11.tgz#f91fa82e7e47275260957bb91f2fed5ecd508098"
+  dependencies:
+    apollo-utilities "^1.0.13"
 
 graphql-tag@^2.4.2, graphql-tag@^2.9.2:
   version "2.9.2"
@@ -4517,9 +4639,9 @@ react-apollo@^2.1.4:
     lodash "4.17.5"
     prop-types "^15.6.0"
 
-react-dom@^16.2.0:
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.2.tgz#cb90f107e09536d683d84ed5d4888e9640e0e4df"
+react-dom@16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.0.tgz#099f067dd5827ce36a29eaf9a6cdc7cbf6216b1e"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -4531,6 +4653,15 @@ react-event-listener@^0.5.1:
   resolved "https://registry.yarnpkg.com/react-event-listener/-/react-event-listener-0.5.3.tgz#a8b492596ad601865314fcc2c18cb87b6ce3876e"
   dependencies:
     babel-runtime "^6.26.0"
+    fbjs "^0.8.16"
+    prop-types "^15.6.0"
+    warning "^3.0.0"
+
+react-event-listener@^0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/react-event-listener/-/react-event-listener-0.5.9.tgz#c64e84f77156a682614835bdc1bc7ba00912df97"
+  dependencies:
+    "@babel/runtime" "^7.0.0-beta.42"
     fbjs "^0.8.16"
     prop-types "^15.6.0"
     warning "^3.0.0"
@@ -4597,9 +4728,9 @@ react-transition-group@^2.2.1:
     loose-envify "^1.3.1"
     prop-types "^15.6.1"
 
-react@^16.2.0:
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.3.2.tgz#fdc8420398533a1e58872f59091b272ce2f91ea9"
+react@16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.4.0.tgz#402c2db83335336fba1962c08b98c6272617d585"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
