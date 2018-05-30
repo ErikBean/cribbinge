@@ -9,10 +9,11 @@ import Avatar from 'material-ui/Avatar';
 import Person from '@material-ui/icons/Person';
 
 const styles = theme => ({
-  root: {
+  li: {
     width: '100%',
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
+    padding: '20px !important',
   },
 });
 
@@ -32,27 +33,28 @@ class Users extends PureComponent {
     } = this.props;
     return (
       <Dialog onClose={this.handleClose} open={this.state.open}>
-        <DialogTitle id="simple-dialog-title">Select an Opponent</DialogTitle>
-        <div className={classes.root}>
-          <List>
-            {
-              Object.keys(users)
-              .filter(name => name !== currentUser)
-              .map(name => (
-                <ListItem
-                  key={name}
-                  button
-                  onClick={() => userClicked(name)}
-                >
-                  <Avatar>
-                    <Person />
-                  </Avatar>
-                  <ListItemText primary={name} secondary="" />
-                </ListItem>
-              ))
-            }
-          </List>
-        </div>
+        <DialogTitle>Select a New Opponent</DialogTitle>
+        <List>
+          {
+            Object.keys(users)
+            .filter(name => name !== currentUser)
+            .map(name => (
+              <ListItem
+                key={name}
+                button
+                onClick={() => userClicked(name)}
+                className={classes.li}
+              >
+                <Avatar>
+                  <Person />
+                </Avatar>
+                <ListItemText primary={name} secondary="" />
+              </ListItem>
+            ))
+          }
+        </List>
+        <DialogTitle>Or Choose an Existing Game: </DialogTitle>
+        {this.props.renderExistingGames()}
       </Dialog>
     );
   }

@@ -39,9 +39,9 @@ export const resolvers = {
     },
   },
   Game2: {
-    hand(game, {userid}){
-      return getHand(game.events, {userid});
-    }
+    hand(game, { userid }) {
+      return getHand(game.events, { userid });
+    },
   },
   CutsInfo: {
     hasCutForFirstCrib(cuts, { userid }) {

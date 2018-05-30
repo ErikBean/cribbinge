@@ -35,6 +35,6 @@ export const getHand = createSelector(
   hand => ({
     cards: hand,
     hasDiscarded: hand.length === 4,
-    __typename: 'Hand'
+    __typename: 'Hand',
   }),
 );

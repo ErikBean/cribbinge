@@ -106,18 +106,18 @@ export default class App extends Component {
         <CssBaseline />
         <AppBar onMenuClick={this.toggleDrawer} />
         {!this.state.signedIn &&
-        <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
-          }
+          <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()} />
+        }
         {this.state.signedIn &&
-        <ApolloWrapper gameId={this.state.activeGame}>
-          <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
-            <GamesList
-              currentUser={this.state.name}
-              setActiveGame={this.setActiveGame}
-              activeGame={this.state.activeGame}
-            />
-          </Drawer>
-          {
+          <ApolloWrapper gameId={this.state.activeGame}>
+            <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
+              <GamesList
+                currentUser={this.state.name}
+                setActiveGame={this.setActiveGame}
+                activeGame={this.state.activeGame}
+              />
+            </Drawer>
+            {
                 this.state.activeGame
                   ? (
                     <GameQuery
@@ -129,11 +129,18 @@ export default class App extends Component {
                       currentUser={this.state.name}
                       users={this.props.users || {}}
                       userClicked={this.startMatch}
+                      renderExistingGames={() => (
+                        <GamesList
+                          currentUser={this.state.name}
+                          setActiveGame={this.setActiveGame}
+                          activeGame={this.state.activeGame}
+                        />
+                      )}
                     />
                   )
-              }
-        </ApolloWrapper>
-          }
+            }
+          </ApolloWrapper>
+        }
       </React.Fragment>
     );
   }
