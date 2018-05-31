@@ -7,6 +7,7 @@ import {
   getFirstCribWinner,
 } from './selectors/firstCrib';
 import { getHand } from './selectors/hand';
+import { getCrib } from './selectors/crib';
 
 export const defaults = {
   todos: [],
@@ -18,7 +19,7 @@ const nextTodoId = 0;
 
 export const resolvers = {
   Query: {
-    game2(_, { id }, { cache }) {
+    game(_, { id }, { cache }) {
       const query = gql`{
         gameEvents {
           timestamp
@@ -34,11 +35,12 @@ export const resolvers = {
         deck: getDeck(events),
         stage: getStage(events),
         cutsForFirstCrib: getFirstCuts(events),
-        __typename: 'Game2',
+        crib: getCrib(events),
+        __typename: 'Game',
       };
     },
   },
-  Game2: {
+  Game: {
     hand(game, { userid }) {
       return getHand(game.events, { userid });
     },

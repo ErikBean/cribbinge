@@ -9,21 +9,27 @@ const typeDefs = `
     visibilityFilter: String
     todos: [Todo]
     gameEvents: [Event]
-    game2: Game2
+    game: Game
   }
   
-  type Game2 {
+  type Game {
     id: String!
     deck: [String]
     stage: Int!
     events: [Event]!
     cutsForFirstCrib: CutsInfo
     hand(userid: String!): Hand
+    crib: Crib
   }
   
   type Hand {
     cards: [String]
     hasDiscarded: Boolean
+  }
+  
+  type Crib {
+    cards: [String!],
+    hasAllCards: Boolean,
   }
   
   type CutsInfo {
