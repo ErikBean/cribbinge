@@ -55,49 +55,32 @@ class Game extends PureComponent {
       console.log('wanna peg: ', card);
     }
   }
-  renderBeginGameStage = () => (
-    <BeginGame
-      deck={this.props.deck}
-      cutForFirstCrib={this.cutForFirstCrib}
-      cutsForFirstCrib={this.props.cutsForFirstCrib}
-    />
-  )
-  renderDiscardStage = () => (
-    <Discard
-      onCardClick={cards => this.setState({ selectedCards: cards })}
-      hand={this.props.hand}
-    />
-  )
-  renderPeggingStage = () => (
-    <Pegging
-      playPegCard={this.playPegCard}
-      hand={this.props.hand}
-    />
-    /*
-    <React.Fragment>
-      <Grid
-        item
-        xs={12}
-      >
-        <Hand
-          {...this.props.hand}
-          onCardClick={this.playPegCard}
-          numSelectable={1}
-        />
-      </Grid>
-    </React.Fragment>
-    */
-  )
   renderGameStage(stage) {
     switch (stage) {
       case 0:
-        return this.renderBeginGameStage();
+        return (
+          <BeginGame
+            deck={this.props.deck}
+            cutForFirstCrib={this.cutForFirstCrib}
+            cutsForFirstCrib={this.props.cutsForFirstCrib}
+          />
+        );
       case 1:
-        return this.renderDiscardStage();
+        return (
+          <Discard
+            onCardClick={cards => this.setState({ selectedCards: cards })}
+            hand={this.props.hand}
+          />
+        )
       case 2:
-        return this.renderPeggingStage();
+        return (
+          <Pegging
+            playPegCard={this.playPegCard}
+            hand={this.props.hand}
+          />
+        );
       default:
-        return 'Not sure whats happening';
+        return `Not sure what stage this game is at (stage=${stage})`;
     }
   }
   render() {

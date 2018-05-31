@@ -10,6 +10,7 @@ const typeDefs = `
     todos: [Todo]
     gameEvents: [Event]
     game: Game
+    pegging: PeggingInfo
   }
   
   type Game {
@@ -20,6 +21,13 @@ const typeDefs = `
     cutsForFirstCrib: CutsInfo
     hand(userid: String!): Hand
     crib: Crib
+  }
+  
+  type PeggingInfo {
+    playedCards: [String]
+    hasAGo(userid: String): Boolean
+    playedBy(userid: String): [String]
+    canPlay(userid: String): Boolean
   }
   
   type Hand {
