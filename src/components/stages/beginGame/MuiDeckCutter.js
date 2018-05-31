@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
 
-import Card from './Card';
+import Card from '../../Card';
 
 const styles = theme => ({
   flipContainer: {

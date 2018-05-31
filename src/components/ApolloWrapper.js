@@ -9,7 +9,7 @@ import {
   defaults,
   resolvers,
   typeDefs,
-} from './util/gql';
+} from '../util/gql';
 
 const client = new ApolloClient({
   // uri: "https://us-central1-crabapple-f6555.cloudfunctions.net/api/graphql", // serve from cloud function

@@ -17,6 +17,7 @@ export const getCrib = createSelector(
     return {
       cards,
       hasAllCards: cards.length === 4,
+      __typename: 'Crib',
     }
   }
 );

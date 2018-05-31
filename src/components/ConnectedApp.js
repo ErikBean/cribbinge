@@ -1,6 +1,6 @@
 import { connect } from 'react-firebase';
 import App from './App';
-import { createDeck, shuffle } from './util/deck';
+import { createDeck, shuffle } from '../util/deck';
 
 export default connect((props, ref) => ({
   users: 'users',

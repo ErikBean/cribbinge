@@ -5,10 +5,9 @@ import { connect } from 'react-firebase';
 
 import Grid from '@material-ui/core/Grid';
 
-import { createDeck, shuffle } from './util/deck';
+import { createDeck, shuffle } from '../util/deck';
+import {BeginGame, Discard, Pegging} from './stages';
 
-import MuiDeckCutter from './MuiDeckCutter';
-import BeginGameCuts from './BeginGameCuts';
 import Hand from './Hand';
 
 class Game extends PureComponent {
@@ -56,24 +55,25 @@ class Game extends PureComponent {
       console.log('wanna peg: ', card);
     }
   }
+  renderBeginGameStage = () => (
+    <BeginGame
+      deck={this.props.deck}
+      cutForFirstCrib={this.cutForFirstCrib}
+      cutsForFirstCrib={this.props.cutsForFirstCrib}
+    />
+  )
   renderDiscardStage = () => (
-    <React.Fragment>
-      <Grid
-        item
-        xs={12}
-        style={{
-          paddingTop: '100px',
-        }}
-      >
-        <Hand
-          {...this.props.hand}
-          onCardClick={cards => this.setState({ selectedCards: cards })}
-          numSelectable={2}
-        />
-      </Grid>
-    </React.Fragment>
+    <Discard
+      onCardClick={cards => this.setState({ selectedCards: cards })}
+      hand={this.props.hand}
+    />
   )
   renderPeggingStage = () => (
+    <Pegging
+      playPegCard={this.playPegCard}
+      hand={this.props.hand}
+    />
+    /*
     <React.Fragment>
       <Grid
         item
@@ -86,21 +86,7 @@ class Game extends PureComponent {
         />
       </Grid>
     </React.Fragment>
-  )
-  renderBeginGameStage = () => (
-    <React.Fragment>
-      <Grid item sm={12} lg={6}>
-        <MuiDeckCutter
-          deck={this.props.deck}
-          doCut={this.cutForFirstCrib}
-          shownCuts={this.props.cutsForFirstCrib.shownCuts}
-          hasDoneCut={this.props.cutsForFirstCrib.hasCutForFirstCrib}
-        />
-      </Grid>
-      <Grid item sm={12} lg={6}>
-        <BeginGameCuts cuts={this.props.cutsForFirstCrib.shownCuts} />
-      </Grid>
-    </React.Fragment>
+    */
   )
   renderGameStage(stage) {
     switch (stage) {

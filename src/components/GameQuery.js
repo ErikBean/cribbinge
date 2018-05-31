@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { getMessage } from './util/messages';
+import { getMessage } from '../util/messages';
 import Game from './Game';
 import GameControls from './GameControls';
 
@@ -30,8 +30,11 @@ export default class GameQuery extends PureComponent {
             cards
             hasDiscarded
           }
+          crib {
+            cards
+            hasAllCards
+          }
         }
-        visibilityFilter @client
       }
     `}
       >

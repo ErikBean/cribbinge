@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getNumberOrFace, getSuit } from './util/deck';
+import { getNumberOrFace, getSuit } from '../util/deck';
 
 const Card = (props) => {
   if (!props.card) return (<span>???</span>);
