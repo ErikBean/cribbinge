@@ -6,9 +6,7 @@ import { connect } from 'react-firebase';
 import Grid from '@material-ui/core/Grid';
 
 import { createDeck, shuffle } from '../util/deck';
-import {BeginGame, Discard, Pegging} from './stages';
-
-import Hand from './Hand';
+import { BeginGame, Discard, Pegging } from './stages';
 
 class Game extends PureComponent {
   state = {
@@ -52,7 +50,10 @@ class Game extends PureComponent {
     if (!this.state.selectedCards.includes(card)) { // select before playing
       this.setState({ selectedCards: [card] });
     } else {
-      console.log('wanna peg: ', card);
+      this.props.addEvent({
+        cards: [card],
+        what: 'play pegging card',
+      });
     }
   }
   renderGameStage(stage) {
@@ -71,12 +72,13 @@ class Game extends PureComponent {
             onCardClick={cards => this.setState({ selectedCards: cards })}
             hand={this.props.hand}
           />
-        )
+        );
       case 2:
         return (
           <Pegging
             playPegCard={this.playPegCard}
             hand={this.props.hand}
+            userid={this.props.currentUser}
           />
         );
       default:

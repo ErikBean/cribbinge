@@ -17,8 +17,7 @@ export default class GameQuery extends PureComponent {
         pollInterval={500}
         query={gql`
       {
-        game(id: "${gameId}") @client {
-          id
+        game @client {
           deck
           stage
           cutsForFirstCrib {
@@ -41,7 +40,6 @@ export default class GameQuery extends PureComponent {
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
-          console.log('>>> new game data: ', data.game);
           if (!data.game) return <p>No game data</p>;
           const message = getMessage(data.game, { currentUser, opponent });
           return (

@@ -23,9 +23,10 @@ class Hand extends PureComponent {
     selected: [],
   }
   onCardClick = (card) => {
-    const { numSelectable } = this.props;
+    const { numSelectable, disabled } = this.props;
+    if (disabled) return;
     const sliceAt = numSelectable > 0 ? numSelectable - 1 : 0;
-    return this.setState({
+    this.setState({
       selected: [
         card,
         ...this.state.selected.slice(0, sliceAt),
@@ -33,7 +34,7 @@ class Hand extends PureComponent {
     }, () => this.props.onCardClick(this.state.selected));
   }
   render() {
-    const { cards, classes } = this.props;
+    const { cards, classes, disabled } = this.props;
     const { selected } = this.state;
     return (
       <React.Fragment>
@@ -48,6 +49,7 @@ class Hand extends PureComponent {
             <Button
               onClick={() => this.onCardClick(card)}
               className={classes.cardButton}
+              disabled={disabled}
             >
               <Card card={card} />
             </Button>
@@ -66,10 +68,12 @@ Hand.propTypes = {
   classes: PropTypes.shape({
     cardContainer: PropTypes.string.isRequired,
   }).isRequired,
+  disabled: PropTypes.bool,
   numSelectable: PropTypes.number,
 };
 
 Hand.defaultProps = {
+  disabled: false,
   onCardClick() {},
   numSelectable: 0,
 };

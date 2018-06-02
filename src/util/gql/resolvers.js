@@ -8,14 +8,11 @@ import {
 } from './selectors/firstCrib';
 import { getHand } from './selectors/hand';
 import { getCrib } from './selectors/crib';
+import { getPlayedCards, getPeggingEvents, canPlayCard } from './selectors/pegging';
 
 export const defaults = {
-  todos: [],
-  visibilityFilter: 'SHOW_ALL',
   gameEvents: [],
 };
-
-const nextTodoId = 0;
 
 const query = gql`{
   gameEvents {
@@ -27,10 +24,10 @@ const query = gql`{
 }`;
 export const resolvers = {
   Query: {
-    game(_, { id }, { cache }) {
+    game(_, args, { cache }) {
       const events = cache.readQuery({ query }).gameEvents;
       return {
-        id,
+        id: (args || {}).id,
         events,
         deck: getDeck(events),
         stage: getStage(events),
@@ -39,29 +36,25 @@ export const resolvers = {
         __typename: 'Game',
       };
     },
-    pegging(_, __, { cache }) {
-      const events = cache.readQuery({ query }).gameEvents;
-      return {
-        playedCards: [],
-        __typename: 'PeggingInfo',
-      };
-    },
   },
   Game: {
     hand(game, { userid }) {
       return getHand(game.events, { userid });
     },
+    pegging(game, { userid }) {
+      return {
+        hand: getHand(game.events, { userid }).cards,
+        events: getPeggingEvents(game.events),
+        playedCards: getPlayedCards(game.events, { userid }),
+        canPlay: canPlayCard(game.events, { userid }),
+        __typename: 'PeggingInfo',
+      };
+    },
   },
   PeggingInfo: {
-    hasAGo(pegInfo, {userid}){
-      return false
-    },
-    playedBy(pegInfo, {userid}){
-      return []
-    },
-    canPlay(pegInfo, {userid}){
+    hasAGo(/* pegInfo */) {
       return false;
-    }
+    },
   },
   CutsInfo: {
     hasCutForFirstCrib(cuts, { userid }) {
@@ -73,7 +66,7 @@ export const resolvers = {
     winner(cuts) {
       return getFirstCribWinner(cuts);
     },
-  }
+  },
 };
 
 export default resolvers;

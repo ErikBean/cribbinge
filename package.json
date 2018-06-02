@@ -7,7 +7,7 @@
     "lint": "eslint ./src --fix --cache",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "webpack --config=webpack.config.vendor.babel.js",
-    "build": "webpack --env=development --profile --json > stats.json",
+    "build": "webpack --env=production",
     "start": "webpack-dev-server --hot"
   },
   "repository": {
@@ -50,6 +50,7 @@
     "graphql-tag": "^2.9.2",
     "material-ui": "^1.0.0-beta.41",
     "prop-types": "^15.6.1",
+    "ramda": "^0.25.0",
     "react": "16.4.0",
     "react-apollo": "^2.1.4",
     "react-dom": "16.4.0",

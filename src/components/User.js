@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import firebase from 'firebase';
-import a11yClick from './util/a11y';
+import a11yClick from '../util/a11y';
 
 export default function User({ name, userClicked }) {
   const userStyle = {

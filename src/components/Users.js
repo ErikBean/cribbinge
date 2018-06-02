@@ -63,6 +63,7 @@ class Users extends PureComponent {
 Users.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   currentUser: PropTypes.string.isRequired,
+  renderExistingGames: PropTypes.func.isRequired,
   userClicked: PropTypes.func.isRequired,
   users: PropTypes.shape({}).isRequired,
 };

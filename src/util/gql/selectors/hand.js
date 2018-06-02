@@ -5,7 +5,7 @@ import { sortByTimeSelector, getEventsForCurrentRound } from './index';
 export const HAND_SIZE = 4;
 const getUserIdArg = (_, { userid }) => userid;
 
-const getDealtHand = createSelector(
+export const getDealtHand = createSelector(
   [sortByTimeSelector, getUserIdArg],
   (sortedEvents, userid) => {
     const dealEvent = Array.from(sortedEvents).reverse().find(({ what }) => what.includes('deal round'));
@@ -16,7 +16,7 @@ const getDealtHand = createSelector(
   },
 );
 
-const getCurrentHand = createSelector(
+export const getCurrentHand = createSelector(
   [sortByTimeSelector, getDealtHand, getEventsForCurrentRound, getUserIdArg],
   (sortedEvents, dealtHand, events, userid) => {
     let hand = dealtHand;

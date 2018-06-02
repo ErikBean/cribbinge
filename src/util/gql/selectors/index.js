@@ -3,13 +3,14 @@ const { createSelector } = require('reselect');
 
 export function sortByTimeSelector(gameEvents) {
   if (!gameEvents) return [];
-  return Object.values(gameEvents).sort((ev1, ev2) => ev1.timestamp > ev2.timestamp);
+  // its already sorted
+  return gameEvents;
 }
 
 export const getDeck = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
-    const deckEvent = sortedEvents.reverse().find(({ what }) => what === 'start');
+    const deckEvent = Array.from(sortedEvents).reverse().find(({ what }) => what === 'start');
     if (deckEvent) {
       return deckEvent.cards;
     }
@@ -20,7 +21,7 @@ export const getDeck = createSelector(
 const lastEventSelector = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
-    if (sortedEvents.length) return sortedEvents.reverse()[0];
+    if (sortedEvents.length) return Array.from(sortedEvents).reverse()[0];
     return null;
   },
 );

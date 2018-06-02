@@ -10,24 +10,28 @@ const typeDefs = `
     todos: [Todo]
     gameEvents: [Event]
     game: Game
-    pegging: PeggingInfo
   }
   
   type Game {
-    id: String!
-    deck: [String]
-    stage: Int!
-    events: [Event]!
-    cutsForFirstCrib: CutsInfo
-    hand(userid: String!): Hand
     crib: Crib
+    cutsForFirstCrib: CutsInfo
+    deck: [String]
+    events: [Event]!
+    hand(userid: String!): Hand
+    id: String
+    pegging(userid: String!): PeggingInfo
+    stage: Int!
   }
   
   type PeggingInfo {
-    playedCards: [String]
+    playedCards: [PegCard]
     hasAGo(userid: String): Boolean
-    playedBy(userid: String): [String]
     canPlay(userid: String): Boolean
+  }
+  
+  type PegCard {
+    card: String!
+    playedBy: String!
   }
   
   type Hand {
