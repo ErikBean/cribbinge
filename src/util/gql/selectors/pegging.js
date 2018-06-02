@@ -29,13 +29,14 @@ export const getPegTotal = createSelector(
   [getPlayedCards],
   playedCards =>
     // TODO: Need to separate rounds
-    playedCards.map(pointValue).reduce((acc, curr) => acc + curr, 0),
-
+    playedCards
+      .map(({ card }) => pointValue(card))
+      .reduce((acc, curr) => acc + curr, 0),
 );
 
 const getLowestCard = createSelector(
   [getCurrentHand],
-  hand => getLowest(hand),
+  hand => getLowest(hand).pop(),
 );
 
 const getRemainingTotal = createSelector(
@@ -45,7 +46,12 @@ const getRemainingTotal = createSelector(
 
 const hasLowEnoughCard = createSelector(
   [getLowestCard, getRemainingTotal],
-  (lowCard, remainingTotal) => pointValue(lowCard) < remainingTotal,
+  (lowCard, remainingTotal) => {
+    if (lowCard) {
+      return pointValue(lowCard) < remainingTotal;
+    }
+    return false;
+  },
 );
 
 export const canPlayCard = createSelector(

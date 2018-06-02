@@ -27,6 +27,7 @@ const typeDefs = `
     playedCards: [PegCard]
     hasAGo(userid: String): Boolean
     canPlay(userid: String): Boolean
+    total: Int!
   }
   
   type PegCard {
@@ -40,8 +41,9 @@ const typeDefs = `
   }
   
   type Crib {
-    cards: [String!],
-    hasAllCards: Boolean,
+    cards: [String!]
+    hasAllCards: Boolean
+    isMyCrib(userid: String!): Boolean!
   }
   
   type CutsInfo {

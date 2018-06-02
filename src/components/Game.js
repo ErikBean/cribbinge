@@ -46,7 +46,7 @@ class Game extends PureComponent {
       what: 'discard',
     });
   }
-  playPegCard = ([card]) => {
+  playPegCard = (card) => {
     if (!this.state.selectedCards.includes(card)) { // select before playing
       this.setState({ selectedCards: [card] });
     } else {

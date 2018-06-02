@@ -24,7 +24,7 @@ export default function BeginGame(props) {
 }
 
 BeginGame.propTypes = {
-  deck: PropTypes.string.isRequired,
+  deck: PropTypes.arrayOf(PropTypes.string).isRequired,
   cutForFirstCrib: PropTypes.func.isRequired,
   cutsForFirstCrib: PropTypes.shape({
     shownCuts: PropTypes.arrayOf(PropTypes.string).isRequired,

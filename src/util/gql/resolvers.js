@@ -7,8 +7,8 @@ import {
   getFirstCribWinner,
 } from './selectors/firstCrib';
 import { getHand } from './selectors/hand';
-import { getCrib } from './selectors/crib';
-import { getPlayedCards, getPeggingEvents, canPlayCard } from './selectors/pegging';
+import { getCrib, getIsMyCrib } from './selectors/crib';
+import { getPlayedCards, getPeggingEvents, canPlayCard, getPegTotal } from './selectors/pegging';
 
 export const defaults = {
   gameEvents: [],
@@ -37,6 +37,12 @@ export const resolvers = {
       };
     },
   },
+  Crib: {
+    isMyCrib(crib, { userid }, { cache }) {
+      const events = cache.readQuery({ query }).gameEvents;
+      return getIsMyCrib(events, { userid });
+    },
+  },
   Game: {
     hand(game, { userid }) {
       return getHand(game.events, { userid });
@@ -47,6 +53,7 @@ export const resolvers = {
         events: getPeggingEvents(game.events),
         playedCards: getPlayedCards(game.events, { userid }),
         canPlay: canPlayCard(game.events, { userid }),
+        total: getPegTotal(game.events),
         __typename: 'PeggingInfo',
       };
     },

@@ -1,14 +1,19 @@
 import { createSelector } from 'reselect';
 
-import { sortByTimeSelector, getEventsForCurrentRound } from './index';
+import { getEventsForCurrentRound } from './index';
+import { getPlayedCards } from './played';
 
-export const HAND_SIZE = 4;
-const getUserIdArg = (_, { userid }) => userid;
+const getUserIdArg = (_, args) => {
+  if (!args || !args.userid) {
+    return console.trace('no userid!');
+  }
+  return args.userid;
+};
 
 export const getDealtHand = createSelector(
-  [sortByTimeSelector, getUserIdArg],
+  [getEventsForCurrentRound, getUserIdArg],
   (sortedEvents, userid) => {
-    const dealEvent = Array.from(sortedEvents).reverse().find(({ what }) => what.includes('deal round'));
+    const dealEvent = sortedEvents.find(({ what }) => what.includes('deal round'));
     if (dealEvent) {
       return dealEvent.cards[userid];
     }
@@ -17,14 +22,18 @@ export const getDealtHand = createSelector(
 );
 
 export const getCurrentHand = createSelector(
-  [sortByTimeSelector, getDealtHand, getEventsForCurrentRound, getUserIdArg],
-  (sortedEvents, dealtHand, events, userid) => {
+  [getEventsForCurrentRound, getDealtHand, getPlayedCards, getUserIdArg],
+  (events, dealtHand, peggingEvents, userid) => {
     let hand = dealtHand;
-    const discardEvt = Array.from(sortedEvents).reverse()
+    const discardEvt = Array.from(events).reverse()
       .find(({ what, who }) => what === 'discard' && who === userid);
     if (discardEvt) {
       const { cards: discards } = discardEvt;
       hand = dealtHand.filter(card => discards.indexOf(card) === -1);
+    }
+    if (peggingEvents.length) {
+      const played = peggingEvents.map(({ card }) => card);
+      hand = hand.filter(card => played.indexOf(card) === -1);
     }
     return hand;
   },

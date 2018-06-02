@@ -32,6 +32,15 @@ export default class GameQuery extends PureComponent {
           crib {
             cards
             hasAllCards
+            isMyCrib(userid: "${currentUser}")
+          }
+          pegging(userid: "${currentUser}"){
+            playedCards {
+              card
+              playedBy
+            }
+            canPlay
+            hasAGo
           }
         }
       }

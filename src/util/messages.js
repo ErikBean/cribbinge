@@ -4,13 +4,11 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     action: '',
     actionText: '',
   };
-  // TODO: Move the below to graphql:
-  const { hasCutForFirstCrib, shownCuts, winner } = game.cutsForFirstCrib;
-  const waitingForOtherCutForFirstCrib = hasCutForFirstCrib && shownCuts.length === 1;
-  const wonFirstCrib = winner === currentUser;
-  const lostFirstCrib = winner === opponent;
-
   if (game.stage === 0) {
+    const { hasCutForFirstCrib, shownCuts, winner } = game.cutsForFirstCrib;
+    const waitingForOtherCutForFirstCrib = hasCutForFirstCrib && shownCuts.length === 1;
+    const wonFirstCrib = winner === currentUser;
+    const lostFirstCrib = winner === opponent;
     if (!hasCutForFirstCrib) {
       message.text = 'Cut for the first crib';
     } else if (waitingForOtherCutForFirstCrib) {
@@ -24,17 +22,28 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     }
   } else if (game.stage === 1) {
     if (!game.hand.hasDiscarded) {
-      message.text = `Select two cards to put in ${wonFirstCrib ? 'your' : 'their'} crib`;
+      message.text = `Select two cards to put in ${game.crib.isMyCrib ? 'your' : 'their'} crib`;
       message.action = 'discard';
       message.actionText = 'Discard';
     } else if (game.hand.hasDiscarded && !game.crib.hasAllCards) {
       message.text = `Waiting for ${opponent} to discard`;
     }
   } else if (game.stage === 2) {
-    if (wonFirstCrib) {
-      message.text = `Waiting for ${opponent} to begin pegging`;
+    const { playedCards, hasAGo, canPlay } = game.pegging;
+    if (playedCards.length === 0) {
+      if (game.crib.isMyCrib) {
+        message.text = `Waiting for ${opponent} to begin pegging`;
+      } else {
+        message.text = 'Your lead, click a card to begin pegging';
+      }
+    } else if (hasAGo) {
+      message.text = 'You have a go, take 1 point';
+      message.action = 'takeAGo';
+      message.actionText = 'OK';
+    } else if (canPlay) {
+      message.text = 'Pick a card to play';
     } else {
-      message.text = 'Your lead, click a card to begin pegging';
+      message.text = `Waiting for ${opponent} to play`;
     }
   }
   return message;

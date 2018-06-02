@@ -20,7 +20,7 @@ const getFirstCutWinner = createSelector(
 export const getIsMyCrib = createSelector(
   [getEventsForCurrentRound, getFirstCutWinner, getUserIdArg],
   (events, firstCribWinner, userid) => {
-    if (events[0].what.includes('deal')) {
+    if (events.length && events[0].what.includes('deal')) {
       return events[0].who === userid;
     }
     return firstCribWinner === userid;
