@@ -10,6 +10,7 @@ module.exports = {
       'apollo-boost',
       'firebase',
       'material-ui',
+      'ramda',
       'react-apollo',
       'react-dom',
       'react-firebase',

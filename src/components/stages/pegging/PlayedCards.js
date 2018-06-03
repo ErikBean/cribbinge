@@ -26,7 +26,7 @@ function PlayedCards({ playedCards, classes, currentUser }) {
           [offsetDirection]: 0,
         }}
       >
-        <Card card={card} style={{ height: '100%' }} />
+        <Card card={card} style={{ width: '150px' }} />
       </div>
     );
   });

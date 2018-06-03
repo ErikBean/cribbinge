@@ -66,3 +66,25 @@ export const canPlayCard = createSelector(
     return false;
   },
 );
+
+const getLastPlayedCard = createSelector(
+  [pegInfo => pegInfo.playedCards],
+  playedCards => Array.from(playedCards).pop(),
+);
+
+const hasLowEnoughCardFromGameEvents = (_, { userid }, gameEvents) => hasLowEnoughCard(gameEvents, { userid }); // eslint-disable-line max-len
+
+export const doesOpponentHaveAGo = createSelector(
+  [getLastPlayedCard, getUserIdArg, hasLowEnoughCardFromGameEvents],
+  (last, userid, hasCardToPlay) => {
+    if (!last) {
+      // no played cards: opponent does not havea go:
+      return false;
+    } else if (last.playedBy === userid) {
+      // I played the last card, opponent does not have a go:
+      return false;
+    }
+    // opponent has a go if I dont have a card I can play:
+    return !hasCardToPlay;
+  },
+);

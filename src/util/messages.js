@@ -29,13 +29,17 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
       message.text = `Waiting for ${opponent} to discard`;
     }
   } else if (game.stage === 2) {
-    const { playedCards, hasAGo, canPlay } = game.pegging;
+    const {
+      playedCards, hasAGo, canPlay, opponentHasAGo,
+    } = game.pegging;
     if (playedCards.length === 0) {
       if (game.crib.isMyCrib) {
         message.text = `Waiting for ${opponent} to begin pegging`;
       } else {
         message.text = 'Your lead, click a card to begin pegging';
       }
+    } else if (opponentHasAGo) {
+      message.text = `${opponent} gets a go`;
     } else if (hasAGo) {
       message.text = 'You have a go, take 1 point';
       message.action = 'takeAGo';

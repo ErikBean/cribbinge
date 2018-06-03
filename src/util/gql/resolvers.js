@@ -8,7 +8,13 @@ import {
 } from './selectors/firstCrib';
 import { getHand } from './selectors/hand';
 import { getCrib, getIsMyCrib } from './selectors/crib';
-import { getPlayedCards, getPeggingEvents, canPlayCard, getPegTotal } from './selectors/pegging';
+import {
+  canPlayCard,
+  doesOpponentHaveAGo,
+  getPeggingEvents,
+  getPegTotal,
+  getPlayedCards,
+} from './selectors/pegging';
 
 export const defaults = {
   gameEvents: [],
@@ -49,7 +55,7 @@ export const resolvers = {
     },
     pegging(game, { userid }) {
       return {
-        hand: getHand(game.events, { userid }).cards,
+        currentHand: getHand(game.events, { userid }).cards,
         events: getPeggingEvents(game.events),
         playedCards: getPlayedCards(game.events, { userid }),
         canPlay: canPlayCard(game.events, { userid }),
@@ -61,6 +67,10 @@ export const resolvers = {
   PeggingInfo: {
     hasAGo(/* pegInfo */) {
       return false;
+    },
+    opponentHasAGo(pegInfo, { userid }, { cache }) {
+      const events = cache.readQuery({ query }).gameEvents;
+      return doesOpponentHaveAGo(pegInfo, { userid }, events);
     },
   },
   CutsInfo: {

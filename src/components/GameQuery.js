@@ -40,7 +40,8 @@ export default class GameQuery extends PureComponent {
               playedBy
             }
             canPlay
-            hasAGo
+            hasAGo: opponentHasAGo(userid: "${opponent}")
+            opponentHasAGo(userid: "${currentUser}")
           }
         }
       }

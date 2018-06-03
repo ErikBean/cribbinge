@@ -18,7 +18,7 @@ const styles = (theme) => {
     paper: {
       position: 'relative',
       padding: '50px 20px',
-      height: '50vh',
+      height: '75vh',
       margin: '30px',
       backgroundColor: theme.palette.background.paper,
     },
@@ -53,6 +53,7 @@ class Pegging extends PureComponent {
               hasAGo
               canPlay
               total
+              opponentHasAGo(userid: "${userid}")
             }
           }
         }
@@ -63,8 +64,8 @@ class Pegging extends PureComponent {
           if (error) return <p>Error :( {error.message}</p>;
           if (!data.game) return <p>No game data</p>;
           const { playedCards = [] } = data.game.pegging || {};
-          // console.log('>>> PeggingInfo: ', data.game.pegging);
-          const {total, canPlay} = data.game.pegging;
+          console.log('>>> PeggingInfo: ', data.game.pegging);
+          const { total, canPlay } = data.game.pegging;
           return (
             <React.Fragment>
               <Grid item xs={12}>
@@ -75,10 +76,7 @@ class Pegging extends PureComponent {
               <Grid item xs={12}>
                 <Hand
                   {...hand}
-                  onCardClick={([card]) => {
-                    console.log('>>> card?: ', card);
-                    this.tryPlayCard(total, card)
-                  }}
+                  onCardClick={([card]) => this.tryPlayCard(total, card)}
                   numSelectable={1}
                   disabled={!canPlay}
                 />
