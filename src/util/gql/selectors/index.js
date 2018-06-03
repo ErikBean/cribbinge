@@ -18,10 +18,10 @@ export const getDeck = createSelector(
   },
 );
 
-const lastEventSelector = createSelector(
+export const lastEventSelector = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
-    if (sortedEvents.length) return Array.from(sortedEvents).reverse()[0];
+    if (sortedEvents.length) return Array.from(sortedEvents).pop();
     return null;
   },
 );
@@ -45,15 +45,18 @@ const getCrib = createSelector(
 );
 
 export const getStage = createSelector(
-  [lastEventSelector, getCrib],
-  (lastEvent, crib) => {
+  [lastEventSelector, getCrib, getEventsForCurrentRound],
+  (lastEvent, crib, events) => {
+    const peggedCards = events.filter(({what}) => what === 'play pegging card');
     const needsDiscard = crib.length < 4;
     if (!lastEvent || lastEvent.what === 'cut for first crib' || lastEvent.what === 'start') {
       return 0;
     } else if (needsDiscard) {
       return 1;
+    } else if(peggedCards.length < 8){
+      return 2;
     }
-    return 2;
+    return 3
   },
 );
 

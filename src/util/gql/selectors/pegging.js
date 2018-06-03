@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import * as R from 'ramda';
-import { getEventsForCurrentRound } from './index';
+import { getEventsForCurrentRound, lastEventSelector } from './index';
 import { getIsMyCrib } from './crib';
 import { getCurrentHand } from './hand';
 import { pointValue } from '../../points';
@@ -13,17 +13,27 @@ const getUserIdArg = (_, { userid }) => userid;
 
 export const getPeggingEvents = createSelector(
   [getEventsForCurrentRound],
-  events => events.filter(evt => evt.what === 'play pegging card'),
+  events => events.filter(evt => evt.what === 'play pegging card' || evt.what === 'take a go'),
 );
 
 export const getPlayedCards = createSelector(
   [getPeggingEvents],
-  events => events.map(evt => ({
-    card: evt.cards[0],
-    playedBy: evt.who,
-    __typename: 'PegCard',
-  })),
+  (events) => {
+    let eventsThisRound = events;
+    const lastGoIndexFromEnd = Array.from(events).reverse().findIndex(evt => evt.what === 'take a go');
+    if (lastGoIndexFromEnd >= 0) {
+      const sliceAt = events.length - lastGoIndexFromEnd;
+      eventsThisRound = events.slice(sliceAt);
+    }
+    return eventsThisRound.map(evt => ({
+      card: evt.cards[0],
+      playedBy: evt.who,
+      __typename: 'PegCard',
+    }));
+  },
 );
+
+// const getAllPlayedCards
 
 export const getPegTotal = createSelector(
   [getPlayedCards],
@@ -73,14 +83,19 @@ const getLastPlayedCard = createSelector(
 );
 
 const hasLowEnoughCardFromGameEvents = (_, { userid }, gameEvents) => hasLowEnoughCard(gameEvents, { userid }); // eslint-disable-line max-len
+const getLastGameEvent = (_, __, gameEvents) => lastEventSelector(gameEvents);
 
 export const doesOpponentHaveAGo = createSelector(
-  [getLastPlayedCard, getUserIdArg, hasLowEnoughCardFromGameEvents],
-  (last, userid, hasCardToPlay) => {
-    if (!last) {
+  [getLastPlayedCard, getUserIdArg, hasLowEnoughCardFromGameEvents, getLastGameEvent],
+  (lastPlayedCard, userid, hasCardToPlay, lastEvent) => {
+    if (lastEvent.what === 'take a go') {
+      // someone needs to lead, cant take 2 gos in a row
+      return false;
+    }
+    if (!lastPlayedCard) {
       // no played cards: opponent does not havea go:
       return false;
-    } else if (last.playedBy === userid) {
+    } else if (lastPlayedCard.playedBy === userid) {
       // I played the last card, opponent does not have a go:
       return false;
     }

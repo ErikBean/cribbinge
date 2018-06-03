@@ -16,6 +16,7 @@ class Game extends PureComponent {
     cutForFirstCrib: this.cutForFirstCrib,
     deal: this.deal,
     discard: this.discard,
+    takeAGo: this.takeAGo,
   })
 
   cutForFirstCrib = (card) => {
@@ -56,6 +57,12 @@ class Game extends PureComponent {
       });
     }
   }
+  takeAGo = () => {
+    this.props.addEvent({
+      cards: '0',
+      what: 'take a go',
+    });
+  }
   renderGameStage(stage) {
     switch (stage) {
       case 0:
@@ -81,6 +88,8 @@ class Game extends PureComponent {
             userid={this.props.currentUser}
           />
         );
+      case 3: 
+        return 'count your hand!'
       default:
         return `Not sure what stage this game is at (stage=${stage})`;
     }

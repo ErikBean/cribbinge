@@ -4,7 +4,7 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     action: '',
     actionText: '',
   };
-  if (game.stage === 0) {
+  if (game.stage === 0) { // Stage 0: Cutting for the first crib
     const { hasCutForFirstCrib, shownCuts, winner } = game.cutsForFirstCrib;
     const waitingForOtherCutForFirstCrib = hasCutForFirstCrib && shownCuts.length === 1;
     const wonFirstCrib = winner === currentUser;
@@ -20,7 +20,7 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     } else if (lostFirstCrib) {
       message.text = `${opponent} won the first crib. Wait for them to deal`;
     }
-  } else if (game.stage === 1) {
+  } else if (game.stage === 1) { // Stage 1: Discarding cards to the crib
     if (!game.hand.hasDiscarded) {
       message.text = `Select two cards to put in ${game.crib.isMyCrib ? 'your' : 'their'} crib`;
       message.action = 'discard';
@@ -28,7 +28,7 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     } else if (game.hand.hasDiscarded && !game.crib.hasAllCards) {
       message.text = `Waiting for ${opponent} to discard`;
     }
-  } else if (game.stage === 2) {
+  } else if (game.stage === 2) { // Stage 2: Pegging
     const {
       playedCards, hasAGo, canPlay, opponentHasAGo,
     } = game.pegging;
