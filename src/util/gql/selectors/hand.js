@@ -25,9 +25,6 @@ export const getDealtHand = createSelector(
 export const getCurrentHand = createSelector(
   [getEventsForCurrentRound, getDealtHand, getPlayedCards, getStage, getUserIdArg],
   (events, dealtHand, peggingEvents, stage, userid) => {
-    if (stage === 1) {
-      return dealtHand;
-    }
     let hand = dealtHand;
     const discardEvt = Array.from(events).reverse()
       .find(({ what, who }) => what === DISCARD && who === userid);
@@ -35,13 +32,12 @@ export const getCurrentHand = createSelector(
       const { cards: discards } = discardEvt;
       hand = dealtHand.filter(card => discards.indexOf(card) === -1);
     }
-    if (stage === 3) {
-      return hand;
-    }
-    if (peggingEvents.length) {
+    
+    if (peggingEvents.length && stage === 2) {
       const played = peggingEvents.map(({ card }) => card);
       hand = hand.filter(card => played.indexOf(card) === -1);
     }
+    
     return hand;
   },
 );

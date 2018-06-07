@@ -23,5 +23,5 @@ export default function Discard(props) {
 
 Discard.propTypes = {
   hand: PropTypes.shape({}).isRequired,
-  onCardClick: PropTypes.bool.isRequired,
+  onCardClick: PropTypes.func.isRequired,
 };

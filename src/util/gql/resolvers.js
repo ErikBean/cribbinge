@@ -51,6 +51,7 @@ export const resolvers = {
   },
   Game: {
     hand(game, { userid }) {
+      console.log('>>> getHand: ', getHand(game.events, { userid }));
       return getHand(game.events, { userid });
     },
     pegging(game, { userid }) {

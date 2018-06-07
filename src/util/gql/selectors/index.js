@@ -13,6 +13,7 @@ const {
 export function sortByTimeSelector(gameEvents) {
   if (!gameEvents) return [];
   // its already sorted
+  // console.log('>>> GE: ', gameEvents.length);
   return gameEvents;
 }
 
@@ -31,7 +32,7 @@ export const lastEventSelector = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
     if (sortedEvents.length) return Array.from(sortedEvents).pop();
-    return null;
+    return {};
   },
 );
 

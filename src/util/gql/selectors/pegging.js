@@ -20,7 +20,6 @@ export const getPeggingEvents = createSelector(
 export const getPlayedCards = createSelector(
   [getPeggingEvents],
   (events) => {
-    console.log('>>> PE again?: ', events.length);
     let eventsThisRound = Array.from(events);
     const lastGoIndexFromEnd = Array.from(events).reverse()
       .findIndex(evt => evt.what === TAKE_A_GO);
@@ -28,7 +27,6 @@ export const getPlayedCards = createSelector(
       const sliceAt = events.length - lastGoIndexFromEnd;
       eventsThisRound = events.slice(sliceAt);
     }
-    console.log('>>> eventsThisRound: ', eventsThisRound.length, events.length);
     return eventsThisRound.map(evt => ({
       card: evt.cards[0],
       playedBy: evt.who,

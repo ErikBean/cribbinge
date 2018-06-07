@@ -69,7 +69,6 @@ export const getPeggingPoints = createSelector(
   [getPeggingEvents, getPegTotal],
   (pegEvents, total) => {
     const lastEvent = R.last(pegEvents) || {};
-    console.log('>>> PE: ', pegEvents.length);
     if(lastEvent.what !== PLAY_PEG_CARD){
       return {
         fifteens: 0,
