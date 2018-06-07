@@ -13,7 +13,10 @@ const {
 export function sortByTimeSelector(gameEvents) {
   if (!gameEvents) return [];
   // its already sorted
-  // console.log('>>> GE: ', gameEvents.length);
+  if(gameEvents.length === 3){
+    debugger;
+  }
+  // console.log('>>> number of events: ', gameEvents.length);
   return gameEvents;
 }
 

@@ -22,6 +22,7 @@ const getPegRuns = createSelector(
 )
 
 const getPegPairs = createSelector(
+  // TODO: This is taking in data that is NOT game.events but derived data from gql 
   [getPlayedCards],
   (played) => {
     const pairs = {
@@ -49,9 +50,9 @@ const getPegPairs = createSelector(
 )
 
 const getPegFifteens = createSelector(
+  // TODO: This is taking in data that is NOT game.events but derived data from gql 
   [getPlayedCards, getPegTotal],
   (played, total) => {
-    console.log('>>> played again: ', played.length);
     if(total === 15){
       return {
         cards: played.map(({card}) => card),
@@ -66,8 +67,9 @@ const getPegFifteens = createSelector(
 )
 
 export const getPeggingPoints = createSelector(
-  [getPeggingEvents, getPegTotal],
-  (pegEvents, total) => {
+  [getPeggingEvents, getPegTotal, (events) => events],
+  (pegEvents, total, allEvents) => {
+    console.log('>>> PegEvents: ', pegEvents.length);
     const lastEvent = R.last(pegEvents) || {};
     if(lastEvent.what !== PLAY_PEG_CARD){
       return {
@@ -77,9 +79,9 @@ export const getPeggingPoints = createSelector(
       };
     } else {
       return {
-        fifteens: getPegFifteens(pegEvents),
-        pairs: getPegPairs(pegEvents),
-        runs: getPegRuns(pegEvents),
+        fifteens: getPegFifteens(allEvents),
+        pairs: getPegPairs(allEvents),
+        runs: getPegRuns(allEvents),
       }
     }
   },

@@ -90,11 +90,14 @@ class Game extends PureComponent {
         );
       case 2:
         return (
-          <Pegging
-            playPegCard={this.playPegCard}
-            hand={this.props.hand}
-            userid={this.props.currentUser}
-          />
+          <React.Fragment>
+            {JSON.stringify(this.props.points.pegging)}
+            <Pegging
+              playPegCard={this.playPegCard}
+              hand={this.props.hand}
+              userid={this.props.currentUser}
+            />
+          </React.Fragment>
         );
       case 3:
         return 'count your hand!';
