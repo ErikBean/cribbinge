@@ -1,6 +1,7 @@
 import { connect } from 'react-firebase';
 import App from './App';
 import { createDeck, shuffle } from '../util/deck';
+import { START } from '../util/types/events';
 
 export default connect((props, ref) => ({
   users: 'users',
@@ -9,7 +10,7 @@ export default connect((props, ref) => ({
     __typename: 'Event',
     cards: shuffle(createDeck()),
     timestamp: Date.now(),
-    what: 'start',
+    what: START,
     who: name,
   }),
 }))(App);

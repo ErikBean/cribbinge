@@ -1,28 +1,36 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
 import { connect } from 'react-firebase';
-
 import Grid from '@material-ui/core/Grid';
 
-import { createDeck, shuffle } from '../util/deck';
 import { BeginGame, Discard, Pegging } from './stages';
+import { createDeck, shuffle } from '../util/deck';
+import {
+  CUT_FOR_FIRST_CRIB,
+  DEAL,
+  DISCARD,
+  PLAY_PEG_CARD,
+  TAKE_A_GO,
+} from '../util/types/events';
 
 class Game extends PureComponent {
   state = {
     selectedCards: [],
   }
   actions = () => ({
+    countHand: this.countHand,
     cutForFirstCrib: this.cutForFirstCrib,
     deal: this.deal,
     discard: this.discard,
     takeAGo: this.takeAGo,
   })
-
+  countHand = () => {
+    console.log('>>> Want to count: ', this.props.hand);
+  }
   cutForFirstCrib = (card) => {
     this.props.addEvent({
       cards: [card],
-      what: 'cut for first crib',
+      what: CUT_FOR_FIRST_CRIB,
     });
   }
   deal = () => {
@@ -33,7 +41,7 @@ class Game extends PureComponent {
         [this.props.currentUser]: deck.slice(6, 12),
         __typename: 'Hands',
       },
-      what: 'deal round 1',
+      what: DEAL,
     });
   }
   discard = () => {
@@ -44,7 +52,7 @@ class Game extends PureComponent {
     }
     this.props.addEvent({
       cards,
-      what: 'discard',
+      what: DISCARD,
     });
   }
   playPegCard = (card) => {
@@ -53,14 +61,14 @@ class Game extends PureComponent {
     } else {
       this.props.addEvent({
         cards: [card],
-        what: 'play pegging card',
+        what: PLAY_PEG_CARD,
       });
     }
   }
   takeAGo = () => {
     this.props.addEvent({
       cards: '0',
-      what: 'take a go',
+      what: TAKE_A_GO,
     });
   }
   renderGameStage(stage) {
@@ -88,8 +96,8 @@ class Game extends PureComponent {
             userid={this.props.currentUser}
           />
         );
-      case 3: 
-        return 'count your hand!'
+      case 3:
+        return 'count your hand!';
       default:
         return `Not sure what stage this game is at (stage=${stage})`;
     }

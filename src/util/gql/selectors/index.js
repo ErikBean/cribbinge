@@ -1,5 +1,14 @@
+import * as stages from '../../types/stages';
+
 const { createSelector } = require('reselect');
-// const { valueOf } = require('../../deck');
+const {
+  CUT_FOR_FIRST_CRIB,
+  START,
+  DEAL,
+  DISCARD,
+  PLAY_PEG_CARD,
+  TAKE_A_GO,
+} = require('../../types/events');
 
 export function sortByTimeSelector(gameEvents) {
   if (!gameEvents) return [];
@@ -10,7 +19,7 @@ export function sortByTimeSelector(gameEvents) {
 export const getDeck = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
-    const deckEvent = Array.from(sortedEvents).reverse().find(({ what }) => what === 'start');
+    const deckEvent = Array.from(sortedEvents).reverse().find(({ what }) => what === START);
     if (deckEvent) {
       return deckEvent.cards;
     }
@@ -31,7 +40,7 @@ export const getEventsForCurrentRound = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
     const dealEvent = Array.from(sortedEvents).reverse()
-      .find(({ what }) => what.includes('deal round'));
+      .find(({ what }) => what.includes(DEAL));
     return sortedEvents.slice(sortedEvents.lastIndexOf(dealEvent));
   },
 );
@@ -39,7 +48,7 @@ export const getEventsForCurrentRound = createSelector(
 const getCrib = createSelector(
   [getEventsForCurrentRound],
   events => events
-    .filter(({ what }) => what === 'discard')
+    .filter(({ what }) => what === DISCARD)
     .map(({ cards }) => cards)
     .reduce((acc, curr) => acc.concat(curr), []),
 );
@@ -47,16 +56,20 @@ const getCrib = createSelector(
 export const getStage = createSelector(
   [lastEventSelector, getCrib, getEventsForCurrentRound],
   (lastEvent, crib, events) => {
-    const peggedCards = events.filter(({what}) => what === 'play pegging card');
+    const peggedCards = events.filter(({ what }) => what === PLAY_PEG_CARD);
+    const lastPeggedCardIdx = events.indexOf(peggedCards[peggedCards.length - 1]);
+    const lastGo = events[lastPeggedCardIdx + 1] || {};
+    const tookGoForLastCard = peggedCards.length === 8 && (lastGo.what === TAKE_A_GO);
     const needsDiscard = crib.length < 4;
-    if (!lastEvent || lastEvent.what === 'cut for first crib' || lastEvent.what === 'start') {
-      return 0;
+    const { what: lastEventType } = lastEvent || {};
+    if (lastEventType === CUT_FOR_FIRST_CRIB || lastEventType === START) {
+      return stages.DETERMINING_FIRST_CRIB;
     } else if (needsDiscard) {
-      return 1;
-    } else if(peggedCards.length < 8){
-      return 2;
+      return stages.DISCARDING_TO_CRIB;
+    } else if (!tookGoForLastCard) {
+      return stages.PLAYING_PEGGING_CARDS;
     }
-    return 3
+    return stages.COUNTING_HAND;
   },
 );
 

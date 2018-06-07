@@ -1,13 +1,14 @@
 import { createSelector } from 'reselect';
 import { getFirstCuts, getFirstCribWinner } from './firstCrib';
 import { getEventsForCurrentRound } from './index';
+import { DISCARD, DEAL } from '../../types/events';
 
 const getUserIdArg = (_, { userid }) => userid;
 
 const getCribCards = createSelector(
   [getEventsForCurrentRound],
   events => events
-    .filter(({ what }) => what === 'discard')
+    .filter(({ what }) => what === DISCARD)
     .map(({ cards }) => cards)
     .reduce((acc, curr) => acc.concat(curr), []),
 );
@@ -20,7 +21,7 @@ const getFirstCutWinner = createSelector(
 export const getIsMyCrib = createSelector(
   [getEventsForCurrentRound, getFirstCutWinner, getUserIdArg],
   (events, firstCribWinner, userid) => {
-    if (events.length && events[0].what.includes('deal')) {
+    if (events.length && events[0].what.includes(DEAL)) {
       return events[0].who === userid;
     }
     return firstCribWinner === userid;

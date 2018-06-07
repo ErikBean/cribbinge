@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
 import { getEventsForCurrentRound } from './index';
+import { PLAY_PEG_CARD } from '../../types/events';
 
 export const getPeggingEvents = createSelector(
   [getEventsForCurrentRound],
-  events => events.filter(evt => evt.what === 'play pegging card'),
+  events => events.filter(evt => evt.what === PLAY_PEG_CARD),
 );
 
 export const getPlayedCards = createSelector(

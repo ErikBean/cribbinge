@@ -49,6 +49,10 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     } else {
       message.text = `Waiting for ${opponent} to play`;
     }
+  } else if (game.stage === 3) {
+    message.text = 'Count your hand';
+    message.action = 'countHand';
+    message.actionText = 'OK';
   }
   return message;
 };

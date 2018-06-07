@@ -64,13 +64,15 @@ class Pegging extends PureComponent {
           if (error) return <p>Error :( {error.message}</p>;
           if (!data.game) return <p>No game data</p>;
           const { playedCards = [] } = data.game.pegging || {};
-          console.log('>>> PeggingInfo: ', data.game.pegging);
           const { total, canPlay } = data.game.pegging;
           return (
             <React.Fragment>
               <Grid item xs={12}>
                 <Paper elevation={5} className={classes.paper}>
-                  <PlayedCards playedCards={playedCards} currentUser={userid} />
+                  <PlayedCards
+                    playedCards={playedCards}
+                    currentUser={userid}
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12}>

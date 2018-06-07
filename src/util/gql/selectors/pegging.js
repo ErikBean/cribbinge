@@ -4,6 +4,7 @@ import { getEventsForCurrentRound, lastEventSelector } from './index';
 import { getIsMyCrib } from './crib';
 import { getCurrentHand } from './hand';
 import { pointValue } from '../../points';
+import { TAKE_A_GO, PLAY_PEG_CARD } from '../../types/events';
 
 const sortByPointValue = R.sortBy(pointValue);
 const first = R.take(1);
@@ -13,18 +14,21 @@ const getUserIdArg = (_, { userid }) => userid;
 
 export const getPeggingEvents = createSelector(
   [getEventsForCurrentRound],
-  events => events.filter(evt => evt.what === 'play pegging card' || evt.what === 'take a go'),
+  events => events.filter(evt => evt.what === PLAY_PEG_CARD || evt.what === TAKE_A_GO),
 );
 
 export const getPlayedCards = createSelector(
   [getPeggingEvents],
   (events) => {
-    let eventsThisRound = events;
-    const lastGoIndexFromEnd = Array.from(events).reverse().findIndex(evt => evt.what === 'take a go');
+    console.log('>>> PE again?: ', events.length);
+    let eventsThisRound = Array.from(events);
+    const lastGoIndexFromEnd = Array.from(events).reverse()
+      .findIndex(evt => evt.what === TAKE_A_GO);
     if (lastGoIndexFromEnd >= 0) {
       const sliceAt = events.length - lastGoIndexFromEnd;
       eventsThisRound = events.slice(sliceAt);
     }
+    console.log('>>> eventsThisRound: ', eventsThisRound.length, events.length);
     return eventsThisRound.map(evt => ({
       card: evt.cards[0],
       playedBy: evt.who,
@@ -33,12 +37,9 @@ export const getPlayedCards = createSelector(
   },
 );
 
-// const getAllPlayedCards
-
 export const getPegTotal = createSelector(
   [getPlayedCards],
   playedCards =>
-    // TODO: Need to separate rounds
     playedCards
       .map(({ card }) => pointValue(card))
       .reduce((acc, curr) => acc + curr, 0),
@@ -88,7 +89,7 @@ const getLastGameEvent = (_, __, gameEvents) => lastEventSelector(gameEvents);
 export const doesOpponentHaveAGo = createSelector(
   [getLastPlayedCard, getUserIdArg, hasLowEnoughCardFromGameEvents, getLastGameEvent],
   (lastPlayedCard, userid, hasCardToPlay, lastEvent) => {
-    if (lastEvent.what === 'take a go') {
+    if (lastEvent.what === TAKE_A_GO) {
       // someone needs to lead, cant take 2 gos in a row
       return false;
     }

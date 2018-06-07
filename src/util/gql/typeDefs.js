@@ -21,6 +21,18 @@ const typeDefs = `
     id: String
     pegging(userid: String!): PeggingInfo
     stage: Int!
+    points(userid: String!): AllPoints!
+  }
+  
+  type AllPoints {
+    hand: PointsItem!
+    pegging: PointsItem!
+  }
+  
+  type Points {
+    fifteens: Int!
+    pairs: Int!
+    runs: Int!
   }
   
   type PeggingInfo {

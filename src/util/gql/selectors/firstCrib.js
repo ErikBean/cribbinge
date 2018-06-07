@@ -1,8 +1,9 @@
-const { createSelector } = require('reselect');
-const { valueOf } = require('../../deck');
+import { createSelector } from 'reselect';
+import { valueOf } from '../../deck';
+import { CUT_FOR_FIRST_CRIB } from '../../types/events';
 
 export const getFirstCuts = (gameEvents) => {
-  const cutEvents = gameEvents.filter(evt => evt.what === 'cut for first crib');
+  const cutEvents = gameEvents.filter(evt => evt.what === CUT_FOR_FIRST_CRIB);
   return {
     first: cutEvents[0] || null,
     second: cutEvents[1] || null,
