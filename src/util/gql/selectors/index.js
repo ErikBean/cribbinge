@@ -40,7 +40,7 @@ export const getEventsForCurrentRound = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
     const dealEvent = Array.from(sortedEvents).reverse()
-      .find(({ what }) => what.includes(DEAL));
+      .find(({ what }) => what === DEAL);
     return sortedEvents.slice(sortedEvents.lastIndexOf(dealEvent));
   },
 );

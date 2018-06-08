@@ -18,7 +18,7 @@ const styles = (theme) => {
     paper: {
       position: 'relative',
       padding: '50px 20px',
-      height: '75vh',
+      height: '60vh',
       margin: '30px',
       backgroundColor: theme.palette.background.paper,
     },
@@ -37,7 +37,7 @@ class Pegging extends PureComponent {
 
   render() {
     const {
-      hand, classes, userid,
+      hand, classes, opponent, userid,
     } = this.props;
     return (
       <Query
@@ -55,6 +55,9 @@ class Pegging extends PureComponent {
               total
               opponentHasAGo(userid: "${userid}")
             }
+            points(userid: "${userid}", opponentid: "${opponent}"){
+              pegging
+            }
           }
         }
       `}
@@ -67,11 +70,13 @@ class Pegging extends PureComponent {
           const { total, canPlay } = data.game.pegging;
           return (
             <React.Fragment>
+              {JSON.stringify(data.game.points.pegging)}
               <Grid item xs={12}>
                 <Paper elevation={5} className={classes.paper}>
                   <PlayedCards
                     playedCards={playedCards}
                     currentUser={userid}
+                    total={total}
                   />
                 </Paper>
               </Grid>

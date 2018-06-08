@@ -43,10 +43,6 @@ export default class GameQuery extends PureComponent {
             hasAGo: opponentHasAGo(userid: "${opponent}")
             opponentHasAGo(userid: "${currentUser}")
           }
-          points(userid: "${currentUser}", opponentid: "${opponent}"){
-            hand
-            pegging
-          }
         }
       }
     `}

@@ -21,9 +21,10 @@ const getFirstCutWinner = createSelector(
 export const getIsMyCrib = createSelector(
   [getEventsForCurrentRound, getFirstCutWinner, getUserIdArg],
   (events, firstCribWinner, userid) => {
-    if (events.length && events[0].what.includes(DEAL)) {
+    if (events.length && events[0].what === DEAL) {
       return events[0].who === userid;
     }
+    // TODO: when we can determine what round it is, do Boolean(round%2)
     return firstCribWinner === userid;
   },
 );

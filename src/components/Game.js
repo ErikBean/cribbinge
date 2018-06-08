@@ -91,11 +91,11 @@ class Game extends PureComponent {
       case 2:
         return (
           <React.Fragment>
-            {JSON.stringify(this.props.points.pegging)}
             <Pegging
               playPegCard={this.playPegCard}
               hand={this.props.hand}
               userid={this.props.currentUser}
+              opponent={this.props.opponent}
             />
           </React.Fragment>
         );

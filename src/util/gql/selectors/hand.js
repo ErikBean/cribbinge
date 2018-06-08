@@ -14,7 +14,7 @@ const getUserIdArg = (_, args) => {
 export const getDealtHand = createSelector(
   [getEventsForCurrentRound, getUserIdArg],
   (sortedEvents, userid) => {
-    const dealEvent = sortedEvents.find(({ what }) => what.includes(DEAL));
+    const dealEvent = sortedEvents.find(({ what }) => what === DEAL);
     if (dealEvent) {
       return dealEvent.cards[userid];
     }

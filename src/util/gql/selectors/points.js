@@ -40,7 +40,7 @@ const getPegPairs = createSelector(
       pairs.cards = R.takeLast(played, 3);
     }
     if(isFourOfAKind){
-      pairs.points = 12;
+      pairs.points = 12;  
       pairs.cards = R.takeLast(played, 4);
     }
     return pairs
