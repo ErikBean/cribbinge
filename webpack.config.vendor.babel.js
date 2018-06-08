@@ -23,14 +23,14 @@ module.exports = {
   mode: 'development',
   output: {
     filename: 'vendor.dll.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
     library: "[name]",
   },
   module: {},
   plugins: [
     new webpack.DllPlugin({
       name: "[name]",
-      path: path.join(__dirname, "dist", "[name]-manifest.json"),
+      path: path.join(__dirname, "public", "[name]-manifest.json"),
     })
   ]
 };

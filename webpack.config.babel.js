@@ -6,7 +6,7 @@ module.exports = (env) => {
     entry: './src/index.js',
     output: {
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'public'),
       publicPath: '/webpackPublicPath'
     },
     module: {
@@ -21,12 +21,12 @@ module.exports = (env) => {
         },
       ]
     },
-    mode: 'development',
+    mode: 'production',
     devtool: 'inline-source-map',
     plugins: [
       new webpack.DllReferencePlugin({
         context: __dirname,
-        manifest: require('./dist/vendor-manifest.json')
+        manifest: require('./public/vendor-manifest.json')
       })
     ]
   }
