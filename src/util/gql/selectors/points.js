@@ -22,35 +22,32 @@ const getPegRuns = createSelector(
 )
 
 const getPegPairs = createSelector(
-  // TODO: This is taking in data that is NOT game.events but derived data from gql 
   [getPlayedCards],
   (played) => {
     const pairs = {
       cards: [],
       points: 0,
     }
-    console.log('>>> played: ', played.length);
-    // const isPair = areLastTwoEq(played); // n === n-1 ?
-    // const isThreeOfAKind = isPair && areLastTwoEq(R.dropLast(1, played)); // n-1 === n-2 ? 
-    // const isFourOfAKind = isPair && isThreeOfAKind && areLastTwoEq(R.dropLast(2, played)); // n-2 === n-3 ?
-    // if(isPair) {
-    //   pairs.points = 2;
-    //   pairs.cards = R.takeLast(played, 2);
-    // }
-    // if(isThreeOfAKind){
-    //   pairs.points = 6;
-    //   pairs.cards = R.takeLast(played, 3);
-    // }
-    // if(isFourOfAKind){
-    //   pairs.points = 12;
-    //   pairs.cards = R.takeLast(played, 4);
-    // }
+    const isPair = areLastTwoEq(played); // n === n-1 ?
+    const isThreeOfAKind = isPair && areLastTwoEq(R.dropLast(1, played)); // n-1 === n-2 ? 
+    const isFourOfAKind = isPair && isThreeOfAKind && areLastTwoEq(R.dropLast(2, played)); // n-2 === n-3 ?
+    if(isPair) {
+      pairs.points = 2;
+      pairs.cards = R.takeLast(played, 2);
+    }
+    if(isThreeOfAKind){
+      pairs.points = 6;
+      pairs.cards = R.takeLast(played, 3);
+    }
+    if(isFourOfAKind){
+      pairs.points = 12;
+      pairs.cards = R.takeLast(played, 4);
+    }
     return pairs
   }
 )
 
 const getPegFifteens = createSelector(
-  // TODO: This is taking in data that is NOT game.events but derived data from gql 
   [getPlayedCards, getPegTotal],
   (played, total) => {
     if(total === 15){
@@ -69,7 +66,6 @@ const getPegFifteens = createSelector(
 export const getPeggingPoints = createSelector(
   [getPeggingEvents, getPegTotal, (events) => events],
   (pegEvents, total, allEvents) => {
-    console.log('>>> PegEvents: ', pegEvents.length);
     const lastEvent = R.last(pegEvents) || {};
     if(lastEvent.what !== PLAY_PEG_CARD){
       return {

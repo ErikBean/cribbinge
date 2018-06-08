@@ -64,12 +64,13 @@ const hasLowEnoughCard = createSelector(
 );
 
 export const canPlayCard = createSelector(
-  [getPeggingEvents, getIsMyCrib, hasLowEnoughCard, getUserIdArg],
+  [getPeggingEvents, getIsMyCrib, hasLowEnoughCard, getUserIdArg, () => {}],
   (pegEvents, isMyCrib, hasCardToPlay, userid) => {
     const lastEvt = Array.from(pegEvents).pop() || {};
     if (!pegEvents.length) {
       return !isMyCrib;
     } else if (lastEvt.who !== userid) {
+      // TODO: also return hasCardToPlay if I have a go 
       return hasCardToPlay;
     }
     return false;

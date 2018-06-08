@@ -63,10 +63,10 @@ export const resolvers = {
         __typename: 'PeggingInfo',
       };
     },
-    points(game, { userid }) {
+    points(game, { userid, opponentid }) {
       return {
         hand: {},
-        pegging: getPeggingPoints(game.events, {userid}),
+        pegging: getPeggingPoints(game.events, {userid, opponentid}),
         __typename: 'AllPoints',
       };
     },

@@ -12,7 +12,7 @@ const styles = theme => ({
     height: '100%',
   },
   flipper: {
-    transition: '6s',
+    transition: '1s',
     transformStyle: 'preserve-3d',
     position: 'relative',
     height: '100%',

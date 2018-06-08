@@ -21,7 +21,7 @@ const typeDefs = `
     id: String
     pegging(userid: String!): PeggingInfo
     stage: Int!
-    points(userid: String!): AllPoints!
+    points(userid: String!, opponentid: String!): AllPoints!
   }
   
   type AllPoints {
