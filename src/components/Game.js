@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-firebase';
 import Grid from '@material-ui/core/Grid';
 
-import { BeginGame, Discard, Pegging } from './stages';
+import { BeginGame, Discard, Pegging, CutDeck } from './stages';
 import { createDeck, shuffle } from '../util/deck';
 import {
   CUT_FOR_FIRST_CRIB,
@@ -32,6 +32,9 @@ class Game extends PureComponent {
       cards: [card],
       what: CUT_FOR_FIRST_CRIB,
     });
+  }
+  cutDeck = (card) => {
+    console.log('>>> want to cut card: ', card);
   }
   deal = () => {
     const deck = shuffle(createDeck());
@@ -88,18 +91,20 @@ class Game extends PureComponent {
             hand={this.props.hand}
           />
         );
-      case 2:
+      case 2: 
         return (
-          <React.Fragment>
-            <Pegging
-              playPegCard={this.playPegCard}
-              hand={this.props.hand}
-              userid={this.props.currentUser}
-              opponent={this.props.opponent}
-            />
-          </React.Fragment>
-        );
+          <CutDeck deck={this.props.deck}/>
+        )
       case 3:
+        return (
+          <Pegging
+            playPegCard={this.playPegCard}
+            hand={this.props.hand}
+            userid={this.props.currentUser}
+            opponent={this.props.opponent}
+          />
+        );
+      case 4:
         return 'count your hand!';
       default:
         return `Not sure what stage this game is at (stage=${stage})`;
