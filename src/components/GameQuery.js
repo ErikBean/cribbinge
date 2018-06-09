@@ -37,6 +37,7 @@ export default class GameQuery extends PureComponent {
             hasAllCards
             isMyCrib(userid: "${currentUser}")
           }
+          cut
           pegging(userid: "${currentUser}"){
             playedCards {
               card

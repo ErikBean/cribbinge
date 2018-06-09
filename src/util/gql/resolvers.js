@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { getDeck, getStage } from './selectors';
+import { getDeck, getStage, getCut } from './selectors';
 import {
   getFirstCuts,
   hasCutForFirstCrib,
@@ -40,6 +40,7 @@ export const resolvers = {
         stage: getStage(events),
         cutsForFirstCrib: getFirstCuts(events),
         crib: getCrib(events),
+        cut: getCut(events),
         __typename: 'Game',
       };
     },

@@ -1,4 +1,4 @@
-import * as stages from '../../types/stages';
+import * as R from 'ramda';
 
 const { createSelector } = require('reselect');
 const {
@@ -6,6 +6,8 @@ const {
   START,
   DEAL,
   DISCARD,
+  FLIP_FIFTH_CARD,
+  START_PEGGING,
   PLAY_PEG_CARD,
   TAKE_A_GO,
 } = require('../../types/events');
@@ -30,7 +32,7 @@ export const getDeck = createSelector(
 export const lastEventSelector = createSelector(
   [sortByTimeSelector],
   (sortedEvents) => {
-    if (sortedEvents.length) return Array.from(sortedEvents).pop();
+    if (sortedEvents.length) return R.last(sortedEvents);
     return {};
   },
 );
@@ -61,15 +63,29 @@ export const getStage = createSelector(
     const lastGo = events[lastPeggedCardIdx + 1] || {};
     const tookGoForLastCard = peggedCards.length === 8 && (lastGo.what === TAKE_A_GO);
     const needsDiscard = crib.length < 4;
+    const hasDoneCut = events.find(({ what }) => what === START_PEGGING);
     const { what: lastEventType } = lastEvent || {};
     if (lastEventType === CUT_FOR_FIRST_CRIB || lastEventType === START) {
-      return stages.DETERMINING_FIRST_CRIB;
+      return 0;
     } else if (needsDiscard) {
-      return stages.DISCARDING_TO_CRIB;
+      return 1;
+    } else if (!hasDoneCut) {
+      return 2;
     } else if (!tookGoForLastCard) {
-      return stages.PLAYING_PEGGING_CARDS;
+      return 3;
     }
-    return stages.COUNTING_HAND;
+    return 4;
+  },
+);
+
+export const getCut = createSelector(
+  [sortByTimeSelector],
+  (sortedEvents) => {
+    const cutEvent = R.reverse(sortedEvents).find(({ what }) => what === FLIP_FIFTH_CARD);
+    if (cutEvent) {
+      return cutEvent.cards[0];
+    }
+    return '';
   },
 );
 

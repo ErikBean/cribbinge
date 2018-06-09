@@ -13,7 +13,7 @@ export default function BeginGame(props) {
           deck={props.deck}
           doCut={props.cutForFirstCrib}
           shownCuts={props.cutsForFirstCrib.shownCuts}
-          hasDoneCut={props.cutsForFirstCrib.hasCutForFirstCrib}
+          disabled={props.cutsForFirstCrib.hasCutForFirstCrib}
         />
       </Grid>
       <Grid item sm={12} lg={6}>

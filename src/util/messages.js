@@ -1,4 +1,6 @@
-module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
+import { getNumberOrFace, getSuit } from './deck';
+
+export const getMessage = (game, { currentUser, opponent } = {}) => {
   const message = {
     text: 'Error: Could not find message for game state',
     action: '',
@@ -35,12 +37,16 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     }
     case 2: { // stage 2: cut 5th card
       console.log('>>> game: ', game);
-      if (game.crib.isMyCrib) {
-        message.text = `Waiting for ${opponent} to cut the deck`;
+      if (!game.cut) {
+        if (game.crib.isMyCrib) {
+          message.text = 'Cut the fifth card';
+        } else {
+          message.text = `Waiting for ${opponent} to flip the fifth card`;
+        }
       } else {
-        message.text = 'Cut the deck';
-        message.action = 'cutDeck';
-        message.actionText = 'OK';
+        message.text = `${game.crib.isMyCrib ? 'You' : 'They'} cut an ${getNumberOrFace(game.cut)} of ${getSuit(game.cut)}!`;
+        message.action = 'continueToPegging';
+        message.actionText = 'Continue';
       }
       break;
     }
@@ -81,4 +87,4 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
   return message;
 };
 
-module.exports.getActionText = () => 'Deal!';
+export const getActionText = () => 'Deal!';

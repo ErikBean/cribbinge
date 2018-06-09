@@ -65,14 +65,14 @@ class MuiDeckCutter extends PureComponent {
   static propTypes = {
     deck: PropTypes.arrayOf(PropTypes.string).isRequired,
     doCut: PropTypes.func.isRequired,
-    changeCutIndex: PropTypes.func,
-    hasDoneCut: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool.isRequired,
     shownCuts: PropTypes.arrayOf(PropTypes.string),
     classes: PropTypes.shape({}).isRequired,
+    canFlip: PropTypes.bool,
   }
   static defaultProps = {
     shownCuts: [],
-    changeCutIndex() {},
+    canFlip: true,
   }
   state = {
     cutIndex: 25,
@@ -80,18 +80,17 @@ class MuiDeckCutter extends PureComponent {
   sliceDeck = (e) => {
     const cutIndex = parseInt(e.target.value, 10);
     this.setState({ cutIndex });
-    this.props.changeCutIndex(cutIndex);
   }
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);
     const leftStackClicked = index === this.state.cutIndex - 1;
-    if (leftStackClicked && !this.props.hasDoneCut) {
+    if (leftStackClicked && this.props.canFlip) {
       this.props.doCut(card);
     }
   }
   render() {
     const { cutIndex } = this.state;
-    const { classes } = this.props;
+    const { classes, canFlip } = this.props;
     return (
       <div className={classes.wrapper}>
         <input
@@ -102,7 +101,7 @@ class MuiDeckCutter extends PureComponent {
           max="51"
           style={{ width: '100%' }}
           ref={(elem) => { this.input = elem; }}
-          disabled={this.props.hasDoneCut}
+          disabled={this.props.disabled}
         />
         {this.props.deck.map((card, i) => {
           const leftRightClass = i < cutIndex ? classes.left : classes.right;
@@ -124,7 +123,7 @@ class MuiDeckCutter extends PureComponent {
                     style={{ transform: 'rotateY(0deg)', zIndex: 2 }}
                   >
                     <Button
-                      disabled={i !== (cutIndex - 1)}
+                      disabled={i !== (cutIndex - 1) || !canFlip}
                       className={`${classes.card}`}
                       onClick={() => this.flipCard(card)}
                     >

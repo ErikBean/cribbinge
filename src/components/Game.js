@@ -4,11 +4,11 @@ import { connect } from 'react-firebase';
 import * as R from 'ramda';
 import Grid from '@material-ui/core/Grid';
 
-import { BeginGame, Discard, Pegging, CutDeck } from './stages';
+import { BeginGame, Discard, Pegging, FifthCard } from './stages';
 import { createDeck, shuffle } from '../util/deck';
 import {
   CUT_FOR_FIRST_CRIB,
-  CUT_DECK,
+  START_PEGGING,
   FLIP_FIFTH_CARD,
   DEAL,
   DISCARD,
@@ -20,7 +20,6 @@ class Game extends PureComponent {
   state = {
     selectedCards: [],
     remainingDeck: [],
-    cutIndex: 25,
   }
   static getDerivedStateFromProps(props) {
     const withoutMyHand = R.without(props.hand.cards);
@@ -33,8 +32,8 @@ class Game extends PureComponent {
   }
   actions = () => ({ // this is for the button on the message bar to do stuff
     countHand: this.countHand,
-    cutDeck: this.cutDeck,
     cutForFirstCrib: this.cutForFirstCrib,
+    continueToPegging: this.continueToPegging,
     deal: this.deal,
     discard: this.discard,
     takeAGo: this.takeAGo,
@@ -48,17 +47,16 @@ class Game extends PureComponent {
       what: CUT_FOR_FIRST_CRIB,
     });
   }
-  cutDeck = () => {
-    this.props.addEvent({
-      index: this.state.cutIndex,
-      cards: ['0'],
-      what: CUT_DECK,
-    });
-  }
   flipFifthCard = (card) => {
     this.props.addEvent({
       cards: [card],
       what: FLIP_FIFTH_CARD,
+    });
+  }
+  continueToPegging = () => {
+    this.props.addEvent({
+      cards: ['0'],
+      what: START_PEGGING,
     });
   }
   deal = () => {
@@ -118,10 +116,11 @@ class Game extends PureComponent {
         );
       case 2:
         return (
-          <CutDeck
+          <FifthCard
             deck={this.state.remainingDeck}
-            changeCutIndex={cutIndex => this.setState({ cutIndex })}
+            cut={this.props.cut}
             flipFifthCard={this.flipFifthCard}
+            canFlip={this.props.crib.isMyCrib}
           />
         );
       case 3:
@@ -154,7 +153,11 @@ class Game extends PureComponent {
 Game.propTypes = {
   addEvent: PropTypes.func.isRequired,
   controls: PropTypes.func.isRequired,
+  crib: PropTypes.shape({
+    isMyCrib: PropTypes.bool.isRequired,
+  }).isRequired,
   currentUser: PropTypes.string.isRequired,
+  cut: PropTypes.string.isRequired,
   cutsForFirstCrib: PropTypes.shape({
     shownCuts: PropTypes.arrayOf(PropTypes.string).isRequired,
     hasCutForFirstCrib: PropTypes.bool.isRequired,

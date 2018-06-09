@@ -5,5 +5,5 @@ export function pointValue(card) {
   if (typeof card !== 'string') {
     console.error('non string passed to pointValue: ', card);
   }
-  return valueOf(card) > 10 ? 10 : valueOf(card);
+  return Math.min(valueOf(card), 10);
 }
