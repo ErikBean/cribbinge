@@ -102,5 +102,6 @@ Pegging.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   hand: PropTypes.shape({}).isRequired,
   userid: PropTypes.string.isRequired,
+  opponent: PropTypes.string.isRequired,
   playPegCard: PropTypes.func.isRequired,
 };

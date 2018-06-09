@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Card from '../../Card';
 
-const styles = (theme) => ({
+const styles = theme => ({
   cardContainer: {
     position: 'absolute',
     display: 'inline-block',
@@ -22,10 +22,12 @@ const styles = (theme) => ({
     fontSize: 72,
     color: theme.palette.primary.light,
     border: `3px solid ${theme.palette.primary.light}`,
-  }
+  },
 });
 
-function PlayedCards({ playedCards, classes, currentUser, total }) {
+function PlayedCards({
+  playedCards, classes, currentUser, total,
+}) {
   return playedCards.map(({ card, playedBy }, idx) => {
     const offsetDirection = playedBy === currentUser ? 'bottom' : 'top';
     const isLastPlayed = idx === playedCards.length - 1;
@@ -38,7 +40,7 @@ function PlayedCards({ playedCards, classes, currentUser, total }) {
           [offsetDirection]: 0,
         }}
       >
-        {isLastPlayed 
+        {isLastPlayed
           ? (
             <Typography className={classes.total}>
               {total}{total === 15 || total === 31 ? '!' : ''}

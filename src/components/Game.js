@@ -1,12 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-firebase';
+import * as R from 'ramda';
 import Grid from '@material-ui/core/Grid';
 
 import { BeginGame, Discard, Pegging, CutDeck } from './stages';
 import { createDeck, shuffle } from '../util/deck';
 import {
   CUT_FOR_FIRST_CRIB,
+  CUT_DECK,
+  FLIP_FIFTH_CARD,
   DEAL,
   DISCARD,
   PLAY_PEG_CARD,
@@ -16,9 +19,21 @@ import {
 class Game extends PureComponent {
   state = {
     selectedCards: [],
+    remainingDeck: [],
+    cutIndex: 25,
   }
-  actions = () => ({
+  static getDerivedStateFromProps(props) {
+    const withoutMyHand = R.without(props.hand.cards);
+    const withoutTheirHand = R.without(props.opponentHand.cards);
+    const withoutCrib = R.without(props.crib.cards);
+    const withoutDealtCards = R.compose(withoutMyHand, withoutTheirHand, withoutCrib);
+    return {
+      remainingDeck: withoutDealtCards(props.deck),
+    };
+  }
+  actions = () => ({ // this is for the button on the message bar to do stuff
     countHand: this.countHand,
+    cutDeck: this.cutDeck,
     cutForFirstCrib: this.cutForFirstCrib,
     deal: this.deal,
     discard: this.discard,
@@ -33,8 +48,18 @@ class Game extends PureComponent {
       what: CUT_FOR_FIRST_CRIB,
     });
   }
-  cutDeck = (card) => {
-    console.log('>>> want to cut card: ', card);
+  cutDeck = () => {
+    this.props.addEvent({
+      index: this.state.cutIndex,
+      cards: ['0'],
+      what: CUT_DECK,
+    });
+  }
+  flipFifthCard = (card) => {
+    this.props.addEvent({
+      cards: [card],
+      what: FLIP_FIFTH_CARD,
+    });
   }
   deal = () => {
     const deck = shuffle(createDeck());
@@ -91,10 +116,14 @@ class Game extends PureComponent {
             hand={this.props.hand}
           />
         );
-      case 2: 
+      case 2:
         return (
-          <CutDeck deck={this.props.deck}/>
-        )
+          <CutDeck
+            deck={this.state.remainingDeck}
+            changeCutIndex={cutIndex => this.setState({ cutIndex })}
+            flipFifthCard={this.flipFifthCard}
+          />
+        );
       case 3:
         return (
           <Pegging
@@ -135,6 +164,9 @@ Game.propTypes = {
   hand: PropTypes.shape({
     cards: PropTypes.arrayOf(PropTypes.string).isRequired,
     hasDiscarded: PropTypes.bool.isRequired,
+  }).isRequired,
+  opponentHand: PropTypes.shape({
+    cards: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   opponent: PropTypes.string.isRequired,
   stage: PropTypes.number.isRequired,

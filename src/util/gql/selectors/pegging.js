@@ -70,7 +70,7 @@ export const canPlayCard = createSelector(
     if (!pegEvents.length) {
       return !isMyCrib;
     } else if (lastEvt.who !== userid) {
-      // TODO: also return hasCardToPlay if I have a go 
+      // TODO: also return hasCardToPlay if I have a go
       return hasCardToPlay;
     }
     return false;

@@ -65,18 +65,22 @@ class MuiDeckCutter extends PureComponent {
   static propTypes = {
     deck: PropTypes.arrayOf(PropTypes.string).isRequired,
     doCut: PropTypes.func.isRequired,
+    changeCutIndex: PropTypes.func,
     hasDoneCut: PropTypes.bool.isRequired,
     shownCuts: PropTypes.arrayOf(PropTypes.string),
     classes: PropTypes.shape({}).isRequired,
   }
   static defaultProps = {
     shownCuts: [],
+    changeCutIndex() {},
   }
   state = {
     cutIndex: 25,
   }
   sliceDeck = (e) => {
-    this.setState({ cutIndex: parseInt(e.target.value, 10) });
+    const cutIndex = parseInt(e.target.value, 10);
+    this.setState({ cutIndex });
+    this.props.changeCutIndex(cutIndex);
   }
   flipCard = (card) => {
     const index = this.props.deck.indexOf(card);

@@ -29,6 +29,9 @@ export default class GameQuery extends PureComponent {
             cards
             hasDiscarded
           }
+          opponentHand: hand(userid: "${opponent}"){
+            cards
+          }
           crib {
             cards
             hasAllCards

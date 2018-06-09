@@ -21,7 +21,7 @@ module.exports = (env) => {
         },
       ]
     },
-    mode: 'production',
+    mode: 'development',
     devtool: 'inline-source-map',
     plugins: [
       new webpack.DllReferencePlugin({

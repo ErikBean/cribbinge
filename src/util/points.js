@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { valueOf } from './deck';
 
 export function pointValue(card) {

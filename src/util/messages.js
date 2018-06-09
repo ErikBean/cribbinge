@@ -4,8 +4,8 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
     action: '',
     actionText: '',
   };
-  switch(game.stage){
-    case 0:  // Stage 0: Cutting for the first crib
+  switch (game.stage) {
+    case 0: { // Stage 0: Cutting for the first crib
       const { hasCutForFirstCrib, shownCuts, winner } = game.cutsForFirstCrib;
       const waitingForOtherCutForFirstCrib = hasCutForFirstCrib && shownCuts.length === 1;
       const wonFirstCrib = winner === currentUser;
@@ -22,7 +22,8 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
         message.text = `${opponent} won the first crib. Wait for them to deal`;
       }
       break;
-    case 1:// Stage 1: Discarding cards to the crib
+    }
+    case 1: { // Stage 1: Discarding cards to the crib
       if (!game.hand.hasDiscarded) {
         message.text = `Select two cards to put in ${game.crib.isMyCrib ? 'your' : 'their'} crib`;
         message.action = 'discard';
@@ -31,9 +32,10 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
         message.text = `Waiting for ${opponent} to discard`;
       }
       break;
-    case 2: // stage 2: cut 5th card
+    }
+    case 2: { // stage 2: cut 5th card
       console.log('>>> game: ', game);
-      if(game.crib.isMyCrib){
+      if (game.crib.isMyCrib) {
         message.text = `Waiting for ${opponent} to cut the deck`;
       } else {
         message.text = 'Cut the deck';
@@ -41,7 +43,8 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
         message.actionText = 'OK';
       }
       break;
-    case 3:  // Stage 3: Pegging
+    }
+    case 3: { // Stage 3: Pegging
       const {
         playedCards, hasAGo, canPlay, opponentHasAGo,
       } = game.pegging;
@@ -63,18 +66,17 @@ module.exports.getMessage = (game, { currentUser, opponent } = {}) => {
         message.text = `Waiting for ${opponent} to play`;
       }
       break;
-    case 4: // stage 4: count the hand
+    }
+    case 4: { // stage 4: count the hand
       message.text = 'Count your hand';
       message.action = 'countHand';
       message.actionText = 'OK';
       break;
-  }
-  if (game.stage === 0) {
-  } else if (game.stage === 1) { 
-  } else if(game.stage === 2) { 
-    
-  } else if (game.stage === 3) {
-  } else if (game.stage === 4) {
+    }
+    default: {
+      message.text = 'not sure whats happening?';
+      break;
+    }
   }
   return message;
 };
