@@ -33,7 +33,7 @@ export const getCurrentHand = createSelector(
       hand = dealtHand.filter(card => discards.indexOf(card) === -1);
     }
 
-    if (peggingEvents.length && stage === 2) {
+    if (peggingEvents.length && stage === 3) {
       const played = peggingEvents.map(({ card }) => card);
       hand = hand.filter(card => played.indexOf(card) === -1);
     }
