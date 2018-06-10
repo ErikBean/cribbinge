@@ -26,9 +26,13 @@ const getPegPairs = createSelector(
       cards: [],
       points: 0,
     };
+    if(played.length < 2){
+      return pairs;
+    }
     const isPair = areLastTwoEq(played); // n === n-1 ?
-    const isThreeOfAKind = isPair && areLastTwoEq(R.dropLast(1, played)); // n-1 === n-2 ?
-    const isFourOfAKind = isPair && isThreeOfAKind &&
+    const isThreeOfAKind = played.length > 2 && isPair && 
+      areLastTwoEq(R.dropLast(1, played)); // n-1 === n-2 ?
+    const isFourOfAKind = played.length > 3 && isPair && isThreeOfAKind &&
       areLastTwoEq(R.dropLast(2, played)); // n-2 === n-3 ?
     if (isPair) {
       pairs.points = 2;
