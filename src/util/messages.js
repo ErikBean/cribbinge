@@ -44,7 +44,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
           message.text = `Waiting for ${opponent} to flip the fifth card`;
         }
       } else {
-        message.text = `${game.crib.isMyCrib ? 'You' : 'They'} cut an ${getNumberOrFace(game.cut)} of ${getSuit(game.cut)}!`;
+        message.text = `${game.crib.isMyCrib ? 'You' : 'They'} cut a ${getNumberOrFace(game.cut)} of ${getSuit(game.cut)}!`;
         message.action = 'continueToPegging';
         message.actionText = 'Continue';
       }
@@ -54,7 +54,16 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       const {
         playedCards, hasAGo, canPlay, opponentHasAGo, total
       } = game.pegging;
-      if (playedCards.length === 0) {
+      const {pairs, runs, fifteens} = game.points.pegging;
+      const allPoints = pairs.points + fifteens.points + runs.points;
+      if(allPoints > 0){
+        const lastPlayedBy = playedCards.length && playedCards[playedCards.length - 1].playedBy;
+        if(lastPlayedBy === currentUser){
+          message.text = `You got ${allPoints} points! Waiting for ${opponent} to play`;
+        } else {
+          message.text = `They got ${allPoints} points. Pick a card to play`;
+        }
+      } else if (playedCards.length === 0) {
         if (canPlay) {
           message.text = 'Your lead, click a card to begin pegging';
         } else {
