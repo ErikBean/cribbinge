@@ -52,13 +52,13 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
     }
     case 3: { // Stage 3: Pegging
       const {
-        playedCards, hasAGo, canPlay, opponentHasAGo,
+        playedCards, hasAGo, canPlay, opponentHasAGo, total
       } = game.pegging;
       if (playedCards.length === 0) {
-        if (game.crib.isMyCrib) {
-          message.text = `Waiting for ${opponent} to begin pegging`;
-        } else {
+        if (canPlay) {
           message.text = 'Your lead, click a card to begin pegging';
+        } else {
+          message.text = `Waiting for ${opponent} to begin pegging`;
         }
       } else if (opponentHasAGo) {
         message.text = `${opponent} gets a go`;
@@ -67,9 +67,9 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         message.action = 'takeAGo';
         message.actionText = 'OK';
       } else if (canPlay) {
-        message.text = 'Pick a card to play';
+        message.text = `Pick a card to play. (Total = ${total})`;
       } else {
-        message.text = `Waiting for ${opponent} to play`;
+        message.text = `Waiting for ${opponent} to play. (Total = ${total})`;
       }
       break;
     }
