@@ -48,7 +48,10 @@ export default class GameQuery extends PureComponent {
             opponentHasAGo(userid: "${currentUser}")
             total
           }
-          points(userid: "${currentUser}", opponentid: "${opponent}"){
+          points(userid: "${currentUser}"){
+            pegging
+          }
+          opponentPoints: points(userid: "${opponent}"){
             pegging
           }
         }
@@ -59,6 +62,7 @@ export default class GameQuery extends PureComponent {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
           if (!data.game) return <p>No game data</p>;
+          console.log('>>> game: ', data.game);
           const message = getMessage(data.game, { currentUser, opponent });
           return (
             <Game

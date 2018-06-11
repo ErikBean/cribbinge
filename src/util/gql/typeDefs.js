@@ -28,6 +28,12 @@ const typeDefs = `
   type AllPoints {
     hand: PointsItem!
     pegging: PointsItem!
+    pegs: Pegs!
+  }
+  
+  type Pegs {
+    front: Int!
+    rear: Int!
   }
   
   type Points {

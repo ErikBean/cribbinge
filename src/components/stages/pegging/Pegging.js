@@ -7,10 +7,10 @@ import { Query } from 'react-apollo';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
-
 import { pointValue } from '../../../util/points';
 import PlayedCards from './PlayedCards';
 import Hand from '../../Hand';
+import Board from '../../Board';
 
 const styles = (theme) => {
   console.log('>>> theme: ', theme);
@@ -18,7 +18,7 @@ const styles = (theme) => {
     paper: {
       position: 'relative',
       padding: '50px 20px',
-      height: '60vh',
+      height: '75vh',
       margin: '30px',
       backgroundColor: theme.palette.background.paper,
     },
@@ -70,9 +70,11 @@ class Pegging extends PureComponent {
           const { total, canPlay } = data.game.pegging;
           return (
             <React.Fragment>
-              {JSON.stringify(data.game.points.pegging)}
               <Grid item xs={12}>
                 <Paper elevation={5} className={classes.paper}>
+                  <Board
+                    points={data.game.points.pegging}
+                  />
                   <PlayedCards
                     playedCards={playedCards}
                     currentUser={userid}

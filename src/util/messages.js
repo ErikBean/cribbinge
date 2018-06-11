@@ -52,34 +52,36 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
     }
     case 3: { // Stage 3: Pegging
       const {
-        playedCards, hasAGo, canPlay, opponentHasAGo, total
+        playedCards, hasAGo, canPlay, opponentHasAGo, total,
       } = game.pegging;
-      const {pairs, runs, fifteens} = game.points.pegging;
+      const { pairs, runs, fifteens } = game.points.pegging;
       const allPoints = pairs.points + fifteens.points + runs.points;
-      if(allPoints > 0){
+      if (allPoints > 0) {
         const lastPlayedBy = playedCards.length && playedCards[playedCards.length - 1].playedBy;
-        if(lastPlayedBy === currentUser){
+        if (lastPlayedBy === currentUser) {
           message.text = `You got ${allPoints} points! Waiting for ${opponent} to play`;
         } else {
           message.text = `They got ${allPoints} points. Pick a card to play`;
         }
       } else if (playedCards.length === 0) {
         if (canPlay) {
-          message.text = 'Your lead, click a card to begin pegging';
+          message.text = 'Your lead, click a card to begin pegging.';
         } else {
-          message.text = `Waiting for ${opponent} to begin pegging`;
+          message.text = `Waiting for ${opponent} to begin pegging.`;
         }
+        break;
       } else if (opponentHasAGo) {
         message.text = `${opponent} gets a go`;
       } else if (hasAGo) {
-        message.text = 'You have a go, take 1 point';
+        message.text = 'You have a go, take 1 point.';
         message.action = 'takeAGo';
         message.actionText = 'OK';
       } else if (canPlay) {
-        message.text = `Pick a card to play. (Total = ${total})`;
+        message.text = 'Pick a card to play.';
       } else {
-        message.text = `Waiting for ${opponent} to play. (Total = ${total})`;
+        message.text = `Waiting for ${opponent} to play.`;
       }
+      message.text += ` (Total = ${total})`;
       break;
     }
     case 4: { // stage 4: count the hand

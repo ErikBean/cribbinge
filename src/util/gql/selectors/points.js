@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
-import { PLAY_PEG_CARD } from '../../types/events';
+import { PLAY_PEG_CARD, TAKE_A_GO } from '../../types/events';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
+import { sortByTimeSelector } from './index';
 import { valueOf } from '../../deck';
 
 const takeLastTwo = R.takeLast(2);
@@ -10,7 +11,8 @@ const cardVal = R.compose(valueOf, R.prop('card'));
 const eqCard = R.eqBy(cardVal);
 const areLastTwoEq = R.compose(R.apply(eqCard), takeLastTwo);
 
-// console.log('>>> areLastTwoEq: ', areLastTwoEq([{card: 'H7'}, {card: 'S7'}]));
+const getUserIdArg = (_, { userid }) => userid;
+
 const getPegRuns = createSelector(
   [getPlayedCards],
   played => ({
@@ -26,11 +28,11 @@ const getPegPairs = createSelector(
       cards: [],
       points: 0,
     };
-    if(played.length < 2){
+    if (played.length < 2) {
       return pairs;
     }
     const isPair = areLastTwoEq(played); // n === n-1 ?
-    const isThreeOfAKind = played.length > 2 && isPair && 
+    const isThreeOfAKind = played.length > 2 && isPair &&
       areLastTwoEq(R.dropLast(1, played)); // n-1 === n-2 ?
     const isFourOfAKind = played.length > 3 && isPair && isThreeOfAKind &&
       areLastTwoEq(R.dropLast(2, played)); // n-2 === n-3 ?
@@ -66,16 +68,18 @@ const getPegFifteens = createSelector(
   },
 );
 
+
+// TODO: currently retrurning sum of points for both players, needs to be just 1 
 export const getPeggingPoints = createSelector(
-  [getPeggingEvents, getPegTotal, events => events],
-  (pegEvents, total, allEvents) => {
+  [getPeggingEvents, getPegTotal, events => events, getUserIdArg],
+  (pegEvents, total, allEvents, userid) => {
+    console.log('>>> userid: ', userid);
     const lastEvent = R.last(pegEvents) || {};
-    if (lastEvent.what !== PLAY_PEG_CARD) {
-      console.log('>>> Here: ', lastEvent);
+    if (lastEvent.what !== PLAY_PEG_CARD || lastEvent.who === userid) {
       return {
-        fifteens: 0,
-        pairs: 0,
-        runs: 0,
+        fifteens: {points: 0, cards: []},
+        pairs: {points: 0, cards: []},
+        runs: {points: 0, cards: []},
       };
     }
     return {
@@ -85,5 +89,35 @@ export const getPeggingPoints = createSelector(
     };
   },
 );
+
+const getPegPointsTotal = createSelector(
+  [getPeggingPoints],
+  ({fifteens, pairs, runs}) => {
+    console.log('>>> Here: ', fifteens.points, pairs.points , runs.points);
+    return fifteens.points + pairs.points + runs.points;
+  }  
+)
+
+export const getPegs = createSelector(
+  [sortByTimeSelector, getUserIdArg],
+  (sortedEvents, userid) => {
+    let points = 0;
+    let prevPoints;
+    let events = Array.from(sortedEvents);
+    // console.log('>>> userid: ', userid);
+    while(events.length > 0){
+      prevPoints = points;
+      //TODO: Also need to include points from taking a go: 
+      points += getPegPointsTotal(events, {userid})
+      events = R.dropLast(1, events);
+    }
+    console.log('>>> Here: ', {points});
+    return {
+      front: points,
+      back: prevPoints, 
+    };
+  },
+);
+
 
 export const getHandPoints = () => {};

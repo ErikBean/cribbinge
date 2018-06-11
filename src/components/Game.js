@@ -85,9 +85,21 @@ class Game extends PureComponent {
     if (!this.state.selectedCards.includes(card)) { // select before playing
       this.setState({ selectedCards: [card] });
     } else {
+      // const { pegging: { fifteens, pairs, runs } } = this.props.points;
+      // const total = fifteens.points + pairs.points + runs.points;
+      // let points = { total };
+      // if (total > 0) {
+      //   points = {
+      //     fifteens,
+      //     pairs,
+      //     runs,
+      //     total,
+      //   };
+      // }
       this.props.addEvent({
         cards: [card],
         what: PLAY_PEG_CARD,
+        // _meta: {points},
       });
     }
   }
