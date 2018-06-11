@@ -74,7 +74,7 @@ export const getPeggingPoints = createSelector(
   [getPeggingEvents, getPegTotal, events => events, getUserIdArg],
   (pegEvents, total, allEvents, userid) => {
     const lastEvent = R.last(pegEvents) || {};
-    if (lastEvent.what !== PLAY_PEG_CARD || lastEvent.who === userid) {
+    if (lastEvent.what !== PLAY_PEG_CARD || lastEvent.who !== userid) {
       return {
         fifteens: { points: 0, cards: [] },
         pairs: { points: 0, cards: [] },
