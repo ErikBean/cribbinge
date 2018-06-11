@@ -55,14 +55,16 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         playedCards, hasAGo, canPlay, opponentHasAGo, total,
       } = game.pegging;
       const { pairs, runs, fifteens } = game.points.pegging;
-      const allPoints = pairs.points + fifteens.points + runs.points;
-      if (allPoints > 0) {
-        const lastPlayedBy = playedCards.length && playedCards[playedCards.length - 1].playedBy;
-        if (lastPlayedBy === currentUser) {
-          message.text = `You got ${allPoints} points! Waiting for ${opponent} to play`;
-        } else {
-          message.text = `They got ${allPoints} points. Pick a card to play`;
-        }
+      const myPoints = pairs.points + fifteens.points + runs.points;
+      let theirPoints;
+      { // block scoping whoop de doo 
+        const { pairs, runs, fifteens } = game.opponentPoints.pegging;
+        theirPoints = pairs.points + fifteens.points + runs.points;
+      }
+      if (myPoints > 0) {
+        message.text = `You got ${myPoints} points! Waiting for ${opponent} to play`;
+      } else if (theirPoints > 0) {
+        message.text = `They got ${theirPoints} points. Pick a card to play`;
       } else if (playedCards.length === 0) {
         if (canPlay) {
           message.text = 'Your lead, click a card to begin pegging.';
