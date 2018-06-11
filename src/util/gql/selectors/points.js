@@ -69,17 +69,16 @@ const getPegFifteens = createSelector(
 );
 
 
-// TODO: currently retrurning sum of points for both players, needs to be just 1 
+// TODO: currently retrurning sum of points for both players, needs to be just 1
 export const getPeggingPoints = createSelector(
   [getPeggingEvents, getPegTotal, events => events, getUserIdArg],
   (pegEvents, total, allEvents, userid) => {
-    console.log('>>> userid: ', userid);
     const lastEvent = R.last(pegEvents) || {};
     if (lastEvent.what !== PLAY_PEG_CARD || lastEvent.who === userid) {
       return {
-        fifteens: {points: 0, cards: []},
-        pairs: {points: 0, cards: []},
-        runs: {points: 0, cards: []},
+        fifteens: { points: 0, cards: [] },
+        pairs: { points: 0, cards: [] },
+        runs: { points: 0, cards: [] },
       };
     }
     return {
@@ -92,11 +91,8 @@ export const getPeggingPoints = createSelector(
 
 const getPegPointsTotal = createSelector(
   [getPeggingPoints],
-  ({fifteens, pairs, runs}) => {
-    console.log('>>> Here: ', fifteens.points, pairs.points , runs.points);
-    return fifteens.points + pairs.points + runs.points;
-  }  
-)
+  ({ fifteens, pairs, runs }) => fifteens.points + pairs.points + runs.points,
+);
 
 export const getPegs = createSelector(
   [sortByTimeSelector, getUserIdArg],
@@ -104,17 +100,15 @@ export const getPegs = createSelector(
     let points = 0;
     let prevPoints;
     let events = Array.from(sortedEvents);
-    // console.log('>>> userid: ', userid);
-    while(events.length > 0){
+    while (events.length > 0) {
       prevPoints = points;
-      //TODO: Also need to include points from taking a go: 
-      points += getPegPointsTotal(events, {userid})
+      // TODO: Also need to include points from taking a go:
+      points += getPegPointsTotal(events, { userid });
       events = R.dropLast(1, events);
     }
-    console.log('>>> Here: ', {points});
     return {
       front: points,
-      back: prevPoints, 
+      rear: prevPoints,
     };
   },
 );

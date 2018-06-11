@@ -55,8 +55,13 @@ class Pegging extends PureComponent {
               total
               opponentHasAGo(userid: "${userid}")
             }
-            points(userid: "${userid}", opponentid: "${opponent}"){
+            points(userid: "${userid}"){
               pegging
+              pegs
+            }
+            opponentPoints: points(userid: "${opponent}"){
+              pegging
+              pegs
             }
           }
         }
@@ -73,7 +78,8 @@ class Pegging extends PureComponent {
               <Grid item xs={12}>
                 <Paper elevation={5} className={classes.paper}>
                   <Board
-                    points={data.game.points.pegging}
+                    pegs={data.game.points.pegs}
+                    opponentPegs={data.game.opponentPoints.pegs}
                   />
                   <PlayedCards
                     playedCards={playedCards}
