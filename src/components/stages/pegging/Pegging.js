@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { pointValue } from '../../../util/points';
 import PlayedCards from './PlayedCards';
 import Hand from '../../Hand';
-import Board from '../../Board';
+import Board from '../../board';
 
 const styles = (theme) => {
   console.log('>>> theme: ', theme);

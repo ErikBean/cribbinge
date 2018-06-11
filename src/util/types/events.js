@@ -12,3 +12,4 @@ export const START_PEGGING = 'start pegging';
 
 export const PLAY_PEG_CARD = 'play pegging card';
 export const TAKE_A_GO = 'take a go';
+export const TAKE_DOUBLE_GO = 'take a go';
