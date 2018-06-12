@@ -110,7 +110,7 @@ export const getPegs = createSelector(
     const events = Array.from(sortedEvents);
     const scoredPoints = [];
     let takeNum = 1;
-    while (takeNum < events.length) {
+    while (takeNum <= events.length) {
       const nextPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
       if (nextPoints > 0) {
         scoredPoints.push(nextPoints);

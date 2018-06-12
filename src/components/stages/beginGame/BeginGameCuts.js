@@ -8,6 +8,7 @@ export default function BeginGameCuts({ cuts }) {
     justifyContent: 'space-between',
     fontSize: 'larger',
     padding: '0 5vw',
+    minHeight: '400px',
   };
   return (
     <div style={style}>

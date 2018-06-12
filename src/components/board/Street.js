@@ -30,12 +30,10 @@ const styles = theme => ({
   },
 });
 
-const oneTwenty = new Array(120);
-
 function Street({ classes, pegs }) {
   return (
     <div className={classes.street}>
-      {R.range(0, 119).map((i) => {
+      {R.range(0, 59).map((i) => {
         const isFrontPeg = i === pegs.front;
         const isRearPeg = i === pegs.rear;
         const isPeg = isFrontPeg || isRearPeg;

@@ -48,8 +48,8 @@ function Board({ classes, pegs, opponentPegs }) {
     <div className={classes.vertFlex}>
       <span />
       <div className={classes.board}>
-        <Street pegs={pegs} />
         <Street pegs={opponentPegs} />
+        <Street pegs={pegs} />
       </div>
       <span />
     </div>

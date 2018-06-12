@@ -19,6 +19,7 @@ const styles = (theme) => {
       position: 'relative',
       padding: '50px 20px',
       height: '75vh',
+      minHeight: '600px',
       margin: '30px',
       backgroundColor: theme.palette.background.paper,
     },
@@ -55,11 +56,11 @@ class Pegging extends PureComponent {
               total
               opponentHasAGo(userid: "${userid}")
             }
-            points(userid: "${userid}"){
+            points(userid: "${userid}", opponentid: "${opponent}"){
               pegging
               pegs
             }
-            opponentPoints: points(userid: "${opponent}"){
+            opponentPoints: points(userid: "${opponent}", opponentid: "${userid}"){
               pegging
               pegs
             }
