@@ -4,7 +4,7 @@ import { connect } from 'react-firebase';
 import * as R from 'ramda';
 import Grid from '@material-ui/core/Grid';
 
-import { BeginGame, Discard, Pegging, FifthCard } from './stages';
+import { BeginGame, Discard, FifthCard, Pegging, CountHands } from './stages';
 import { createDeck, shuffle } from '../util/deck';
 import {
   CUT_FOR_FIRST_CRIB,
@@ -133,7 +133,12 @@ class Game extends PureComponent {
           />
         );
       case 4:
-        return 'count your hand!';
+        return (
+          <CountHands
+            userid={this.props.currentUser}
+            opponent={this.props.opponent}
+          />
+        );
       default:
         return `Not sure what stage this game is at (stage=${stage})`;
     }
@@ -168,7 +173,7 @@ Game.propTypes = {
     cards: PropTypes.arrayOf(PropTypes.string).isRequired,
     hasDiscarded: PropTypes.bool.isRequired,
   }).isRequired,
-  opponentHand: PropTypes.shape({
+  opponentHand: PropTypes.shape({ // eslint-disable-line react/no-unused-prop-types
     cards: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   opponent: PropTypes.string.isRequired,

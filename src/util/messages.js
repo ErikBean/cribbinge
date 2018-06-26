@@ -57,10 +57,11 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       const { pairs, runs, fifteens } = game.points.pegging;
       const myPoints = pairs.points + fifteens.points + runs.points;
       let theirPoints;
-      { // block scoping whoop de doo 
+
+      { /* eslint-disable no-shadow */
         const { pairs, runs, fifteens } = game.opponentPoints.pegging;
         theirPoints = pairs.points + fifteens.points + runs.points;
-      }
+      } /* eslint-enable no-shadow */
       if (myPoints > 0) {
         message.text = `You got ${myPoints} points! Waiting for ${opponent} to play`;
       } else if (theirPoints > 0) {

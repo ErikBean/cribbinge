@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as R from 'ramda';
-
 import { withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
-import PegIcon from '@material-ui/icons/DirectionsRun';
 
 import Street from './Street';
 
@@ -14,7 +9,7 @@ const circle = {
   width: '3px',
   borderRadius: '99px',
 };
-const styles = theme => ({
+const styles = () => ({
   vertFlex: {
     height: '100%',
     display: 'flex',
@@ -55,5 +50,17 @@ function Board({ classes, pegs, opponentPegs }) {
     </div>
   );
 }
+
+Board.propTypes = {
+  pegs: PropTypes.shape({
+    front: PropTypes.number,
+    rear: PropTypes.number,
+  }).isRequired,
+  opponentPegs: PropTypes.shape({
+    front: PropTypes.number,
+    rear: PropTypes.number,
+  }).isRequired,
+  classes: PropTypes.shape({}).isRequired,
+};
 
 export default withStyles(styles)(Board);

@@ -4,12 +4,7 @@ import { getEventsForCurrentRound, getStage } from './index';
 import { getPlayedCards } from './played';
 import { DEAL, DISCARD } from '../../types/events';
 
-const getUserIdArg = (_, args) => {
-  if (!args || !args.userid) {
-    return console.trace('no userid!');
-  }
-  return args.userid;
-};
+const getUserIdArg = (_, { userid }) => userid;
 
 export const getDealtHand = createSelector(
   [getEventsForCurrentRound, getUserIdArg],

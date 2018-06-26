@@ -92,9 +92,10 @@ export const getPeggingPoints = createSelector(
 // if the last event is a go, return the number of points for the go
 // if the last event is a card play, return the number opf points scored
 const getPegPointsTotal = createSelector(
-  [getPeggingPoints, lastEventSelector],
-  ({ fifteens, pairs, runs }, lastEvt) => {
+  [getPeggingPoints, lastEventSelector, getUserIdArg],
+  ({ fifteens, pairs, runs }, lastEvt, userid) => {
     let sum = fifteens.points + pairs.points + runs.points;
+    if (lastEvt.who !== userid) return sum;
     if (lastEvt.what === TAKE_A_GO) {
       sum += 1;
     } else if (lastEvt.what === TAKE_DOUBLE_GO) {
@@ -115,7 +116,7 @@ export const getPegs = createSelector(
       if (nextPoints > 0) {
         scoredPoints.push(nextPoints);
       }
-      takeNum+=1;
+      takeNum += 1;
     }
     return {
       front: R.sum(scoredPoints),

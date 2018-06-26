@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Paper from '@material-ui/core/Paper';
 import * as R from 'ramda';
 import FrontPegIcon from '@material-ui/icons/DirectionsRun';
 import RearPegIcon from '@material-ui/icons/ArrowDropDown';
 
-const styles = theme => ({
+const styles = () => ({
   street: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -36,7 +34,6 @@ function Street({ classes, pegs }) {
       {R.range(0, 59).map((i) => {
         const isFrontPeg = i === pegs.front;
         const isRearPeg = i === pegs.rear;
-        const isPeg = isFrontPeg || isRearPeg;
         return (
           <span className={classes.hole} key={i} >
             {isFrontPeg &&
@@ -57,5 +54,13 @@ function Street({ classes, pegs }) {
     </div>
   );
 }
+
+Street.propTypes = {
+  pegs: PropTypes.shape({
+    front: PropTypes.number,
+    rear: PropTypes.number,
+  }).isRequired,
+  classes: PropTypes.shape({}).isRequired,
+};
 
 export default withStyles(styles)(Street);
