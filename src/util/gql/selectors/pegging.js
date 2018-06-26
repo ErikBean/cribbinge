@@ -57,7 +57,7 @@ const hasLowEnoughCard = createSelector(
   [getLowestCard, getRemainingTotal],
   (lowCard, remainingTotal) => {
     if (lowCard) {
-      return pointValue(lowCard) < remainingTotal;
+      return pointValue(lowCard) <= remainingTotal;
     }
     return false;
   },

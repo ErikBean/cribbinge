@@ -82,7 +82,9 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       } else if (opponentHasAGo) {
         message.text = `${opponent} gets a go`;
       } else if (hasAGo) {
-        message.text = 'You have a go, take 1 point.';
+        const hit31 = total === 31;
+        const pointsToTake = hit31 ? '2 points' : '1 point';
+        message.text = `You have a go ${hit31 ? ' and hit 31,' : ','} take ${pointsToTake}.`;
         message.action = 'takeAGo';
         message.actionText = 'OK';
       } else if (canPlay) {
@@ -90,7 +92,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       } else {
         message.text = `Waiting for ${opponent} to play.`;
       }
-      message.text += ` (Total = ${total})`;
+      if(!hasAGo && !opponentHasAGo) message.text += ` (Total = ${total})`;
       break;
     }
     case 4: { // stage 4: count the hand

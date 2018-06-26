@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
-import { PLAY_PEG_CARD, TAKE_A_GO, TAKE_DOUBLE_GO } from '../../types/events';
+import { PLAY_PEG_CARD, TAKE_A_GO } from '../../types/events';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
 import { sortByTimeSelector, lastEventSelector } from './index';
 import { valueOf } from '../../deck';
@@ -117,14 +117,13 @@ export const getPeggingPoints = createSelector(
 // if the last event is a go, return the number of points for the go
 // if the last event is a card play, return the number opf points scored
 const getPegPointsTotal = createSelector(
-  [getPeggingPoints, lastEventSelector, getUserIdArg],
-  ({ fifteens, pairs, runs }, lastEvt, userid) => {
+  [getPeggingPoints, (evts) => getPegTotal(R.dropLast(1, evts)), lastEventSelector, getUserIdArg],
+  ({ fifteens, pairs, runs }, total, lastEvt, userid) => {
     let sum = fifteens.points + pairs.points + runs.points;
     if (lastEvt.who !== userid) return sum;
     if (lastEvt.what === TAKE_A_GO) {
       sum += 1;
-    } else if (lastEvt.what === TAKE_DOUBLE_GO) {
-      sum += 2;
+      if(total === 31) sum += 1;
     }
     return sum;
   },
