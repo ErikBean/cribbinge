@@ -55,13 +55,19 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         playedCards, hasAGo, canPlay, opponentHasAGo, total,
       } = game.pegging;
       const { pairs, runs, fifteens } = game.points.pegging;
-      const myPoints = pairs.points + fifteens.points + runs.points;
+      
       let theirPoints;
-
-      { /* eslint-disable no-shadow */
-        const { pairs, runs, fifteens } = game.opponentPoints.pegging;
-        theirPoints = pairs.points + fifteens.points + runs.points;
-      } /* eslint-enable no-shadow */
+      let myPoints;
+      try {
+        myPoints = pairs.points + fifteens.points + runs.points;
+        
+        { /* eslint-disable no-shadow */
+          const { pairs, runs, fifteens } = game.opponentPoints.pegging;
+          theirPoints = pairs.points + fifteens.points + runs.points;
+        } /* eslint-enable no-shadow */
+      } catch(e){
+        throw e;
+      }
       if (myPoints > 0) {
         message.text = `You got ${myPoints} points! Waiting for ${opponent} to play`;
       } else if (theirPoints > 0) {

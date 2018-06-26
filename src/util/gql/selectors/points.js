@@ -10,15 +10,40 @@ const takeLastTwo = R.takeLast(2);
 const cardVal = R.compose(valueOf, R.prop('card'));
 const eqCard = R.eqBy(cardVal);
 const areLastTwoEq = R.compose(R.apply(eqCard), takeLastTwo);
+const getCardVals = R.map(cardVal);
+const plusEqualsOne = (a,b) => (a + 1) === b;
+
+ // take an array, sort it, determine if its in order
+const isSequential = (nums) => {
+  return R.sort((a,b) => a > b, nums).reduce((acc, curr, idx) => {
+    if(idx === 0) return false;
+    return plusEqualsOne(nums[idx - 1], curr);
+  }, false);
+}
 
 const getUserIdArg = (_, { userid }) => userid;
 
 const getPegRuns = createSelector(
   [getPlayedCards],
-  played => ({
-    points: 0,
-    cards: [],
-  }),
+  played => {
+    let run = {
+      points: 0,
+      cards: [],
+    };
+    if(played.length < 3)return run;
+    let n = 3; // run length
+    while(n <= played.length){
+      const lastN = R.takeLast(n, played);
+      if(isSequential(getCardVals(lastN))){
+        run = {
+          points: n,
+          cards: lastN,
+        }
+      }
+      n+=1;
+    }
+    return run;
+  },
 );
 
 const getPegPairs = createSelector(

@@ -45,7 +45,7 @@ export default class CountHands extends PureComponent {
           if (!data.game) return <p>No game data</p>;
           return (
             <React.Fragment>
-              <Grid container spacing={16} style={{ padding: '20px' }}>
+              <Grid container style={{ padding: '20px' }}>
                 <Grid item xs={12}>
                   <Hand
                     cards={data.game.opponentHand.cards}
@@ -64,7 +64,7 @@ export default class CountHands extends PureComponent {
                   <Card card={data.game.cut} style={{ position: 'absolute', top: '50%' }} />
                 </Grid>
               </Grid>
-              <Grid container spacing={16} style={{ padding: '20px' }}>
+              <Grid container style={{ padding: '20px' }}>
                 <Grid item xs={12}>
                   <Hand
                     cards={data.game.hand.cards}
