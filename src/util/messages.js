@@ -55,17 +55,17 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         playedCards, hasAGo, canPlay, opponentHasAGo, total,
       } = game.pegging;
       const { pairs, runs, fifteens } = game.points.pegging;
-      
+
       let theirPoints;
       let myPoints;
       try {
         myPoints = pairs.points + fifteens.points + runs.points;
-        
+
         { /* eslint-disable no-shadow */
           const { pairs, runs, fifteens } = game.opponentPoints.pegging;
           theirPoints = pairs.points + fifteens.points + runs.points;
         } /* eslint-enable no-shadow */
-      } catch(e){
+      } catch (e) {
         throw e;
       }
       if (myPoints > 0) {
@@ -92,7 +92,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       } else {
         message.text = `Waiting for ${opponent} to play.`;
       }
-      if(!hasAGo && !opponentHasAGo) message.text += ` (Total = ${total})`;
+      if (!hasAGo && !opponentHasAGo) message.text += ` (Total = ${total})`;
       break;
     }
     case 4: { // stage 4: count the hand

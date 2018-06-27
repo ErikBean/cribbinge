@@ -11,36 +11,34 @@ const cardVal = R.compose(valueOf, R.prop('card'));
 const eqCard = R.eqBy(cardVal);
 const areLastTwoEq = R.compose(R.apply(eqCard), takeLastTwo);
 const getCardVals = R.map(cardVal);
-const plusEqualsOne = (a,b) => (a + 1) === b;
+const plusEqualsOne = (a, b) => (a + 1) === b;
 
- // take an array, sort it, determine if its in order
-const isSequential = (nums) => {
-  return R.sort((a,b) => a > b, nums).reduce((acc, curr, idx) => {
-    if(idx === 0) return false;
-    return plusEqualsOne(nums[idx - 1], curr);
-  }, false);
-}
+// take an array, sort it, determine if its in order
+const isSequential = nums => R.sort((a, b) => a > b, nums).reduce((acc, curr, idx) => {
+  if (idx === 0) return false;
+  return plusEqualsOne(nums[idx - 1], curr);
+}, false);
 
 const getUserIdArg = (_, { userid }) => userid;
 
 const getPegRuns = createSelector(
   [getPlayedCards],
-  played => {
+  (played) => {
     let run = {
       points: 0,
       cards: [],
     };
-    if(played.length < 3)return run;
+    if (played.length < 3) return run;
     let n = 3; // run length
-    while(n <= played.length){
+    while (n <= played.length) {
       const lastN = R.takeLast(n, played);
-      if(isSequential(getCardVals(lastN))){
+      if (isSequential(getCardVals(lastN))) {
         run = {
           points: n,
           cards: lastN,
-        }
+        };
       }
-      n+=1;
+      n += 1;
     }
     return run;
   },
@@ -117,13 +115,13 @@ export const getPeggingPoints = createSelector(
 // if the last event is a go, return the number of points for the go
 // if the last event is a card play, return the number opf points scored
 const getPegPointsTotal = createSelector(
-  [getPeggingPoints, (evts) => getPegTotal(R.dropLast(1, evts)), lastEventSelector, getUserIdArg],
+  [getPeggingPoints, evts => getPegTotal(R.dropLast(1, evts)), lastEventSelector, getUserIdArg],
   ({ fifteens, pairs, runs }, total, lastEvt, userid) => {
     let sum = fifteens.points + pairs.points + runs.points;
     if (lastEvt.who !== userid) return sum;
     if (lastEvt.what === TAKE_A_GO) {
       sum += 1;
-      if(total === 31) sum += 1;
+      if (total === 31) sum += 1;
     }
     return sum;
   },
