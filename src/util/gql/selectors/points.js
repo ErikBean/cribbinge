@@ -2,9 +2,11 @@ import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
 import { PLAY_PEG_CARD, TAKE_A_GO } from '../../types/events';
-import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
-import { sortByTimeSelector, lastEventSelector } from './index';
 import { valueOf } from '../../deck';
+import { getCurrentHand } from './hand';
+import { sortByTimeSelector, lastEventSelector, getCut } from './index';
+import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
+import { getFifteens as getFifteensCards } from '../../legacy_points';
 
 const takeLastTwo = R.takeLast(2);
 const cardVal = R.compose(valueOf, R.prop('card'));
@@ -12,6 +14,7 @@ const eqCard = R.eqBy(cardVal);
 const areLastTwoEq = R.compose(R.apply(eqCard), takeLastTwo);
 const getCardVals = R.map(cardVal);
 const plusEqualsOne = (a, b) => (a + 1) === b;
+const sortByVal = R.sort((a, b) => valueOf(a) > valueOf(b));
 
 // take an array, sort it, determine if its in order
 const isSequential = nums => R.sort((a, b) => a > b, nums).reduce((acc, curr, idx) => {
@@ -138,6 +141,7 @@ export const getPegs = createSelector(
       if (nextPoints > 0) {
         scoredPoints.push(nextPoints);
       }
+      // TODO: push hand points
       takeNum += 1;
     }
     return {
@@ -147,5 +151,58 @@ export const getPegs = createSelector(
   },
 );
 
+const getPairs = (handWithCut) => {
+  const sortedHand = sortByVal(handWithCut);
+  const pairsCards = sortedHand.reduce((acc, curr, idx) => {
+    if (sortedHand.indexOf(curr) < 3) {
+      return acc;
+    }
+    if (valueOf(sortedHand[idx - 1]) === valueOf(curr)) {
+      acc.push([sortedHand[idx - 1], curr]);
+    }
+    if (valueOf(sortedHand[idx - 2]) === valueOf(curr)) {
+      acc.push([sortedHand[idx - 2], curr]);
+    } // three of a kind
+    if (valueOf(sortedHand[idx - 3]) === valueOf(curr)) {
+      acc.push([sortedHand[idx - 3], curr]);
+    } // four of a kind
+    return acc;
+  }, []);
+  return {
+    cards: pairsCards,
+    points: pairsCards.length * 2,
+  };
+};
 
-export const getHandPoints = () => {};
+const getFifteens = (handWithCut) => {
+  const fifteens = getFifteensCards(handWithCut);
+  const points = Object.keys(fifteens)
+    .map(num => fifteens[num])
+    .reduce((acc, curr) => acc + curr.length, 0);
+  return {
+    cards: fifteens,
+    points,
+  };
+};
+
+const getRuns = (handWithCut) => {
+  const sortedHand = sortByVal(handWithCut);
+  return {
+    cards: [],
+    points: 0,
+  };
+};
+
+export const getHandPoints = createSelector(
+  [getCurrentHand, getCut],
+  (currentHand, cut) => {
+    const handWithCut = currentHand.concat(cut);
+    return {
+      fifteens: getFifteens(handWithCut),
+      pairs: getPairs(handWithCut),
+      runs: getRuns(handWithCut),
+      rightJack: 'tbd',
+      flush: 'tbd',
+    };
+  },
+);

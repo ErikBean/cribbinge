@@ -15,7 +15,7 @@ import {
   getPegTotal,
   getPlayedCards,
 } from './selectors/pegging';
-import { getPeggingPoints, getPegs } from './selectors/points';
+import { getPeggingPoints, getPegs, getHandPoints } from './selectors/points';
 
 export const defaults = {
   gameEvents: [],
@@ -67,7 +67,7 @@ export const resolvers = {
     },
     points(game, { userid, opponentid }) {
       return {
-        hand: {},
+        hand: getHandPoints(game.events, { userid }),
         pegging: getPeggingPoints(game.events, { userid, opponentid }),
         pegs: getPegs(game.events, { userid }),
         __typename: 'AllPoints',
