@@ -14,6 +14,7 @@ import {
   DISCARD,
   PLAY_PEG_CARD,
   TAKE_A_GO,
+  COUNT_HAND,
 } from '../util/types/events';
 
 class Game extends PureComponent {
@@ -39,7 +40,12 @@ class Game extends PureComponent {
     takeAGo: this.takeAGo,
   })
   countHand = () => {
-    console.log('>>> Want to count: ', this.props.hand);
+    console.log('>>> Want to count: ', this.props.points.hand.total);
+    this.props.addEvent({
+      cards: [...this.props.hand.cards, this.props.cut],
+      // points: this.props.points.hand.total,
+      what: COUNT_HAND,
+    });
   }
   cutForFirstCrib = (card) => {
     this.props.addEvent({

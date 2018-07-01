@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
-import { PLAY_PEG_CARD, TAKE_A_GO } from '../../types/events';
+import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND } from '../../types/events';
 import { valueOf } from '../../deck';
 import { getCurrentHand } from './hand';
 import { sortByTimeSelector, lastEventSelector, getCut } from './index';
@@ -146,9 +146,14 @@ export const getPegs = createSelector(
     const scoredPoints = [];
     let takeNum = 1;
     while (takeNum <= events.length) {
-      const nextPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
-      if (nextPoints > 0) {
-        scoredPoints.push(nextPoints);
+      const pegPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
+      if (pegPoints > 0) {
+        scoredPoints.push(pegPoints);
+      }
+      const lastEvt = R.last(R.take(takeNum, events));
+      if(lastEvt.what === COUNT_HAND && lastEvt.who === userid){
+        const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
+        scoredPoints.push(handPoints);
       }
       // TODO: push hand points
       takeNum += 1;

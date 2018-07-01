@@ -36,7 +36,6 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
     case 2: { // stage 2: cut 5th card
-      console.log('>>> game: ', game);
       if (!game.cut) {
         if (game.crib.isMyCrib) {
           message.text = 'Cut the fifth card';
@@ -96,6 +95,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
     case 4: { // stage 4: count the hand
+      // TODO: if I've counted and they haven't: 
       const points = game.points.hand.total;
       message.text = `Count your hand, take ${points} points`;
       message.action = 'countHand';
