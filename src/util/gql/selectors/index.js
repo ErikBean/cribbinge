@@ -10,6 +10,7 @@ const {
   START_PEGGING,
   PLAY_PEG_CARD,
   TAKE_A_GO,
+  COUNT_HAND,
 } = require('../../types/events');
 
 export function sortByTimeSelector(gameEvents) {
@@ -64,6 +65,7 @@ export const getStage = createSelector(
     const tookGoForLastCard = peggedCards.length === 8 && (lastGo.what === TAKE_A_GO);
     const needsDiscard = crib.length < 4;
     const hasDoneCut = events.find(({ what }) => what === START_PEGGING);
+    const haveBothPlayersCounted = events.filter(({ what }) => what === COUNT_HAND).length === 2;
     const { what: lastEventType } = lastEvent || {};
     if (lastEventType === CUT_FOR_FIRST_CRIB || lastEventType === START) {
       return 0;
@@ -73,8 +75,10 @@ export const getStage = createSelector(
       return 2;
     } else if (!tookGoForLastCard) {
       return 3;
+    } else if(!haveBothPlayersCounted){
+      return 4;
     }
-    return 4;
+    return 5;
   },
 );
 

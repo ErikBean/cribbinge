@@ -70,6 +70,7 @@ export const resolvers = {
         hand: getHandPoints(game.events, { userid }),
         pegging: getPeggingPoints(game.events, { userid, opponentid }),
         pegs: getPegs(game.events, { userid }),
+        crib: {},
         __typename: 'AllPoints',
       };
     },

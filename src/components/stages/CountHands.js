@@ -4,13 +4,17 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-// import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 import Hand from '../Hand';
 import Card from '../Card';
 import Board from '../board';
-
+const textStyle = {
+  fontSize: '48px',
+  position: 'relative',
+  top: '80px',
+}
 export default class CountHands extends PureComponent {
   render() {
     const { userid, opponent } = this.props;
@@ -21,8 +25,13 @@ export default class CountHands extends PureComponent {
         {
           game @client {
             cut
+            stage
             hand(userid: "${userid}"){
               cards
+            }
+            crib {
+              cards
+              isMyCrib(userid: "${userid}")
             }
             opponentHand: hand(userid: "${opponent}"){
               cards
@@ -43,12 +52,27 @@ export default class CountHands extends PureComponent {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
           if (!data.game) return <p>No game data</p>;
+          const {isMyCrib, cards: cribCards} = data.game.crib;
+          const {cards: myHandCards} = data.game.hand;
+          const {cards: theirHandCards} = data.game.opponentHand;
+          const isCribCountingStage = data.game.stage === 5;
+          const showMyCrib = isMyCrib && isCribCountingStage;
+          const showtheirCrib = !isMyCrib && isCribCountingStage;
+
+          const myCards = showMyCrib ? cribCards : myHandCards;
+          const theirCards = showtheirCrib ? cribCards : theirHandCards;
+          const cribBanner = (
+            <Typography style={textStyle}>
+              {`${isMyCrib ? 'Your' : 'Their'} Crib`}
+            </Typography>
+          );
           return (
             <React.Fragment>
               <Grid container style={{ padding: '20px' }}>
                 <Grid item xs={12}>
+                  {showtheirCrib && cribBanner}
                   <Hand
-                    cards={data.game.opponentHand.cards}
+                    cards={theirCards}
                     disabled
                   />
                 </Grid>
@@ -66,8 +90,9 @@ export default class CountHands extends PureComponent {
               </Grid>
               <Grid container style={{ padding: '20px' }}>
                 <Grid item xs={12}>
+                  {showMyCrib && cribBanner}
                   <Hand
-                    cards={data.game.hand.cards}
+                    cards={myCards}
                     disabled
                   />
                 </Grid>

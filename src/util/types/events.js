@@ -14,3 +14,5 @@ export const PLAY_PEG_CARD = 'play pegging card';
 export const TAKE_A_GO = 'take a go';
 
 export const COUNT_HAND = 'count hand';
+export const FLIP_CRIB = 'flip crib';
+export const COUNT_CRIB = 'count crib';

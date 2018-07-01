@@ -99,21 +99,31 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       const opponentCounted = game.opponentPoints.hand.hasCounted;
       if (!hasCounted) {
         const points = game.points.hand.total;
-        message.text = `Count your hand, take ${points} points`;
-        message.action = 'countHand';
-        message.actionText = 'OK';
+        if(points === 0){
+          message.text = `You got zero points (sad trombone)`;
+          message.action = 'countHand';
+          message.actionText = 'OK';
+        } else {
+          message.text = `Count your hand, take ${points} points`;
+          message.action = 'countHand';
+          message.actionText = 'Count Hand';
+        }
       } else if (hasCounted && !opponentCounted) {
         message.text = `Waiting for ${opponent} to take points`;
-      } else if (hasCounted && opponentCounted) {
-        if (game.crib.isMyCrib) {
-          message.text = `Waiting for ${opponent} to deal`;
+      }
+      break;
+    }
+    case 5: {
+      if(!game.crib.counted){
+        if(game.crib.isMyCrib){
+          const points = game.points.crib.total;
+          message.text = `Count your crib, take ${points} points`;
+          message.action = 'countCrib';
+          message.actionText = 'Count Crib';
         } else {
-          message.text = 'Deal the next round';
-          message.action = 'deal';
-          message.actionText = 'Deal!';
+          message.text = `Waiting for ${opponent} to count their crib`;
         }
       }
-
       break;
     }
     default: {

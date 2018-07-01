@@ -139,21 +139,25 @@ const getPegPointsTotal = createSelector(
   },
 );
 
-const getPairs = (handWithCut) => {
+const getPairs = (handWithCut) => { // TODO: this doesnt work at all apparently 
   const sortedHand = sortByVal(handWithCut);
+  // console.log('>>> sh: ', sortedHand);
   const pairsCards = sortedHand.reduce((acc, curr, idx) => {
-    if (sortedHand.indexOf(curr) < 3) {
-      return acc;
-    }
+    if (sortedHand.indexOf(curr) === 0) return acc;
+    
     if (valueOf(sortedHand[idx - 1]) === valueOf(curr)) {
       acc.push([sortedHand[idx - 1], curr]);
     }
-    if (valueOf(sortedHand[idx - 2]) === valueOf(curr)) {
-      acc.push([sortedHand[idx - 2], curr]);
-    } // three of a kind
-    if (valueOf(sortedHand[idx - 3]) === valueOf(curr)) {
-      acc.push([sortedHand[idx - 3], curr]);
-    } // four of a kind
+    if (sortedHand.indexOf(curr) > 1) { // three of a kind
+      if (valueOf(sortedHand[idx - 2]) === valueOf(curr)) {
+        acc.push([sortedHand[idx - 2], curr]);
+      }
+    }
+    if (sortedHand.indexOf(curr) > 2) { // four of a kind
+      if (valueOf(sortedHand[idx - 3]) === valueOf(curr)) {
+        acc.push([sortedHand[idx - 3], curr]);
+      }
+    }
     return acc;
   }, []);
   return {
@@ -228,7 +232,9 @@ export const getPegs = createSelector(
       const lastEvt = R.last(R.take(takeNum, events));
       if (lastEvt.what === COUNT_HAND && lastEvt.who === userid) {
         const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
-        scoredPoints.push(handPoints);
+        if(handPoints > 0){
+          scoredPoints.push(handPoints);
+        }
       }
       takeNum += 1;
     }

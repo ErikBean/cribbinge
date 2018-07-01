@@ -52,6 +52,7 @@ export default class GameQuery extends PureComponent {
             pegging
             pegs
             hand
+            crib
           }
           opponentPoints: points(userid: "${opponent}"){
             pegging

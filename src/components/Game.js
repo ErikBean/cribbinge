@@ -32,9 +32,10 @@ class Game extends PureComponent {
     };
   }
   actions = () => ({ // this is for the button on the message bar to do stuff
+    continueToPegging: this.continueToPegging,
+    countCrib: this.countCrib,
     countHand: this.countHand,
     cutForFirstCrib: this.cutForFirstCrib,
-    continueToPegging: this.continueToPegging,
     deal: this.deal,
     discard: this.discard,
     takeAGo: this.takeAGo,
@@ -52,6 +53,9 @@ class Game extends PureComponent {
       cards: [card],
       what: CUT_FOR_FIRST_CRIB,
     });
+  }
+  countCrib = () => {
+    console.log('>>> want to count crib: ', {crib: this.props.crib});
   }
   flipFifthCard = (card) => {
     this.props.addEvent({
@@ -139,6 +143,7 @@ class Game extends PureComponent {
           />
         );
       case 4:
+      case 5:
         return (
           <CountHands
             userid={this.props.currentUser}
