@@ -18,9 +18,18 @@ const sortByVal = R.sort((a, b) => valueOf(a) > valueOf(b));
 
 // take an array, sort it, determine if its in order
 const isSequential = nums => R.sort((a, b) => a > b, nums).reduce((acc, curr, idx) => {
-  if (idx === 0) return false;
-  return plusEqualsOne(nums[idx - 1], curr);
-}, false);
+  if (idx === 0) return true;
+  return acc && plusEqualsOne(nums[idx - 1], curr);
+}, true);
+
+const g = (xs, n) =>
+  (n == 0 ? [[]] :
+    R.isEmpty(xs) ? [] :
+      R.concat(
+        R.map(R.prepend(R.head(xs)), g(R.tail(xs), n - 1))
+        , g(R.tail(xs), n),
+      ));
+
 
 const getUserIdArg = (_, { userid }) => userid;
 
@@ -176,9 +185,11 @@ const getPairs = (handWithCut) => {
 
 const getFifteens = (handWithCut) => {
   const fifteens = getFifteensCards(handWithCut);
-  const points = Object.keys(fifteens)
+  const numFifteens = Object.keys(fifteens)
     .map(num => fifteens[num])
     .reduce((acc, curr) => acc + curr.length, 0);
+  const points = numFifteens * 2;
+
   return {
     cards: fifteens,
     points,
@@ -187,8 +198,17 @@ const getFifteens = (handWithCut) => {
 
 const getRuns = (handWithCut) => {
   const sortedHand = sortByVal(handWithCut);
+  const uniqVals = R.uniq(handWithCut.map(valueOf));
+  const hasNoPairs = uniqVals.length === sortedHand.length;
+  // TODO: create all 3,4, and 5 card permutations
+  // TODO: if isSequential, push it into runs (unless dupe)
+  const [perm3, perm4, perm5] = [3, 4, 5].map(n => g(handWithCut, n));
+  const [sperm3, sperm4, sperm5] = [perm3, perm4, perm5].map(p => p.map(sortByVal));
+  const runs3 = sperm3.filter(a => isSequential(a.map(valueOf)));
+  // console.log('>>> a: ', runs3[0].map(valueOf));
+  console.log('>>> Here: ', { runs3 });
   return {
-    cards: [],
+    cards: 'runs',
     points: 0,
   };
 };
