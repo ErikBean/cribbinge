@@ -95,11 +95,25 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
     case 4: { // stage 4: count the hand
-      // TODO: if I've counted and they haven't: 
-      const points = game.points.hand.total;
-      message.text = `Count your hand, take ${points} points`;
-      message.action = 'countHand';
-      message.actionText = 'OK';
+      const { hasCounted } = game.points.hand;
+      const opponentCounted = game.opponentPoints.hand.hasCounted;
+      if (!hasCounted) {
+        const points = game.points.hand.total;
+        message.text = `Count your hand, take ${points} points`;
+        message.action = 'countHand';
+        message.actionText = 'OK';
+      } else if (hasCounted && !opponentCounted) {
+        message.text = `Waiting for ${opponent} to take points`;
+      } else if (hasCounted && opponentCounted) {
+        if (game.crib.isMyCrib) {
+          message.text = `Waiting for ${opponent} to deal`;
+        } else {
+          message.text = 'Deal the next round';
+          message.action = 'deal';
+          message.actionText = 'Deal!';
+        }
+      }
+
       break;
     }
     default: {

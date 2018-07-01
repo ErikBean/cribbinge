@@ -79,7 +79,7 @@ export const getStage = createSelector(
 );
 
 export const getCut = createSelector(
-  [sortByTimeSelector],
+  [getEventsForCurrentRound],
   (sortedEvents) => {
     const cutEvent = R.reverse(sortedEvents).find(({ what }) => what === FLIP_FIFTH_CARD);
     if (cutEvent) {

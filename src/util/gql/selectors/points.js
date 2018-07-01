@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND } from '../../types/events';
 import { valueOf } from '../../deck';
 import { getCurrentHand } from './hand';
-import { sortByTimeSelector, lastEventSelector, getCut } from './index';
+import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound } from './index';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
 import { getFifteens as getFifteensCards } from '../../legacy_points';
 
@@ -139,32 +139,6 @@ const getPegPointsTotal = createSelector(
   },
 );
 
-export const getPegs = createSelector(
-  [sortByTimeSelector, getUserIdArg],
-  (sortedEvents, userid) => {
-    const events = Array.from(sortedEvents);
-    const scoredPoints = [];
-    let takeNum = 1;
-    while (takeNum <= events.length) {
-      const pegPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
-      if (pegPoints > 0) {
-        scoredPoints.push(pegPoints);
-      }
-      const lastEvt = R.last(R.take(takeNum, events));
-      if(lastEvt.what === COUNT_HAND && lastEvt.who === userid){
-        const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
-        scoredPoints.push(handPoints);
-      }
-      // TODO: push hand points
-      takeNum += 1;
-    }
-    return {
-      front: R.sum(scoredPoints),
-      rear: R.sum(R.dropLast(1, scoredPoints)),
-    };
-  },
-);
-
 const getPairs = (handWithCut) => {
   const sortedHand = sortByVal(handWithCut);
   const pairsCards = sortedHand.reduce((acc, curr, idx) => {
@@ -215,9 +189,17 @@ const getRuns = (handWithCut) => {
   };
 };
 
+const getHasCounted = createSelector(
+  [getEventsForCurrentRound, getUserIdArg],
+  (events, userid) => {
+    const coundHandFilter = evt => evt.what === COUNT_HAND && evt.who === userid;
+    return Boolean(events.filter(coundHandFilter).length);
+  },
+);
+
 export const getHandPoints = createSelector(
-  [getCurrentHand, getCut],
-  (currentHand, cut) => {
+  [getCurrentHand, getCut, getHasCounted],
+  (currentHand, cut, hasCounted) => {
     const handWithCut = currentHand.concat(cut);
     const fifteens = getFifteens(handWithCut);
     const pairs = getPairs(handWithCut);
@@ -227,6 +209,32 @@ export const getHandPoints = createSelector(
       pairs,
       runs,
       total: runs.points + pairs.points + fifteens.points,
+      hasCounted,
+    };
+  },
+);
+
+export const getPegs = createSelector(
+  [sortByTimeSelector, getUserIdArg],
+  (sortedEvents, userid) => {
+    const events = Array.from(sortedEvents);
+    const scoredPoints = [];
+    let takeNum = 1;
+    while (takeNum <= events.length) {
+      const pegPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
+      if (pegPoints > 0) {
+        scoredPoints.push(pegPoints);
+      }
+      const lastEvt = R.last(R.take(takeNum, events));
+      if (lastEvt.what === COUNT_HAND && lastEvt.who === userid) {
+        const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
+        scoredPoints.push(handPoints);
+      }
+      takeNum += 1;
+    }
+    return {
+      front: R.sum(scoredPoints),
+      rear: R.sum(R.dropLast(1, scoredPoints)),
     };
   },
 );

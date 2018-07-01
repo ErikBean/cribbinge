@@ -20,8 +20,8 @@ const styles = theme => ({
     margin: '55px 20px',
     borderRadius: '99px',
     fontSize: 72,
-    color: theme.palette.primary.light,
-    border: `3px solid ${theme.palette.primary.light}`,
+    color: 'blue',
+    border: '3px solid blue',
   },
 });
 

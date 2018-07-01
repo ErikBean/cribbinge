@@ -184,6 +184,11 @@ Game.propTypes = {
   }).isRequired,
   opponent: PropTypes.string.isRequired,
   stage: PropTypes.number.isRequired,
+  points: PropTypes.shape({
+    hand: PropTypes.shape({
+      total: PropTypes.number.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default connect((props, ref) => ({
