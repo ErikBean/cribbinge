@@ -21,7 +21,7 @@ const isSequential = nums => R.sort((a, b) => a > b, nums).reduce((acc, curr, id
   if (idx === 0) return true;
   return acc && plusEqualsOne(nums[idx - 1], curr);
 }, true);
-
+/* eslint-disable */
 const g = (xs, n) =>
   (n == 0 ? [[]] :
     R.isEmpty(xs) ? [] :
@@ -29,7 +29,7 @@ const g = (xs, n) =>
         R.map(R.prepend(R.head(xs)), g(R.tail(xs), n - 1))
         , g(R.tail(xs), n),
       ));
-
+/* eslint-enable */
 
 const getUserIdArg = (_, { userid }) => userid;
 
@@ -197,19 +197,16 @@ const getFifteens = (handWithCut) => {
 };
 
 const getRuns = (handWithCut) => {
-  const sortedHand = sortByVal(handWithCut);
-  const uniqVals = R.uniq(handWithCut.map(valueOf));
-  const hasNoPairs = uniqVals.length === sortedHand.length;
-  // TODO: create all 3,4, and 5 card permutations
-  // TODO: if isSequential, push it into runs (unless dupe)
+  // create all 3,4, and 5 card permutations:
   const [perm3, perm4, perm5] = [3, 4, 5].map(n => g(handWithCut, n));
-  const [sperm3, sperm4, sperm5] = [perm3, perm4, perm5].map(p => p.map(sortByVal));
-  const runs3 = sperm3.filter(a => isSequential(a.map(valueOf)));
-  // console.log('>>> a: ', runs3[0].map(valueOf));
-  console.log('>>> Here: ', { runs3 });
+  // filter out non-sequential ones:
+  const [runs3, runs4, runs5] = [perm3, perm4, perm5]
+    .map(p => p.filter(a => isSequential(a.map(valueOf))));
+  const allRuns = runs3.concat(runs4).concat(runs5);
+  const points = allRuns.reduce((acc, curr) => acc + curr.length, 0);
   return {
-    cards: 'runs',
-    points: 0,
+    cards: allRuns,
+    points,
   };
 };
 
@@ -217,12 +214,14 @@ export const getHandPoints = createSelector(
   [getCurrentHand, getCut],
   (currentHand, cut) => {
     const handWithCut = currentHand.concat(cut);
+    const fifteens = getFifteens(handWithCut);
+    const pairs = getPairs(handWithCut);
+    const runs = getRuns(handWithCut);
     return {
-      fifteens: getFifteens(handWithCut),
-      pairs: getPairs(handWithCut),
-      runs: getRuns(handWithCut),
-      rightJack: 'tbd',
-      flush: 'tbd',
+      fifteens,
+      pairs,
+      runs,
+      total: runs.points + pairs.points + fifteens.points,
     };
   },
 );

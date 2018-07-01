@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { valueOf } from './deck';
 import { uniq, includes, last, countBy } from 'lodash';
-import R from 'ramda';
+import * as R from 'ramda';
 
 export function valueMaxTen(card) {
   return valueOf(card) > 10 ? 10 : valueOf(card);

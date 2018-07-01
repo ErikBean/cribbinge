@@ -96,7 +96,8 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
     case 4: { // stage 4: count the hand
-      message.text = 'Count your hand';
+      const points = game.points.hand.total;
+      message.text = `Count your hand, take ${points} points`;
       message.action = 'countHand';
       message.actionText = 'OK';
       break;
