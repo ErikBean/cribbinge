@@ -123,7 +123,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
     case 5: {
-      if(!game.crib.counted){
+      if(!game.points.crib.hasCounted){
         if(game.crib.isMyCrib){
           const points = game.points.crib.total;
           message.text = `Count your crib, take ${points} points`;
@@ -131,6 +131,14 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
           message.actionText = 'Count Crib';
         } else {
           message.text = `Waiting for ${opponent} to count their crib`;
+        }
+      } else {
+        if(game.crib.isMyCrib){
+          message.text = `Waiting for ${opponent} to deal`;
+        } else {
+          message.text = 'Deal the next hand';
+          message.action = 'deal';
+          message.actionText = 'Deal';
         }
       }
       break;
