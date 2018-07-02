@@ -2,7 +2,7 @@ import { getNumberOrFace, getSuit } from './deck';
 
 export const getMessage = (game, { currentUser, opponent } = {}) => {
   const message = {
-    text: 'Error: Could not find message for game state',
+    text: '',
     action: '',
     actionText: '',
   };
@@ -68,7 +68,16 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         throw e;
       }
       if (myPoints > 0) {
-        message.text = `You got ${myPoints} points! Waiting for ${opponent} to play`;
+        message.text = `You got ${myPoints} points!`;
+        if(hasAGo){
+          const hit31 = total === 31;
+          const pointsToTake = hit31 ? '2 points' : '1 point';
+          message.text += `and a go ${hit31 ? ' with 31,' : ','} take ${pointsToTake}.`;
+          message.action = 'takeAGo';
+          message.actionText = 'OK';
+        } else {
+          message.text += ` Waiting for ${opponent} to play`;
+        }
       } else if (theirPoints > 0) {
         message.text = `They got ${theirPoints} points. Pick a card to play`;
       } else if (playedCards.length === 0) {

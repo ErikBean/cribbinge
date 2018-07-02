@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
-import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND } from '../../types/events';
+import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND, COUNT_CRIB } from '../../types/events';
 import { valueOf } from '../../deck';
 import { getCurrentHand } from './hand';
-import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound } from './index';
+import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound, getCrib } from './index';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
 import { getFifteens as getFifteensCards } from '../../legacy_points';
 
@@ -17,10 +17,13 @@ const plusEqualsOne = (a, b) => (a + 1) === b;
 const sortByVal = R.sort((a, b) => valueOf(a) > valueOf(b));
 
 // take an array, sort it, determine if its in order
-const isSequential = nums => R.sort((a, b) => a > b, nums).reduce((acc, curr, idx) => {
-  if (idx === 0) return true;
-  return acc && plusEqualsOne(nums[idx - 1], curr);
-}, true);
+const isSequential = nums => {
+  const sortedNums =  R.sort((a, b) => a > b, nums);
+  return sortedNums.reduce((acc, curr, idx) => {
+    if (idx === 0) return true;
+    return acc && plusEqualsOne(sortedNums[idx - 1], curr);
+  }, true);
+}
 /* eslint-disable */
 const g = (xs, n) =>
   (n == 0 ? [[]] :
@@ -141,7 +144,6 @@ const getPegPointsTotal = createSelector(
 
 const getPairs = (handWithCut) => { // TODO: this doesnt work at all apparently 
   const sortedHand = sortByVal(handWithCut);
-  // console.log('>>> sh: ', sortedHand);
   const pairsCards = sortedHand.reduce((acc, curr, idx) => {
     if (sortedHand.indexOf(curr) === 0) return acc;
     
@@ -193,7 +195,7 @@ const getRuns = (handWithCut) => {
   };
 };
 
-const getHasCounted = createSelector(
+const getHasCountedHand = createSelector(
   [getEventsForCurrentRound, getUserIdArg],
   (events, userid) => {
     const coundHandFilter = evt => evt.what === COUNT_HAND && evt.who === userid;
@@ -202,12 +204,37 @@ const getHasCounted = createSelector(
 );
 
 export const getHandPoints = createSelector(
-  [getCurrentHand, getCut, getHasCounted],
+  [getCurrentHand, getCut, getHasCountedHand],
   (currentHand, cut, hasCounted) => {
     const handWithCut = currentHand.concat(cut);
     const fifteens = getFifteens(handWithCut);
     const pairs = getPairs(handWithCut);
     const runs = getRuns(handWithCut);
+    return {
+      fifteens,
+      pairs,
+      runs,
+      total: runs.points + pairs.points + fifteens.points,
+      hasCounted,
+    };
+  },
+);
+
+const getHasCountedCrib = createSelector(
+  [getEventsForCurrentRound],
+  (events) => {
+    const coundHandFilter = evt => evt.what === COUNT_CRIB;
+    return Boolean(events.filter(coundHandFilter).length);
+  },
+);
+
+export const getCribPoints = createSelector(
+  [getCrib, getCut, getHasCountedCrib],
+  (crib, cut, hasCounted) => {
+    const cribWithCut = crib.concat(cut);
+    const fifteens = getFifteens(cribWithCut);
+    const pairs = getPairs(cribWithCut);
+    const runs = getRuns(cribWithCut);
     return {
       fifteens,
       pairs,
@@ -234,6 +261,11 @@ export const getPegs = createSelector(
         const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
         if(handPoints > 0){
           scoredPoints.push(handPoints);
+        }
+      } else if (lastEvt.what === COUNT_CRIB && lastEvt.who === userid) {
+        const cribPoints = getCribPoints(R.take(takeNum, events)).total;
+        if(cribPoints > 0){
+          scoredPoints.push(cribPoints);
         }
       }
       takeNum += 1;

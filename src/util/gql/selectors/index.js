@@ -48,7 +48,7 @@ export const getEventsForCurrentRound = createSelector(
   },
 );
 
-const getCrib = createSelector(
+export const getCrib = createSelector(
   [getEventsForCurrentRound],
   events => events
     .filter(({ what }) => what === DISCARD)
