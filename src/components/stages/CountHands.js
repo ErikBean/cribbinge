@@ -10,11 +10,12 @@ import Grid from '@material-ui/core/Grid';
 import Hand from '../Hand';
 import Card from '../Card';
 import Board from '../board';
+
 const textStyle = {
   fontSize: '48px',
   position: 'relative',
   top: '80px',
-}
+};
 export default class CountHands extends PureComponent {
   render() {
     const { userid, opponent } = this.props;
@@ -52,9 +53,9 @@ export default class CountHands extends PureComponent {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
           if (!data.game) return <p>No game data</p>;
-          const {isMyCrib, cards: cribCards} = data.game.crib;
-          const {cards: myHandCards} = data.game.hand;
-          const {cards: theirHandCards} = data.game.opponentHand;
+          const { isMyCrib, cards: cribCards } = data.game.crib;
+          const { cards: myHandCards } = data.game.hand;
+          const { cards: theirHandCards } = data.game.opponentHand;
           const isCribCountingStage = data.game.stage === 5;
           const showMyCrib = isMyCrib && isCribCountingStage;
           const showtheirCrib = !isMyCrib && isCribCountingStage;

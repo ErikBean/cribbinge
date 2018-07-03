@@ -19,7 +19,7 @@ const typeDefs = `
     events: [Event]!
     hand(userid: String!): Hand
     id: String
-    pegging(userid: String!): PeggingInfo
+    pegging(userid: String!, opponentid: String!): PeggingInfo
     stage: Int!
     points(userid: String!, opponentid: String!): AllPoints!
     cut: String!

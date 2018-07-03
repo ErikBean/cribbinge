@@ -75,7 +75,7 @@ export const getStage = createSelector(
       return 2;
     } else if (!tookGoForLastCard) {
       return 3;
-    } else if(!haveBothPlayersCounted){
+    } else if (!haveBothPlayersCounted) {
       return 4;
     }
     return 5;

@@ -46,7 +46,7 @@ class Pegging extends PureComponent {
         query={gql`
         {
           game @client {
-            pegging(userid: "${userid}") {
+            pegging(userid: "${userid}", opponentid: "${opponent}") {
               playedCards {
                 card
                 playedBy

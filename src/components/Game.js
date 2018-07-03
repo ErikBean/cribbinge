@@ -18,6 +18,10 @@ import {
   COUNT_CRIB,
 } from '../util/types/events';
 
+// to get game from cache to serialize when archiving
+import { query } from '../util/gql/resolvers';
+
+
 class Game extends PureComponent {
   state = {
     selectedCards: [],
@@ -32,7 +36,8 @@ class Game extends PureComponent {
       remainingDeck: withoutDealtCards(props.deck),
     };
   }
-  actions = () => ({ // this is for the button on the message bar to do stuff
+  actions = () => ({ // this so the button on the message bar can do stuff
+    archive: this.archive,
     continueToPegging: this.continueToPegging,
     countCrib: this.countCrib,
     countHand: this.countHand,
@@ -41,6 +46,10 @@ class Game extends PureComponent {
     discard: this.discard,
     takeAGo: this.takeAGo,
   })
+  archive = () => {
+    console.log('>>> want to archive: ', this.props.gameId);
+    this.props.archive();
+  }
   countCrib = () => {
     this.props.addEvent({
       cards: this.props.crib,
@@ -171,6 +180,7 @@ class Game extends PureComponent {
 
 Game.propTypes = {
   addEvent: PropTypes.func.isRequired,
+  archive: PropTypes.func.isRequired,
   controls: PropTypes.func.isRequired,
   crib: PropTypes.shape({
     isMyCrib: PropTypes.bool.isRequired,
@@ -192,11 +202,6 @@ Game.propTypes = {
   }).isRequired,
   opponent: PropTypes.string.isRequired,
   stage: PropTypes.number.isRequired,
-  points: PropTypes.shape({
-    hand: PropTypes.shape({
-      total: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
 };
 
 export default connect((props, ref) => ({
@@ -206,4 +211,9 @@ export default connect((props, ref) => ({
     __typename: 'Event',
     ...evt,
   }),
+  archive: () => {
+    window.localStorage.clear();
+    ref(`games/${props.gameId}`).set(null);
+    ref(`archive/${props.gameId}`).set(JSON.stringify(window.ac.readQuery({ query }).gameEvents));
+  },
 }))(Game);

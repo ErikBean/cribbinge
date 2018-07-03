@@ -69,10 +69,11 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       }
       if (myPoints > 0) {
         message.text = `You got ${myPoints} points!`;
-        if(hasAGo){
+        if (hasAGo) {
           const hit31 = total === 31;
-          const pointsToTake = hit31 ? '2 points' : '1 point';
-          message.text += `and a go ${hit31 ? ' with 31,' : ','} take ${pointsToTake}.`;
+          const goPoints = hit31 ? 2 : 1;
+          const pointsToTake = goPoints + myPoints;
+          message.text += ` and a go${hit31 ? ' with 31,' : ','} for a total of ${pointsToTake} points.`;
           message.action = 'takeAGo';
           message.actionText = 'OK';
         } else {
@@ -90,11 +91,15 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       } else if (opponentHasAGo) {
         message.text = `${opponent} gets a go`;
       } else if (hasAGo) {
-        const hit31 = total === 31;
-        const pointsToTake = hit31 ? '2 points' : '1 point';
-        message.text = `You have a go ${hit31 ? ' and hit 31,' : ','} take ${pointsToTake}.`;
-        message.action = 'takeAGo';
-        message.actionText = 'OK';
+        if (!canPlay) {
+          const hit31 = total === 31;
+          const pointsToTake = hit31 ? '2 points' : '1 point';
+          message.text = `You have a go ${hit31 ? ' and hit 31,' : ','} take ${pointsToTake}.`;
+          message.action = 'takeAGo';
+          message.actionText = 'OK';
+        } else {
+          message.text = 'You have a go, pick a card to play.';
+        }
       } else if (canPlay) {
         message.text = 'Pick a card to play.';
       } else {
@@ -108,8 +113,8 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       const opponentCounted = game.opponentPoints.hand.hasCounted;
       if (!hasCounted) {
         const points = game.points.hand.total;
-        if(points === 0){
-          message.text = `You got zero points (sad trombone)`;
+        if (points === 0) {
+          message.text = 'You got zero points (sad trombone)';
           message.action = 'countHand';
           message.actionText = 'OK';
         } else {
@@ -123,8 +128,8 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
     case 5: {
-      if(!game.points.crib.hasCounted){
-        if(game.crib.isMyCrib){
+      if (!game.points.crib.hasCounted) {
+        if (game.crib.isMyCrib) {
           const points = game.points.crib.total;
           message.text = `Count your crib, take ${points} points`;
           message.action = 'countCrib';
@@ -132,14 +137,12 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         } else {
           message.text = `Waiting for ${opponent} to count their crib`;
         }
+      } else if (game.crib.isMyCrib) {
+        message.text = `Waiting for ${opponent} to deal`;
       } else {
-        if(game.crib.isMyCrib){
-          message.text = `Waiting for ${opponent} to deal`;
-        } else {
-          message.text = 'Deal the next hand';
-          message.action = 'deal';
-          message.actionText = 'Deal';
-        }
+        message.text = 'Deal the next hand';
+        message.action = 'deal';
+        message.actionText = 'Deal';
       }
       break;
     }
@@ -148,6 +151,17 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       break;
     }
   }
+  if (game.points.isWinner) {
+    message.text = 'Congraduations, you won the game!';
+    message.action = 'archive';
+    message.actionText = 'Archive Game';
+  } else if (game.opponentPoints.isWinner) {
+    message.text = `${opponent} won the game!`;
+    message.action = 'archive';
+    message.actionText = 'Archive Game';
+  }
+
+
   return message;
 };
 

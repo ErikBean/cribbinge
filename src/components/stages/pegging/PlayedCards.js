@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Card from '../../Card';
 
-const styles = theme => ({
+const styles = () => ({
   cardContainer: {
     position: 'absolute',
     display: 'inline-block',
@@ -21,7 +21,8 @@ const styles = theme => ({
     borderRadius: '99px',
     fontSize: 72,
     color: 'blue',
-    border: '3px solid blue',
+    // border: '3px solid blue',
+    backgroundColor: 'rgba(192,192,192,0.6)',
   },
 });
 

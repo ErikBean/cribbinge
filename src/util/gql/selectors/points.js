@@ -2,11 +2,14 @@ import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
 import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND, COUNT_CRIB } from '../../types/events';
+import { POINTS_TO_WIN } from '../../points';
+
 import { valueOf } from '../../deck';
 import { getCurrentHand } from './hand';
 import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound, getCrib } from './index';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
 import { getFifteens as getFifteensCards } from '../../legacy_points';
+
 
 const takeLastTwo = R.takeLast(2);
 const cardVal = R.compose(valueOf, R.prop('card'));
@@ -17,13 +20,13 @@ const plusEqualsOne = (a, b) => (a + 1) === b;
 const sortByVal = R.sort((a, b) => valueOf(a) > valueOf(b));
 
 // take an array, sort it, determine if its in order
-const isSequential = nums => {
-  const sortedNums =  R.sort((a, b) => a > b, nums);
+const isSequential = (nums) => {
+  const sortedNums = R.sort((a, b) => a > b, nums);
   return sortedNums.reduce((acc, curr, idx) => {
     if (idx === 0) return true;
     return acc && plusEqualsOne(sortedNums[idx - 1], curr);
   }, true);
-}
+};
 /* eslint-disable */
 const g = (xs, n) =>
   (n == 0 ? [[]] :
@@ -142,11 +145,11 @@ const getPegPointsTotal = createSelector(
   },
 );
 
-const getPairs = (handWithCut) => { // TODO: this doesnt work at all apparently 
+const getPairs = (handWithCut) => { // TODO: this doesnt work at all apparently
   const sortedHand = sortByVal(handWithCut);
   const pairsCards = sortedHand.reduce((acc, curr, idx) => {
     if (sortedHand.indexOf(curr) === 0) return acc;
-    
+
     if (valueOf(sortedHand[idx - 1]) === valueOf(curr)) {
       acc.push([sortedHand[idx - 1], curr]);
     }
@@ -259,19 +262,23 @@ export const getPegs = createSelector(
       const lastEvt = R.last(R.take(takeNum, events));
       if (lastEvt.what === COUNT_HAND && lastEvt.who === userid) {
         const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
-        if(handPoints > 0){
+        if (handPoints > 0) {
           scoredPoints.push(handPoints);
         }
       } else if (lastEvt.what === COUNT_CRIB && lastEvt.who === userid) {
         const cribPoints = getCribPoints(R.take(takeNum, events)).total;
-        if(cribPoints > 0){
+        if (cribPoints > 0) {
           scoredPoints.push(cribPoints);
         }
       }
       takeNum += 1;
     }
+    let front = R.sum(scoredPoints);
+    if (front > POINTS_TO_WIN.HALF) {
+      front = POINTS_TO_WIN.HALF;
+    }
     return {
-      front: R.sum(scoredPoints),
+      front,
       rear: R.sum(R.dropLast(1, scoredPoints)),
     };
   },

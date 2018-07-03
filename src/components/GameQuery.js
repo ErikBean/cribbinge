@@ -38,7 +38,7 @@ export default class GameQuery extends PureComponent {
             isMyCrib(userid: "${currentUser}")
           }
           cut
-          pegging(userid: "${currentUser}"){
+          pegging(userid: "${currentUser}", opponentid: "${opponent}"){
             playedCards {
               card
               playedBy
@@ -53,11 +53,13 @@ export default class GameQuery extends PureComponent {
             pegs
             hand
             crib
+            isWinner
           }
           opponentPoints: points(userid: "${opponent}"){
             pegging
             pegs
             hand
+            isWinner
           }
         }
       }

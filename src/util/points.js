@@ -7,3 +7,8 @@ export function pointValue(card) {
   }
   return Math.min(valueOf(card), 10);
 }
+
+export const POINTS_TO_WIN = {
+  HALF: 60,
+  FULL: 120,
+};

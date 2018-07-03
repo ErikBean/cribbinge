@@ -16,12 +16,14 @@ import {
   getPlayedCards,
 } from './selectors/pegging';
 import { getPeggingPoints, getPegs, getHandPoints, getCribPoints } from './selectors/points';
+import { POINTS_TO_WIN } from '../points';
+
 
 export const defaults = {
   gameEvents: [],
 };
 
-const query = gql`{
+export const query = gql`{
   gameEvents {
     timestamp
     what
@@ -55,12 +57,12 @@ export const resolvers = {
     hand(game, { userid }) {
       return getHand(game.events, { userid });
     },
-    pegging(game, { userid }) {
+    pegging(game, { userid, opponentid }) {
       return {
         currentHand: getHand(game.events, { userid }).cards,
         events: getPeggingEvents(game.events),
         playedCards: getPlayedCards(game.events, { userid }),
-        canPlay: canPlayCard(game.events, { userid }),
+        canPlay: canPlayCard(game.events, { userid, opponentid }),
         total: getPegTotal(game.events),
         __typename: 'PeggingInfo',
       };
@@ -75,8 +77,10 @@ export const resolvers = {
       };
     },
   },
-  Points: {
-
+  AllPoints: {
+    isWinner(pointsInfo) {
+      return pointsInfo.pegs.front === POINTS_TO_WIN.HALF;
+    },
   },
   PeggingInfo: {
     hasAGo(/* pegInfo */) {

@@ -63,19 +63,6 @@ const hasLowEnoughCard = createSelector(
   },
 );
 
-export const canPlayCard = createSelector(
-  [getPeggingEvents, getIsMyCrib, hasLowEnoughCard, getUserIdArg, () => {}],
-  (pegEvents, isMyCrib, hasCardToPlay, userid) => {
-    const lastEvt = Array.from(pegEvents).pop() || {};
-    if (!pegEvents.length) {
-      return !isMyCrib;
-    } else if (lastEvt.who !== userid) {
-      // TODO: also return hasCardToPlay if I have a go
-      return hasCardToPlay;
-    }
-    return false;
-  },
-);
 
 const getLastPlayedCard = createSelector(
   [pegInfo => pegInfo.playedCards],
@@ -101,5 +88,28 @@ export const doesOpponentHaveAGo = createSelector(
     }
     // opponent has a go if I dont have a card I can play:
     return !hasCardToPlay;
+  },
+);
+
+export const canPlayCard = createSelector(
+  [
+    getPeggingEvents,
+    getPlayedCards,
+    getIsMyCrib,
+    hasLowEnoughCard,
+    getUserIdArg,
+    (_, { opponentid }) => opponentid,
+    events => events,
+  ],
+  (pegEvents, playedCards, isMyCrib, hasCardToPlay, userid, opponentid, events) => {
+    const hasAGo = doesOpponentHaveAGo({ playedCards }, { userid: opponentid }, events);
+    const lastEvt = Array.from(pegEvents).pop() || {};
+    if (!pegEvents.length) {
+      return !isMyCrib;
+    } else if (lastEvt.who !== userid || hasAGo) {
+      // TODO: also return hasCardToPlay if I have a go
+      return hasCardToPlay;
+    }
+    return false;
   },
 );
