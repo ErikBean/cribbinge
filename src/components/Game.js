@@ -18,10 +18,6 @@ import {
   COUNT_CRIB,
 } from '../util/types/events';
 
-// to get game from cache to serialize when archiving
-import { query } from '../util/gql/resolvers';
-
-
 class Game extends PureComponent {
   state = {
     selectedCards: [],
@@ -211,9 +207,4 @@ export default connect((props, ref) => ({
     __typename: 'Event',
     ...evt,
   }),
-  archive: () => {
-    window.localStorage.clear();
-    ref(`games/${props.gameId}`).set(null);
-    ref(`archive/${props.gameId}`).set(JSON.stringify(window.ac.readQuery({ query }).gameEvents));
-  },
 }))(Game);

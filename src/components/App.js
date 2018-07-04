@@ -5,6 +5,8 @@ import 'firebase/auth';
 
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import CssBaseline from 'material-ui/CssBaseline';
+import Dialog, { DialogTitle } from 'material-ui/Dialog';
+import Divider from '@material-ui/core/Divider';
 
 import ApolloWrapper from './ApolloWrapper';
 import AppBar from './AppBar';
@@ -33,6 +35,7 @@ export default class App extends Component {
     drawerOpen: false,
     name: '', // current user's email before the @ sign
     signedIn: false, // Local signed-in state.
+    dialogOpen: true,
   }
 
   // Listen to the Firebase Auth state and set the local state.
@@ -68,6 +71,22 @@ export default class App extends Component {
     });
   }
 
+  handleDialogClose = () => {
+    this.setState({
+      dialogOpen: false,
+    });
+  }
+
+  clearActiveGame = () => {
+    const gameId = this.state.activeGame;
+    this.setState({
+      activeGame: null,
+    }, () => {
+      window.localStorage.setItem(LOCALSTORAGE_KEY, null);
+      this.props.archive(gameId);
+    });
+  }
+
   closeDrawer = () => {
     if (this.state.drawerOpen) {
       this.toggleDrawer();
@@ -100,6 +119,23 @@ export default class App extends Component {
     },
   }
 
+  renderGamesList = () => (
+    <GamesList
+      clearActiveGame={this.clearActiveGame}
+      currentUser={this.state.name}
+      setActiveGame={this.setActiveGame}
+      activeGame={this.state.activeGame}
+    />
+  )
+
+  renderUsersList = () => (
+    <Users
+      currentUser={this.state.name}
+      users={this.props.users}
+      userClicked={this.startMatch}
+    />
+  )
+
   render() {
     return (
       <React.Fragment>
@@ -111,11 +147,9 @@ export default class App extends Component {
         {this.state.signedIn &&
           <ApolloWrapper gameId={this.state.activeGame}>
             <Drawer open={this.state.drawerOpen} toggleDrawer={this.toggleDrawer}>
-              <GamesList
-                currentUser={this.state.name}
-                setActiveGame={this.setActiveGame}
-                activeGame={this.state.activeGame}
-              />
+              {this.renderGamesList()}
+              <Divider />
+              {this.renderUsersList()}
             </Drawer>
             {
                 this.state.activeGame
@@ -123,20 +157,15 @@ export default class App extends Component {
                     <GameQuery
                       gameId={this.state.activeGame}
                       currentUser={this.state.name}
+                      clearActiveGame={this.clearActiveGame}
                     />
                   ) : (
-                    <Users
-                      currentUser={this.state.name}
-                      users={this.props.users || {}}
-                      userClicked={this.startMatch}
-                      renderExistingGames={() => (
-                        <GamesList
-                          currentUser={this.state.name}
-                          setActiveGame={this.setActiveGame}
-                          activeGame={this.state.activeGame}
-                        />
-                      )}
-                    />
+                    <Dialog open={this.state.dialogOpen} onClose={this.handleDialogClose}>
+                      <DialogTitle>Select a New Opponent</DialogTitle>
+                      {this.renderUsersList()}
+                      <DialogTitle>Or Choose an Existing Game: </DialogTitle>
+                      {this.renderGamesList()}
+                    </Dialog>
                   )
             }
           </ApolloWrapper>
@@ -148,6 +177,7 @@ export default class App extends Component {
 
 App.propTypes = {
   addUser: PropTypes.func.isRequired,
+  archive: PropTypes.func.isRequired,
   startMatch: PropTypes.func.isRequired,
   users: PropTypes.shape({}),
 };

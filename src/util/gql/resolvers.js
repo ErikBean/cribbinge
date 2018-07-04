@@ -31,6 +31,7 @@ export const query = gql`{
     cards
   }
 }`;
+
 export const resolvers = {
   Query: {
     game(_, args, { cache }) {

@@ -76,6 +76,7 @@ export default class GameQuery extends PureComponent {
               gameId={gameId}
               currentUser={currentUser}
               opponent={opponent}
+              clearActiveGame={this.props.clearActiveGame}
               controls={actions => (
                 <GameControls
                   message={message.text}
@@ -95,4 +96,5 @@ export default class GameQuery extends PureComponent {
 GameQuery.propTypes = {
   gameId: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired,
+  clearActiveGame: PropTypes.func.isRequired,
 };

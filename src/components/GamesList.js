@@ -8,7 +8,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Divider from '@material-ui/core/Divider';
 
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
@@ -18,14 +17,6 @@ const styles = theme => ({
     width: '100%',
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-  },
-  gutters: {
-    paddingRight: '50px',
-    paddingLeft: '50px',
-    [theme.breakpoints.between('xs', 'md')]: {
-      paddingRight: '20px',
-      paddingLeft: '20px',
-    },
   },
   active: {
     fontWeight: 'bold',
@@ -53,41 +44,38 @@ class GamesList extends PureComponent {
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error :( {error.message}</p>;
-          if (!data.games.length) {
-            // TODO: Provide a way for user to start a new game from here
-            return <p>You have no active games at this time.</p>;
-          }
+
           return (
-            <div className={classes.root}>
-              <List subheader={<ListSubheader component="div">Games</ListSubheader>}>
-                <Divider />
-                {data.games
-                  .filter(game => game.id.includes(this.props.currentUser))
-                  .map(game => (
-                    <React.Fragment key={game.id}>
-                      <ListItem
-                        button
-                        onClick={() => this.props.setActiveGame(game.id)}
-                        classes={{ gutters: classes.gutters }}
-                      >
-                        <Avatar>
-                          <PersonIcon />
-                        </Avatar>
-                        <ListItemText
-                          primary={game.id}
-                          secondary="Jan 9, 2014"
-                          classes={
+            <List className={classes.root} subheader={<ListSubheader component="div">Games</ListSubheader>}>
+              {!data.games.length &&
+                <ListItem>
+                  <ListItemText primary="You currently have no active games" />
+                </ListItem>
+              }
+              {data.games
+                .filter(game => game.id.includes(this.props.currentUser))
+                .map(game => (
+                  <React.Fragment key={game.id}>
+                    <ListItem
+                      button
+                      onClick={() => this.props.setActiveGame(game.id)}
+                    >
+                      <Avatar>
+                        <PersonIcon />
+                      </Avatar>
+                      <ListItemText
+                        primary={game.id}
+                        secondary="Jan 9, 2014"
+                        classes={
                             game.id === activeGame
                               ? { primary: classes.active }
                               : { primary: classes.nonactive }
-                          }
-                        />
-                      </ListItem>
-                      <Divider />
-                    </React.Fragment>
-                  ))}
-              </List>
-            </div>
+                        }
+                      />
+                    </ListItem>
+                  </React.Fragment>
+                ))}
+            </List>
           );
         }}
       </Query>
