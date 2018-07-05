@@ -78,10 +78,9 @@ export default class App extends Component {
   }
 
   clearActiveGame = (gameId) => {
-    console.log('>>> want to clear: ', gameId);
     if (gameId === this.state.activeGame) {
       this.setState({
-        activeGame: null,
+        activeGame: '',
         dialogOpen: true,
       }, () => {
         window.localStorage.removeItem(LOCALSTORAGE_KEY);

@@ -4,7 +4,7 @@ import * as R from 'ramda';
 import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND, COUNT_CRIB, FLIP_FIFTH_CARD } from '../../types/events';
 import { POINTS_TO_WIN } from '../../points';
 
-import { valueOf, getNumberOrFace } from '../../deck';
+import { valueOf, getNumberOrFace, getSuit } from '../../deck';
 import { getCurrentHand } from './hand';
 import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound, getCrib } from './index';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
@@ -198,6 +198,30 @@ const getRuns = (handWithCut) => {
   };
 };
 
+const getFlush = (cards, cut, isHand) => {
+  const base4Match = cards.reduce((acc, curr, idx) => {
+    if(idx === 0) return acc;
+    return acc && getSuit(curr) === getSuit(cards[idx - 1])
+  }, true);
+  const all5Match = base4Match && getSuit(cut) === getSuit(cards[0])
+  
+  if(all5Match){
+    return {
+      cards: cards.concat(cut),
+      points: 5
+    }
+  } else if(isHand && base4Match){
+    return {
+      cards: cards,
+      points: 4
+    }
+  }
+  return {
+    cards: [],
+    points: 0,
+  }
+}
+
 const getHasCountedHand = createSelector(
   [getEventsForCurrentRound, getUserIdArg],
   (events, userid) => {
@@ -213,12 +237,14 @@ export const getHandPoints = createSelector(
     const fifteens = getFifteens(handWithCut);
     const pairs = getPairs(handWithCut);
     const runs = getRuns(handWithCut);
+    const flush = getFlush(currentHand, cut, true);
     return {
       fifteens,
+      flush,
+      hasCounted,
       pairs,
       runs,
-      total: runs.points + pairs.points + fifteens.points,
-      hasCounted,
+      total: runs.points + pairs.points + fifteens.points + flush.points,
     };
   },
 );
@@ -238,12 +264,14 @@ export const getCribPoints = createSelector(
     const fifteens = getFifteens(cribWithCut);
     const pairs = getPairs(cribWithCut);
     const runs = getRuns(cribWithCut);
+    const flush = getFlush(crib, cut, false);
     return {
       fifteens,
+      flush,
+      hasCounted,
       pairs,
       runs,
-      total: runs.points + pairs.points + fifteens.points,
-      hasCounted,
+      total: runs.points + pairs.points + fifteens.points + flush.points,
     };
   },
 );

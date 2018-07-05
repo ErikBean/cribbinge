@@ -42,7 +42,7 @@ export function getNumberOrFace(card) {
 }
 
 export function getSuit(card) {
-  switch (card[0]) {
+  switch (card && card[0]) {
     case 'H':
       return 'hearts';
     case 'D':
