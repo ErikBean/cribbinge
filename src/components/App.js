@@ -77,14 +77,19 @@ export default class App extends Component {
     });
   }
 
-  clearActiveGame = () => {
-    const gameId = this.state.activeGame;
-    this.setState({
-      activeGame: null,
-    }, () => {
-      window.localStorage.setItem(LOCALSTORAGE_KEY, null);
+  clearActiveGame = (gameId) => {
+    console.log('>>> want to clear: ', gameId);
+    if (gameId === this.state.activeGame) {
+      this.setState({
+        activeGame: null,
+        dialogOpen: true,
+      }, () => {
+        window.localStorage.removeItem(LOCALSTORAGE_KEY);
+        this.props.archive(gameId);
+      });
+    } else {
       this.props.archive(gameId);
-    });
+    }
   }
 
   closeDrawer = () => {
@@ -163,7 +168,7 @@ export default class App extends Component {
                     <Dialog open={this.state.dialogOpen} onClose={this.handleDialogClose}>
                       <DialogTitle>Select a New Opponent</DialogTitle>
                       {this.renderUsersList()}
-                      <DialogTitle>Or Choose an Existing Game: </DialogTitle>
+                      <DialogTitle>Or Choose an Existing Game</DialogTitle>
                       {this.renderGamesList()}
                     </Dialog>
                   )

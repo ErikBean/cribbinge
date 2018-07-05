@@ -33,7 +33,7 @@ class Game extends PureComponent {
     };
   }
   actions = () => ({ // this so the button on the message bar can do stuff
-    archive: this.archive,
+    archive: this.props.clearActiveGame,
     continueToPegging: this.continueToPegging,
     countCrib: this.countCrib,
     countHand: this.countHand,
@@ -42,10 +42,6 @@ class Game extends PureComponent {
     discard: this.discard,
     takeAGo: this.takeAGo,
   })
-  archive = () => {
-    console.log('>>> want to archive: ', this.props.gameId);
-    this.props.archive();
-  }
   countCrib = () => {
     this.props.addEvent({
       cards: this.props.crib,
@@ -176,7 +172,7 @@ class Game extends PureComponent {
 
 Game.propTypes = {
   addEvent: PropTypes.func.isRequired,
-  archive: PropTypes.func.isRequired,
+  clearActiveGame: PropTypes.func.isRequired,
   controls: PropTypes.func.isRequired,
   crib: PropTypes.shape({
     isMyCrib: PropTypes.bool.isRequired,
