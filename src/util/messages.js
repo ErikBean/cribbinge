@@ -59,17 +59,13 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       const { pairs, runs, fifteens } = game.points.pegging;
 
       let theirPoints;
-      let myPoints;
-      try {
-        myPoints = pairs.points + fifteens.points + runs.points;
+      const myPoints = pairs.points + fifteens.points + runs.points;
 
-        { /* eslint-disable no-shadow */
-          const { pairs, runs, fifteens } = game.opponentPoints.pegging;
-          theirPoints = pairs.points + fifteens.points + runs.points;
-        } /* eslint-enable no-shadow */
-      } catch (e) {
-        throw e;
-      }
+      { /* eslint-disable no-shadow */
+        const { pairs, runs, fifteens } = game.opponentPoints.pegging;
+        theirPoints = pairs.points + fifteens.points + runs.points;
+      } /* eslint-enable no-shadow */
+      
       if (myPoints > 0) {
         message.text = `You got ${myPoints} points!`;
         if (hasAGo) {
@@ -82,7 +78,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         } else {
           message.text += ` Waiting for ${opponent} to play`;
         }
-      } else if (theirPoints > 0) {
+      } else if (theirPoints > 0 && !opponentHasAGo) {
         message.text = `They got ${theirPoints} points. Pick a card to play`;
       } else if (playedCards.length === 0) {
         if (canPlay) {
@@ -93,6 +89,9 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
         break;
       } else if (opponentHasAGo) {
         message.text = `${opponent} gets a go`;
+        if (theirPoints > 0){
+          message.text+=`, and ${theirPoints} points`
+        }
       } else if (hasAGo) {
         if (!canPlay) {
           const hit31 = total === 31;
