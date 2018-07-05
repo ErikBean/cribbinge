@@ -43,9 +43,12 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
           message.text = `Waiting for ${opponent} to flip the fifth card`;
         }
       } else {
-        message.text = `${game.crib.isMyCrib ? 'You' : 'They'} cut a ${getNumberOrFace(game.cut)} of ${getSuit(game.cut)}!`;
+        message.text = `${game.crib.isMyCrib ? 'You' : 'They'} cut a ${getNumberOrFace(game.cut)} of ${getSuit(game.cut)}`;
         message.action = 'continueToPegging';
         message.actionText = 'Continue';
+        if (getNumberOrFace(game.cut) === 'jack') {
+          message.text += `${game.crib.isMyCrib ? ', take' : ' for'} two points`;
+        }
       }
       break;
     }

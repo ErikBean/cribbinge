@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect';
 import * as R from 'ramda';
 
-import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND, COUNT_CRIB } from '../../types/events';
+import { PLAY_PEG_CARD, TAKE_A_GO, COUNT_HAND, COUNT_CRIB, FLIP_FIFTH_CARD } from '../../types/events';
 import { POINTS_TO_WIN } from '../../points';
 
-import { valueOf } from '../../deck';
+import { valueOf, getNumberOrFace } from '../../deck';
 import { getCurrentHand } from './hand';
 import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound, getCrib } from './index';
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
@@ -254,21 +254,38 @@ export const getPegs = createSelector(
     const events = Array.from(sortedEvents);
     const scoredPoints = [];
     let takeNum = 1;
-    while (takeNum <= events.length) {
-      const pegPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
-      if (pegPoints > 0) {
-        scoredPoints.push(pegPoints);
+    const recordScoredPoints = (pts) => {
+      if (pts > 0) {
+        scoredPoints.push(pts);
       }
+    };
+    while (takeNum <= events.length) {
       const lastEvt = R.last(R.take(takeNum, events));
-      if (lastEvt.what === COUNT_HAND && lastEvt.who === userid) {
-        const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
-        if (handPoints > 0) {
-          scoredPoints.push(handPoints);
-        }
-      } else if (lastEvt.what === COUNT_CRIB && lastEvt.who === userid) {
-        const cribPoints = getCribPoints(R.take(takeNum, events)).total;
-        if (cribPoints > 0) {
-          scoredPoints.push(cribPoints);
+      if (lastEvt.who === userid) {
+        switch (lastEvt.what) {
+          case PLAY_PEG_CARD:
+          case TAKE_A_GO: {
+            const pegPoints = getPegPointsTotal(R.take(takeNum, events), { userid });
+            recordScoredPoints(pegPoints);
+            break;
+          }
+          case COUNT_HAND: {
+            const handPoints = getHandPoints(R.take(takeNum, events), { userid }).total;
+            recordScoredPoints(handPoints);
+            break;
+          }
+          case COUNT_CRIB: {
+            const cribPoints = getCribPoints(R.take(takeNum, events)).total;
+            recordScoredPoints(cribPoints);
+            break;
+          }
+          case FLIP_FIFTH_CARD: {
+            const cutJackPoints = getNumberOrFace(lastEvt.cards[0]) === 'jack' ? 2 : 0;
+            recordScoredPoints(cutJackPoints);
+            break;
+          }
+          default:
+            break;
         }
       }
       takeNum += 1;
