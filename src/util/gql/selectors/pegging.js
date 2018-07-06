@@ -103,10 +103,11 @@ export const canPlayCard = createSelector(
   ],
   (pegEvents, playedCards, isMyCrib, hasCardToPlay, userid, opponentid, events) => {
     const hasAGo = doesOpponentHaveAGo({ playedCards }, { userid: opponentid }, events);
+    const oppHand = getCurrentHand(events, {userid: opponentid});
     const lastEvt = Array.from(pegEvents).pop() || {};
     if (!pegEvents.length) {
       return !isMyCrib;
-    } else if (lastEvt.who !== userid || hasAGo) {
+    } else if (lastEvt.who !== userid || hasAGo || !oppHand.length) {
       // TODO: also return hasCardToPlay if I have a go
       return hasCardToPlay;
     }

@@ -82,7 +82,6 @@ export default class App extends Component {
     if (gameId === this.state.activeGame) {
       this.setState({
         activeGame: '',
-        dialogOpen: true,
       }, () => {
         window.localStorage.removeItem(LOCALSTORAGE_KEY);
         this.props.archive(gameId);

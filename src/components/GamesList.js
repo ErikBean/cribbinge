@@ -53,8 +53,8 @@ class GamesList extends PureComponent {
   }
   handleDialogClose = () => this.setState({ showRemoveConfirm: false })
   removeGame = () => {
+    this.setState({ showRemoveConfirm: false })
     this.props.clearActiveGame(this.state.gameToRemove);
-    this.handleDialogClose();
   }
   render() {
     const { classes, activeGame } = this.props;

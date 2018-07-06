@@ -83,7 +83,7 @@ export const getMessage = (game, { currentUser, opponent } = {}) => {
       } else if (playedCards.length === 0) {
         if (canPlay) {
           message.text = 'Your lead, click a card to begin pegging.';
-        } else {
+        } else if(game.opponentHand.cards.length){
           message.text = `Waiting for ${opponent} to begin pegging.`;
         }
         break;
