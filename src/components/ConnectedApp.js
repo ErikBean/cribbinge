@@ -15,7 +15,7 @@ export default connect((props, ref) => ({
     who: name,
   }),
   archive: (gameId) => {
-    ref(`games/${gameId}`).set(null);
     ref(`archive/${gameId}-${Date.now()}`).set(JSON.stringify(window.ac.readQuery({ query }).gameEvents));
+    ref(`games/${gameId}`).set(null);
   },
 }))(App);

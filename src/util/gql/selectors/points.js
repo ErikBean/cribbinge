@@ -10,7 +10,6 @@ import { sortByTimeSelector, lastEventSelector, getCut, getEventsForCurrentRound
 import { getPeggingEvents, getPlayedCards, getPegTotal } from './pegging';
 import { getFifteens as getFifteensCards } from '../../legacy_points';
 
-
 const takeLastTwo = R.takeLast(2);
 const cardVal = R.compose(valueOf, R.prop('card'));
 const eqCard = R.eqBy(cardVal);
@@ -190,7 +189,7 @@ const getRuns = (handWithCut) => {
   // filter out non-sequential ones:
   const [runs3, runs4, runs5] = [perm3, perm4, perm5]
     .map(p => p.filter(a => isSequential(a.map(valueOf))));
-  const allRuns = runs3.concat(runs4).concat(runs5);
+  const allRuns = runs5.length ? runs5 : (runs4.length ? runs4 : runs3);
   const points = allRuns.reduce((acc, curr) => acc + curr.length, 0);
   return {
     cards: allRuns,

@@ -78,6 +78,7 @@ export default class App extends Component {
   }
 
   clearActiveGame = (gameId) => {
+    console.log('>>> Here: ', gameId);
     if (gameId === this.state.activeGame) {
       this.setState({
         activeGame: '',

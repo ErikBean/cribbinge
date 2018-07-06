@@ -33,7 +33,7 @@ class Game extends PureComponent {
     };
   }
   actions = () => ({ // this so the button on the message bar can do stuff
-    archive: this.props.clearActiveGame,
+    archive: () => this.props.clearActiveGame(this.props.gameId),
     continueToPegging: this.continueToPegging,
     countCrib: this.countCrib,
     countHand: this.countHand,
